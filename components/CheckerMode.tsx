@@ -933,4 +933,3 @@ export const CheckerMode: React.FC<CheckerModeProps> = ({ language, theme }) => 
       </div>
     );
   };  
-};
