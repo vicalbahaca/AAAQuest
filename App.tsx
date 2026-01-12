@@ -5,8 +5,9 @@ import { StudyMode } from './components/StudyMode';
 import { TestMode } from './components/TestMode';
 import { CheckerMode } from './components/CheckerMode';
 import { InfoMode } from './components/InfoMode';
+import { CertificateMode } from './components/CertificateMode';
 import { NeuralCore } from './components/NeuralCore';
-import { BookOpen, ScanEye, Globe, ChevronDown, Sun, Moon, ArrowRight, Coffee } from 'lucide-react';
+import { BookOpen, ScanEye, Globe, ChevronDown, Sun, Moon, ArrowRight, Coffee, Award } from 'lucide-react';
 import { Loader } from './components/Loader';
 import { Reveal } from './components/Reveal';
 
@@ -54,13 +55,15 @@ const App: React.FC = () => {
   const renderContent = () => {
     switch (mode) {
       case AppMode.STUDY:
-        return <StudyMode setFocusMode={setFocusMode} language={language} theme={theme} />;
+        return <StudyMode setFocusMode={setFocusMode} language={language} theme={theme} setMode={setMode} />;
       case AppMode.TEST:
         return <TestMode language={language} theme={theme} />;
       case AppMode.CHECKER:
         return <CheckerMode language={language} theme={theme} />;
       case AppMode.INFO:
         return <InfoMode setMode={setMode} language={language} theme={theme} />;
+      case AppMode.CERTIFICATE:
+        return <CertificateMode language={language} theme={theme} setMode={setMode} />;
       default:
         return <Home setMode={setMode} t={t} theme={theme} />;
     }
@@ -239,7 +242,7 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme}> = ({
       </div>
 
       {/* Main Foreground Container */}
-      <div className="relative z-10 w-full max-w-5xl px-4">
+      <div className="relative z-10 w-full max-w-6xl px-4">
         <div className="flex flex-col items-center text-center">
           
           <div className="space-y-8 mb-16 max-w-3xl flex flex-col items-center">
@@ -272,7 +275,7 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme}> = ({
             </Reveal>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-3xl" role="list">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl" role="list">
             <Reveal delay={400} className="h-full">
               <Card 
                 title={t.studyMode}
