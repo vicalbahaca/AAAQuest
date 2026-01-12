@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { generateTest } from '../services/geminiService';
 import { Difficulty, TestQuestion, TestType, Language, TRANSLATIONS, Theme } from '../types';
 import { Check, X, Award, ArrowRight, BookOpen, GraduationCap } from 'lucide-react';
@@ -38,6 +37,11 @@ export const TestMode: React.FC<TestModeProps> = ({ language, theme }) => {
     { label: Difficulty.ADVANCED, symbol: '+', color: 'text-orange-500' },
     { label: Difficulty.EXPERT, symbol: '++', color: 'text-red-500' },
   ];
+
+  // Auto scroll to top on step change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [step]);
 
   const handleTopicSelect = (topic: TestType) => {
     setSelectedTopic(topic);
