@@ -746,7 +746,7 @@ export const CheckerMode: React.FC<CheckerModeProps> = ({ language, theme }) => 
   if (viewState === 'ANALYZING') {
     return (
        <div className="flex items-center justify-center min-h-[80vh] w-full animate-fade-in" role="status" aria-live="polite">
-          <Loader text={t.analyzing} duration={12} timerLabel={t.estimatedTime} theme={theme} />
+          <Loader text={t.analyzing} theme={theme} />
        </div>
     );
   }
