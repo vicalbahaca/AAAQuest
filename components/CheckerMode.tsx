@@ -979,5 +979,7 @@ export const CheckerMode: React.FC<CheckerModeProps> = ({ language, theme }) => 
     );
   };
 
+}
+
      export default CheckerMode;
 
