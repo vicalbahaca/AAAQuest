@@ -4,7 +4,8 @@ export enum AppMode {
   STUDY = 'STUDY',
   TEST = 'TEST',
   CHECKER = 'CHECKER',
-  INFO = 'INFO'
+  INFO = 'INFO',
+  CERTIFICATE = 'CERTIFICATE'
 }
 
 export type Theme = 'light' | 'dark';
@@ -61,15 +62,13 @@ export interface StudyLesson {
   };
   documentation: {
     nonTechnical: string;
-    codeExamples?: {
+    codeExamples: {
       html: string;
       ios: string;
       android: string;
     };
-    specificAccessibility: string[];
-    behavior: string[];
-    voiceOver: string;
-    nvda: string;
+    mobileScreenReader: string;
+    desktopScreenReader: string;
   };
   goodPractices: string[];
   badPractices: string[];
@@ -145,11 +144,13 @@ export const TRANSLATIONS = {
     appTitle: 'AAAQuest',
     homeSubtitle: 'Convierte la accesibilidad en tu superpoder profesional. Aprende jugando y genera documentación automáticamente con IA.',
     studyMode: 'Modo estudio',
-    studyModeDesc: '¡Explora los criterios de la WCAG mediante juegos!',
+    studyModeDesc: 'Aprende sobre accesibilidad digital de forma fácil y práctica en diferentes niveles',
     testMode: 'Hora del examen',
     testModeDesc: 'Realiza pruebas rápidas de accesibilidad en formato de 20 preguntas',
     checkerMode: 'Detector de accesibilidad',
     checkerModeDesc: 'Genera la documentación de accesibilidad de una captura de pantalla en segundos',
+    certMode: 'Certificado',
+    certModeDesc: 'Visualiza tu progreso final y obtén tu diploma de experto.',
     footer: 'Hecho con Gemini 3 por',
     changingLanguage: 'Cambiando idioma...',
     navStudy: 'Estudio',
@@ -170,7 +171,7 @@ export const TRANSLATIONS = {
     deepDive: 'Buenas Prácticas',
     evaluation: 'Evaluación',
     visualExample: 'Ejemplo práctico',
-    tabs: { nonTech: 'Documentación no técnica', tech: 'Documentación Técnica', voiceOver: 'Lector de pantalla' },
+    tabs: { nonTech: 'Documentación Funcional', tech: 'Documentación Técnica', voiceOver: 'Lectores de Pantalla' },
     audioOutput: 'Salida de Audio',
     testTitle: 'Hora del examen',
     testSubtitle: 'Aquí tienes pruebas gratuitas sobre accesibilidad en formato de 20 preguntas rápidas y dinámicas',
@@ -278,17 +279,30 @@ export const TRANSLATIONS = {
     comingSoon: "Próximamente más funcionalidades",
     supportBtn: 'Apoya el proyecto',
     attemptsRemaining: 'intentos restantes',
-    limitReached: 'Límite alcanzado'
+    limitReached: 'Límite alcanzado',
+    certTitle: 'Certificación AAAQuest',
+    certSubtitle: 'Has demostrado un dominio excepcional de las pautas de accesibilidad WCAG 2.1.',
+    downloadCert: 'Descargar diploma',
+    certName: 'Experto en Accesibilidad',
+    certHeader: 'CERTIFICADO DE FINALIZACIÓN',
+    certVerify: 'Esto certifica que',
+    enterName: 'Por favor, introduzca su nombre para el diploma:',
+    certText: 'Por haber completado con éxito la demo de niveles de entrenamiento intensivo en accesibilidad digital y diseño inclusivo en productos digitales.',
+    lockedTitle: 'Has gastado todos los intentos de analizar capturas que tenías disponible',
+    lockedDesc: 'Puedes solicitar más créditos escribiendo al creador de la herramienta Victor Saiz vía Linkedin o correo electrónico:',
+    lockedThanks: 'Gracias por usar el detector de accesibildiad AAAQuest!'
   },
   en: {
     appTitle: 'AAAQuest',
     homeSubtitle: 'Digital accessibility learning platform with game modes, quick tests, and automatic AI auditing.',
     studyMode: 'Study Mode',
-    studyModeDesc: 'Explore WCAG criteria through games!',
+    studyModeDesc: 'Learn about digital accessibility easily and practically across different levels.',
     testMode: 'Exam Time',
     testModeDesc: 'Take quick accessibility tests in a 20-question format',
     checkerMode: 'Accessibility Detector',
     checkerModeDesc: 'Generate accessibility documentation from a screenshot in seconds',
+    certMode: 'Certificate',
+    certModeDesc: 'View your final progress and get your expert diploma.',
     footer: 'Made with Gemini 3 by',
     changingLanguage: 'Changing language...',
     navStudy: 'Study',
@@ -309,7 +323,7 @@ export const TRANSLATIONS = {
     deepDive: 'Best Practices',
     evaluation: 'Evaluation',
     visualExample: 'Accessibility Example',
-    tabs: { nonTech: 'Explanation', tech: 'Technical', voiceOver: 'Screen Reader' },
+    tabs: { nonTech: 'Functional Spec', tech: 'Technical Code', voiceOver: 'Screen Readers' },
     audioOutput: 'Audio Output',
     testTitle: 'Exam Time',
     testSubtitle: 'Here are free accessibility tests in a quick and dynamic 20-question format',
@@ -417,7 +431,18 @@ export const TRANSLATIONS = {
     comingSoon: "More features coming soon",
     supportBtn: 'Support the project',
     attemptsRemaining: 'attempts remaining',
-    limitReached: 'Limit reached'
+    limitReached: 'Limit reached',
+    certTitle: 'AAAQuest Certification',
+    certSubtitle: 'You have demonstrated exceptional mastery of WCAG 2.1 accessibility guidelines.',
+    downloadCert: 'Download Diploma',
+    certName: 'Accessibility Expert',
+    certHeader: 'CERTIFICATE OF COMPLETION',
+    certVerify: 'This certifies that',
+    enterName: 'Please enter your name for the certificate:',
+    certText: 'For successfully completing the demo levels of intensive training in digital accessibility and inclusive design in digital products.',
+    lockedTitle: 'You have used all available screenshot analysis attempts',
+    lockedDesc: 'You can request more credits by writing to the tool creator Victor Saiz via LinkedIn or email:',
+    lockedThanks: 'Thanks for using AAAQuest Accessibility Detector!'
   },
   zh: {
     appTitle: 'AAAQuest',
@@ -428,6 +453,8 @@ export const TRANSLATIONS = {
     testModeDesc: '以20个问题的形式进行快速无障碍测试',
     checkerMode: '无障碍检测器',
     checkerModeDesc: '几秒钟内从屏幕截图生成无障碍文档',
+    certMode: '证书',
+    certModeDesc: '查看您的最终进度并获得专家文凭。',
     footer: '由 Gemini 3 制作，作者',
     changingLanguage: '正在更改语言...',
     navStudy: '学习',
@@ -448,7 +475,7 @@ export const TRANSLATIONS = {
     deepDive: '最佳实践',
     evaluation: '评估',
     visualExample: '无障碍示例',
-    tabs: { nonTech: '解释', tech: '代码 / ARIA', voiceOver: '屏幕阅读器' },
+    tabs: { nonTech: '功能规范', tech: '技术代码', voiceOver: '屏幕阅读器' },
     audioOutput: '音频输出',
     testTitle: '考试时间',
     testSubtitle: '这里有免费的无障碍测试，采用快速动态的20问格式',
@@ -556,7 +583,18 @@ export const TRANSLATIONS = {
     comingSoon: "更多功能即将推出",
     supportBtn: '支持项目',
     attemptsRemaining: '剩余尝试次数',
-    limitReached: '达到限制'
+    limitReached: '达到限制',
+    certTitle: 'AAAQuest 认证',
+    certSubtitle: '您已展示出对 WCAG 2.1 无障碍准则的卓越掌握。',
+    downloadCert: '下载文凭',
+    certName: '无障碍专家',
+    certHeader: '结业证书',
+    certVerify: '特此证明',
+    enterName: '请输入证书上的姓名：',
+    certText: '成功完成数字产品数字无障碍和包容性设计的强化培训演示级别。',
+    lockedTitle: 'You have used all available screenshot analysis attempts',
+    lockedDesc: 'You can request more credits by writing to the tool creator Victor Saiz Alfageme via LinkedIn or via email victorsaizalfageme@gmail.com',
+    lockedThanks: 'Thanks for using AAAQuest Accessibility Detector!'
   },
   ru: {
     appTitle: 'AAAQuest',
@@ -567,6 +605,8 @@ export const TRANSLATIONS = {
     testModeDesc: 'Быстрые тесты по доступности в формате 20 вопросов',
     checkerMode: 'Детектор доступности',
     checkerModeDesc: 'Создайте документацию по доступности по скриншоту за секунды',
+    certMode: 'Сертификат',
+    certModeDesc: 'Просмотрите свой прогресс и получите диплом эксперта.',
     footer: 'Сделано с Gemini 3 от',
     changingLanguage: 'Смена языка...',
     navStudy: 'Учеба',
@@ -587,7 +627,7 @@ export const TRANSLATIONS = {
     deepDive: 'Лучшие практики',
     evaluation: 'Оценка',
     visualExample: 'Пример доступности',
-    tabs: { nonTech: 'Объяснение', tech: 'Код / ARIA', voiceOver: 'Скринридер' },
+    tabs: { nonTech: 'Функциональная Спек.', tech: 'Технический Код', voiceOver: 'Скринридеры' },
     audioOutput: 'Аудиовыход',
     testTitle: 'Время теста',
     testSubtitle: 'Бесплатные тесты по доступности в быстром и динамичном формате',
@@ -695,7 +735,18 @@ export const TRANSLATIONS = {
     comingSoon: "Скоро появятся новые функции",
     supportBtn: 'Поддержать',
     attemptsRemaining: 'попыток осталось',
-    limitReached: 'Лимит исчерпан'
+    limitReached: 'Лимит исчерпан',
+    certTitle: 'Сертификация AAAQuest',
+    certSubtitle: 'Вы продемонстрировали исключительное владение рекомендациями по доступности WCAG 2.1.',
+    downloadCert: 'Скачать диплом',
+    certName: 'Эксперт по доступности',
+    certHeader: 'СЕРТИФИКАТ О ЗАВЕРШЕНИИ',
+    certVerify: 'Настоящим удостоверяется, что',
+    enterName: 'Пожалуйста, введите ваше имя для сертификата:',
+    certText: 'За успешное прохождение демо-уровней интенсивного обучения цифровой доступности и инклюзивному дизайну в цифровых продуктах.',
+    lockedTitle: 'You have used all available screenshot analysis attempts',
+    lockedDesc: 'You can request more credits by writing to the tool creator Victor Saiz Alfageme via LinkedIn or via email victorsaizalfageme@gmail.com',
+    lockedThanks: 'Thanks for using AAAQuest Accessibility Detector!'
   },
   hi: {
     appTitle: 'AAAQuest',
@@ -706,6 +757,8 @@ export const TRANSLATIONS = {
     testModeDesc: '20-प्रश्नों के प्रारूप में त्वरित एक्सेसिबिलिटी परीक्षण लें',
     checkerMode: 'एक्सेसिबिलिटी डिटेक्टर',
     checkerModeDesc: 'सेकंड में स्क्रीनशॉट से एक्सेसिबिलिटी दस्तावेज़ बनाएं',
+    certMode: 'प्रमाणपत्र',
+    certModeDesc: 'अपनी अंतिम प्रगति देखें और अपना विशेषज्ञ डिप्लोमा प्राप्त करें।',
     footer: 'Gemini 3 द्वारा निर्मित',
     changingLanguage: 'भाषा बदली जा रही है...',
     navStudy: 'अध्ययन',
@@ -726,7 +779,7 @@ export const TRANSLATIONS = {
     deepDive: 'सर्वोत्तम प्रथाएं',
     evaluation: 'मूल्यांकन',
     visualExample: 'पहुंच का उदाहरण',
-    tabs: { nonTech: 'स्पष्टीकरण', tech: 'कोड / ARIA', voiceOver: 'स्क्रीन रीडर' },
+    tabs: { nonTech: 'कार्यात्मक विवरण', tech: 'तकनीकी कोड', voiceOver: 'स्क्रीन रीडर' },
     audioOutput: 'ऑडियो आउटपुट',
     testTitle: 'परीक्षा का समय',
     testSubtitle: 'यहाँ त्वरित और गतिशील 20-प्रश्न प्रारूप में मुफ्त एक्सेसिबिलिटी परीक्षण हैं',
@@ -834,6 +887,17 @@ export const TRANSLATIONS = {
     comingSoon: "जल्द ही और अधिक सुविधाएँ आ रही हैं",
     supportBtn: 'समर्थन',
     attemptsRemaining: 'शेष प्रयास',
-    limitReached: 'सीमा समाप्त'
+    limitReached: 'सीमा समाप्त',
+    certTitle: 'AAAQuest प्रमाणन',
+    certSubtitle: 'आपने WCAG 2.1 एक्सेसिबिलिटी दिशानिर्देशों की असाधारण महारत का प्रदर्शन किया है।',
+    downloadCert: 'डिप्लोमा डाउनलोड करें',
+    certName: 'एक्सेसिबिलिटी विशेषज्ञ',
+    certHeader: 'पूर्णता का प्रमाण पत्र',
+    certVerify: 'यह प्रमाणित करता है कि',
+    enterName: 'कृपया प्रमाण पत्र के लिए अपना नाम दर्ज करें:',
+    certText: 'डिजिटल उत्पादों में डिजिटल एक्सेसिबिलिटी और समावेशी डिज़ाइन में गहन प्रशिक्षण के डेमो स्तरों को सफलतापूर्वक पूरा करने के लिए।',
+    lockedTitle: 'You have used all available screenshot analysis attempts',
+    lockedDesc: 'You can request more credits by writing to the tool creator Victor Saiz Alfageme via LinkedIn or via email victorsaizalfageme@gmail.com',
+    lockedThanks: 'Thanks for using AAAQuest Accessibility Detector!'
   }
 };
