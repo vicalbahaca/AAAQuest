@@ -594,7 +594,7 @@ export const CheckerMode: React.FC<CheckerModeProps> = ({ language, theme }) => 
   if (viewState === 'UPLOAD') {
     return (
       <div className="max-w-6xl mx-auto p-4 md:p-8 animate-fade-in">
-        <div className="text-left md:text-center mb-10">
+        <div className="text-left md:text-center mb-8">
           <h2 className={`text-4xl font-bold mb-2 flex justify-start md:justify-center items-center gap-3 ${textMain}`}>
             <ScanEye className={`w-10 h-10 ${isDark ? 'text-green-500' : 'text-emerald-600'}`} aria-hidden="true" /> 
             <span className={`text-transparent bg-clip-text ${isDark ? 'bg-gradient-to-r from-green-400 to-emerald-600' : 'bg-gradient-to-r from-emerald-600 to-green-800'}`}>{t.checkerTitle}</span>
@@ -604,11 +604,11 @@ export const CheckerMode: React.FC<CheckerModeProps> = ({ language, theme }) => 
           </p>
         </div>
 
-        <div className={`${glassPanelClass} rounded-xl p-8`}>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className={`${glassPanelClass} rounded-xl p-6`}>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             
             {/* 1. IMAGE PREVIEW (Mobile: Order 3, Desktop: Left Column) */}
-            <div className={`order-3 lg:order-1 ${isDark ? 'bg-slate-900/50 border-slate-800' : 'bg-slate-50 border-slate-200 shadow-inner'} rounded-xl h-64 lg:h-auto min-h-[320px] flex items-center justify-center border overflow-hidden relative group`}>
+            <div className={`order-3 lg:order-1 ${isDark ? 'bg-slate-900/50 border-slate-800' : 'bg-slate-50 border-slate-200 shadow-inner'} rounded-xl h-64 lg:h-full min-h-[200px] flex items-center justify-center border overflow-hidden relative group`}>
               {image ? (
                 <>
                   <img src={`data:image/png;base64,${image}`} alt="Preview" className="max-h-full max-w-full object-contain p-2" />
@@ -800,11 +800,11 @@ export const CheckerMode: React.FC<CheckerModeProps> = ({ language, theme }) => 
               <button onClick={handleReset} className="text-red-500 hover:text-red-600 font-bold underline rounded px-2">{t.tryAgain}</button>
            </div>
         ) : (
-          <div className={`grid gap-8 items-start ${isDesktopScreenshot ? 'grid-cols-1' : 'lg:grid-cols-12'}`}>
+          <div className={`grid gap-8 ${isDesktopScreenshot ? 'grid-cols-1' : 'lg:grid-cols-12'}`}>
              
              {/* LEFT/TOP: Image with Interactive Overlay */}
              <div className={`${isDesktopScreenshot ? 'w-full' : 'lg:col-span-4'} space-y-6`}>
-                <div className={`${glassPanelClass} p-0 sticky top-24 overflow-hidden`}>
+                <div className={`${glassPanelClass} p-0 sticky top-32 overflow-hidden`}>
 
                    {/* Hidden Screen Reader List for Navigation */}
                    {result.complexSections && result.complexSections.length > 0 && (
