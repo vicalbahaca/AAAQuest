@@ -101,6 +101,7 @@ export const InfoMode: React.FC<InfoModeProps> = ({ setMode, language, theme }) 
                       <span className={`px-4 py-2 rounded-full text-sm font-bold border ${isDark ? 'bg-blue-500/10 border-blue-500/20 text-blue-400' : 'bg-blue-100 border-blue-200 text-blue-800'}`}>
                         {t.studyMode}
                       </span>
+                      
                     </div>
                     <h2 className={`text-4xl md:text-5xl font-bold leading-tight mb-12 ${textMain}`}>
                         {t.learnSectionTitle}
@@ -124,7 +125,7 @@ export const InfoMode: React.FC<InfoModeProps> = ({ setMode, language, theme }) 
                         onClick={() => setMode(AppMode.STUDY)}
                         className={`mt-8 px-10 py-5 rounded-2xl font-bold text-lg transition-all hover:scale-105 active:scale-95 flex items-center gap-3 ${isDark ? 'bg-white text-black hover:bg-slate-200' : 'bg-blue-600 text-white hover:bg-blue-700 shadow-xl shadow-blue-500/30'}`}
                     >
-                        {t.ctaStudy} <ChevronRight className="w-5 h-5" />
+                        {t.ctaChecker} <ArrowRight className="w-5 h-5" />
                     </button>
                 </Reveal>
             </div>
