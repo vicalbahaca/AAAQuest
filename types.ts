@@ -157,7 +157,7 @@ export const TRANSLATIONS = {
     navTest: 'Test',
     navChecker: 'Checker',
     studyTitle: 'Modo estudio',
-    studySubtitle: 'Aprende accesibilidad mediante juegos y teoria dinamica generada con IA ajustado a tu conocimiento',
+    studySubtitle: 'Aprende accesibilidad mediante juegos y teoría dinámica generada con IA ajustado a tu conocimiento',
     level: 'Nivel',
     start: 'Comenzar',
     back: 'Atrás',
@@ -275,7 +275,7 @@ export const TRANSLATIONS = {
     aboutTitle: '¿Quién está detrás de esto?',
     aboutName: 'Victor Saiz Alfageme',
     aboutRole: 'Product Designer',
-    aboutDesc: 'Soy un ex-developer reconvertido a Product Designer. Por necesidad del mercado, me metí de lleno en la accesibilidad y he creado esta plataforma para ver hasta dónde puede llegar Gemini 3 para tener un producto de este estilo cara a mi pequeña comunidad.',
+    aboutDesc: 'Soy un ex-developer reconvertido a Product Designer. Por necesidad del mercado, me metí de lleno en la accesibilidad y he creado esta plataforma para ver hasta dónde puede llegar Gemini 3 en la cración de un producto de este estilo cara a mi pequeña comunidad.',
     comingSoon: "Próximamente más funcionalidades",
     supportBtn: 'Apoya el proyecto',
     attemptsRemaining: 'intentos restantes',
@@ -290,7 +290,7 @@ export const TRANSLATIONS = {
     certText: 'Por haber completado con éxito la demo de niveles de entrenamiento intensivo en accesibilidad digital y diseño inclusivo en productos digitales.',
     lockedTitle: 'Has gastado todos los intentos de analizar capturas que tenías disponible',
     lockedDesc: 'Puedes solicitar más créditos escribiendo al creador de la herramienta Victor Saiz vía Linkedin o correo electrónico:',
-    lockedThanks: 'Gracias por usar el detector de accesibildiad AAAQuest!'
+    lockedThanks: 'Gracias por usar el detector de accesibilidad AAAQuest!'
   },
   en: {
     appTitle: 'AAAQuest',
