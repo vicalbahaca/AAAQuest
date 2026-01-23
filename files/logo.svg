@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24">
   <!-- Círculo de fondo verde -->
-  <circle cx="12" cy="12" r="12" fill="#13A95C"/>
+  <circle cx="12" cy="12" r="11" fill="#13A95C"/>
   
-  <!-- Icono ScanEye en blanco -->
-  <g fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Icono ScanEye original pero escalado más pequeño -->
+  <g transform="translate(12, 12) scale(0.7) translate(-12, -12)" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
     <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
     <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
