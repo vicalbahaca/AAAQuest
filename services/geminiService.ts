@@ -386,39 +386,87 @@ JSON RULES: Keep text concise. Max 80 chars per string. No line breaks.
 
 OUTPUT:
 
-1. VIEW TITLE (viewTitle array)
-Brief sentences about view type, navigation, suggested title.
+1. SCREEN CONTEXT (screenContext)
+- screenType: Describe the PURPOSE (e.g., "Generacion de extracto", "Perfil de usuario", "Formulario de pago")
+- description: Brief context
 
-2. FOCUS ORDER (focusOrder array)
+2. VIEW TITLE (viewTitle array)
+CRITICAL RULES:
+- For normal screens: Use the H1 text with minimal context. Example: "Generar Extracto EUR"
+- For modals: State "Modal sobre [main screen title]" + modal's title
+- For elements without native title: State "Este elemento no requiere title" + suggest one
+- Output ONE clear sentence only
+
+3. STRUCTURE (structure array)
+Always include native mobile elements:
+- "Menu nativo superior" (if present)
+- "Main: [content description]"
+- "Footer fijo inferior" (if fixed bottom button/nav present)
+
+4. HEADINGS (heading array)
+List all h1-h6 detected with format "hN: Text"
+
+5. FOCUS ORDER (focusOrder array)
 List EVERY interactive element separately.
 Format: "N. [Type] - [Label]"
 Examples:
-"1. Image - Profile Avatar"
-"2. Button - Edit Profile"
-"3. Link - 123 Posts"
+"1. Button - Volver"
+"2. Heading - EUR Extracto"
+"3. Tab - PDF"
 
-DO NOT group elements. Each button/link/input = separate item.
-
-3. STRUCTURE (structure array) & HEADINGS (heading array)
-Semantic landmarks and h1-h6 hierarchy.
-
-4. SECTIONS (complexSections array)
+6. COMPLEX SECTIONS (complexSections array)
 ONE element = ONE section.
 
 Each section needs:
-- regionTitle: Element name
-- box_2d: [ymin, xmin, ymax, xmax] (scale 0-1000, min 50 units)
+- regionTitle: Descriptive element name
+- box_2d: [ymin, xmin, ymax, xmax] (scale 0-1000, min 50 units) - MANDATORY
 - categories:
-  * generalSpecific: ["role: X", "label: Y"]
-  * behavior: ["Keyboard: Tab/Enter", "Action: Opens X"]
-  * alt: ["Decorative" or "alt: description"]
-  * grouped: [] (only for form groups)
+  * generalSpecific: ["role: X", "Alt/label: Y"] OR ["role: X", "label: Y"] if no alt
+  * behavior: 
+    - Keyboard: NEVER use "Deslizar". Use "Enter/Space", "Tab", "Flechas", "Esc"
+    - Action: Be specific (e.g., "Regresa a pantalla anterior", "Ajusta posicion horizontalmente")
+  * alt: 
+    - For icons/images WITH decorative purpose: ["alt: \"\""]
+    - For icons/images WITH informative purpose: ["alt: description"]
+    - For elements WITHOUT icons/images: [] (empty array)
+  * grouped: [] (ONLY for actual form groups like radio buttons, otherwise EMPTY)
 
-CRITICAL: box_2d is MANDATORY. Format [ymin, xmin, ymax, xmax].
-Example: [20, 100, 80, 200] means top:2%, left:10%, bottom:8%, right:20%
+ALT RULES (CRITICAL):
+- Icon buttons: Combine in generalSpecific as "Alt/label: X"
+- Decorative icons: alt array contains ["alt: \"\""]
+- No icon/image: alt array is EMPTY []
+- NEVER put "Decorative" as text, use alt: ""
 
-CTAs: Detect all buttons (text/icon/hybrid).
-Images: Profile avatars/logos = decorative. Products/charts = informative.
+KEYBOARD RULES:
+- Pickers/Selectors: "Flechas" (not "Deslizar")
+- Buttons: "Enter/Space"
+- Tabs: "Flechas"
+
+GROUPED RULES:
+- ONLY use for semantic groups (radio buttons in same fieldset, related checkboxes)
+- DO NOT use for visual grouping
+- Most elements: [] (empty)
+
+Example correct output:
+{
+  "regionTitle": "Boton Volver",
+  "categories": {
+    "generalSpecific": ["role: button", "Alt/label: Volver"],
+    "behavior": ["Keyboard: Enter/Space", "Action: Regresa a pantalla anterior"],
+    "alt": [],
+    "grouped": []
+  }
+}
+
+{
+  "regionTitle": "Selector de Periodo",
+  "categories": {
+    "generalSpecific": ["role: button", "label: Periodo Mes"],
+    "behavior": ["Keyboard: Enter", "Action: Abre menu de seleccion"],
+    "alt": ["alt: \"\""],
+    "grouped": []
+  }
+}
 
 Return valid JSON.`;
 
