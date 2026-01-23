@@ -869,7 +869,7 @@ export const CheckerMode: React.FC<CheckerModeProps> = ({ language, theme }) => 
                       </div>
                       
                       <div className="absolute bottom-2 right-2 bg-black/60 backdrop-blur-md text-[10px] text-white/80 px-2 py-1 rounded-md pointer-events-none flex items-center gap-1" aria-hidden="true">
-                         <MousePointerClick className="w-3 h-3" /> Click regions to filter
+                         <MousePointerClick className="w-3 h-3" /> Haz click en los elementos para filtrar
                       </div>
                    </div>
 
