@@ -605,10 +605,10 @@ export const CheckerMode: React.FC<CheckerModeProps> = ({ language, theme }) => 
         </div>
 
         <div className={`${glassPanelClass} rounded-xl p-8`}>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             
             {/* 1. IMAGE PREVIEW (Mobile: Order 3, Desktop: Left Column) */}
-            <div className={`order-3 lg:order-1 lg:row-span-3 ${isDark ? 'bg-slate-900/50 border-slate-800' : 'bg-slate-50 border-slate-200 shadow-inner'} rounded-xl h-64 lg:h-full min-h-[320px] flex items-center justify-center border overflow-hidden relative group`}>
+            <div className={`order-3 lg:order-1 ${isDark ? 'bg-slate-900/50 border-slate-800' : 'bg-slate-50 border-slate-200 shadow-inner'} rounded-xl h-64 lg:h-auto min-h-[320px] flex items-center justify-center border overflow-hidden relative group`}>
               {image ? (
                 <>
                   <img src={`data:image/png;base64,${image}`} alt="Preview" className="max-h-full max-w-full object-contain p-2" />
@@ -626,115 +626,118 @@ export const CheckerMode: React.FC<CheckerModeProps> = ({ language, theme }) => 
               )}
             </div>
 
-            {/* 2. TITLE (Mobile: Order 1, Desktop: Top Right) */}
-            <div className="order-1 lg:order-2 lg:col-start-2">
-               <div>
-                  <h3 className={`text-2xl font-bold mb-2 ${textMain}`}>{t.uploadTitle}</h3>
-                  <p className={`${textSub} leading-relaxed text-sm`}>{t.uploadDesc}</p>
-               </div>
-            </div>
+            {/* Right Column Wrapper */}
+            <div className="contents lg:flex lg:flex-col lg:gap-6 lg:order-2">
+                {/* 2. TITLE (Mobile: Order 1) */}
+                <div className="order-1">
+                   <div>
+                      <h3 className={`text-2xl font-bold mb-2 ${textMain}`}>{t.uploadTitle}</h3>
+                      <p className={`${textSub} leading-relaxed text-sm`}>{t.uploadDesc}</p>
+                   </div>
+                </div>
 
-            {/* 3. INPUTS (Mobile: Order 2, Desktop: Middle Right) */}
-            <div className="order-2 lg:order-2 lg:col-start-2 space-y-6">
-               {isLocked ? (
-                 <div className={`border rounded-xl p-8 text-center flex flex-col items-center justify-center gap-4 ${isDark ? 'border-red-500/30 bg-red-900/10' : 'border-red-200 bg-red-50'}`}>
-                    <h3 className={`text-xl font-bold ${textMain}`}>{t.lockedTitle}</h3>
-                    <div className={`text-sm leading-relaxed max-w-md ${textSub}`}>
-                       <p className="mb-6">{t.lockedDesc}</p>
-                       <ul className="space-y-3 font-medium flex flex-col items-center">
-                          <li className="w-full">
-                              <a href="https://www.linkedin.com/in/victorsaizalfageme/" target="_blank" rel="noopener noreferrer" className={`hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border transition-all w-full max-w-xs mx-auto ${isDark ? 'bg-slate-800 border-slate-700 hover:border-white text-white' : 'bg-white border-slate-200 hover:border-black hover:text-black text-slate-700 shadow-sm'}`}>
-                                 <Linkedin className="w-4 h-4 text-[#0A66C2]" />
-                                 <span>Linkedin Victor Saiz</span>
-                              </a>
-                          </li>
-                          <li className="w-full">
-                              <a href="mailto:victorsaizalfageme@gmail.com" className={`hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border transition-all w-full max-w-xs mx-auto ${isDark ? 'bg-slate-800 border-slate-700 hover:border-white text-white' : 'bg-white border-slate-200 hover:border-black hover:text-black text-slate-700 shadow-sm'}`}>
-                                 <Mail className="w-4 h-4 text-red-500" />
-                                 <span>victorsaizalfageme@gmail.com</span>
-                              </a>
-                          </li>
-                       </ul>
-                    </div>
-                    <p className={`text-xs font-bold tracking-wider mt-4 ${isDark ? 'text-white' : 'text-black'}`}>
-                       {t.lockedThanks}
-                    </p>
-                 </div>
-               ) : (
-                 <>
-                   <div 
-                      className={`border-2 rounded-xl p-8 text-center transition-all group ${
-                        image ? 'border-green-500/50 bg-green-500/5 border-dashed' : isDark ? 'border-slate-700 hover:border-white hover:bg-slate-800/50 border-dashed' : 'border-slate-300 hover:border-black hover:bg-emerald-50/50 border-dashed'} cursor-pointer active:scale-[0.99]`}
-                      role="button"
-                      tabIndex={0}
-                      onClick={() => fileInputRef.current?.click()}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault();
-                            fileInputRef.current?.click();
-                        }
-                      }}
-                      aria-label={image ? `${t.imageLoaded}. ${t.clickToChange}` : t.uploadFile}
-                    >
-                      <input 
-                        type="file" 
-                        ref={fileInputRef} 
-                        className="hidden" 
-                        accept="image/*"
-                        onChange={handleFileUpload}
-                      />
-                      
-                      {image ? (
-                        <div className="text-green-500 flex flex-col items-center">
-                          <CheckCircle className="w-10 h-10 mb-2" aria-hidden="true" />
-                          <span className="font-bold">{t.imageLoaded}</span>
-                          <span className="text-xs opacity-60">{t.clickToChange}</span>
+                {/* 3. INPUTS (Mobile: Order 2) */}
+                <div className="order-2 space-y-6">
+                   {isLocked ? (
+                     <div className={`border rounded-xl p-8 text-center flex flex-col items-center justify-center gap-4 ${isDark ? 'border-red-500/30 bg-red-900/10' : 'border-red-200 bg-red-50'}`}>
+                        <h3 className={`text-xl font-bold ${textMain}`}>{t.lockedTitle}</h3>
+                        <div className={`text-sm leading-relaxed max-w-md ${textSub}`}>
+                           <p className="mb-6">{t.lockedDesc}</p>
+                           <ul className="space-y-3 font-medium flex flex-col items-center">
+                              <li className="w-full">
+                                  <a href="https://www.linkedin.com/in/victorsaizalfageme/" target="_blank" rel="noopener noreferrer" className={`hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border transition-all w-full max-w-xs mx-auto ${isDark ? 'bg-slate-800 border-slate-700 hover:border-white text-white' : 'bg-white border-slate-200 hover:border-black hover:text-black text-slate-700 shadow-sm'}`}>
+                                     <Linkedin className="w-4 h-4 text-[#0A66C2]" />
+                                     <span>Linkedin Victor Saiz</span>
+                                  </a>
+                              </li>
+                              <li className="w-full">
+                                  <a href="mailto:victorsaizalfageme@gmail.com" className={`hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border transition-all w-full max-w-xs mx-auto ${isDark ? 'bg-slate-800 border-slate-700 hover:border-white text-white' : 'bg-white border-slate-200 hover:border-black hover:text-black text-slate-700 shadow-sm'}`}>
+                                     <Mail className="w-4 h-4 text-red-500" />
+                                     <span>victorsaizalfageme@gmail.com</span>
+                                  </a>
+                              </li>
+                           </ul>
                         </div>
-                      ) : (
-                        <div className={`${textSub} flex flex-col items-center ${isDark ? 'group-hover:text-white' : 'group-hover:text-emerald-700'} transition-colors`}>
-                          <Upload className="w-10 h-10 mb-3 opacity-50 group-hover:scale-105 transition-transform" aria-hidden="true" />
-                          <span className="font-medium">{t.uploadFile}</span>
-                          <span className="text-xs mt-1 opacity-60">{t.formats}</span>
-                        </div>
-                      )}
-                   </div>
+                        <p className={`text-xs font-bold tracking-wider mt-4 ${isDark ? 'text-white' : 'text-black'}`}>
+                           {t.lockedThanks}
+                        </p>
+                     </div>
+                   ) : (
+                     <>
+                       <div 
+                          className={`border-2 rounded-xl p-8 text-center transition-all group ${
+                            image ? 'border-green-500/50 bg-green-500/5 border-dashed' : isDark ? 'border-slate-700 hover:border-white hover:bg-slate-800/50 border-dashed' : 'border-slate-300 hover:border-black hover:bg-emerald-50/50 border-dashed'} cursor-pointer active:scale-[0.99]`}
+                          role="button"
+                          tabIndex={0}
+                          onClick={() => fileInputRef.current?.click()}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                fileInputRef.current?.click();
+                            }
+                          }}
+                          aria-label={image ? `${t.imageLoaded}. ${t.clickToChange}` : t.uploadFile}
+                        >
+                          <input 
+                            type="file" 
+                            ref={fileInputRef} 
+                            className="hidden" 
+                            accept="image/*"
+                            onChange={handleFileUpload}
+                          />
+                          
+                          {image ? (
+                            <div className="text-green-500 flex flex-col items-center">
+                              <CheckCircle className="w-10 h-10 mb-2" aria-hidden="true" />
+                              <span className="font-bold">{t.imageLoaded}</span>
+                              <span className="text-xs opacity-60">{t.clickToChange}</span>
+                            </div>
+                          ) : (
+                            <div className={`${textSub} flex flex-col items-center ${isDark ? 'group-hover:text-white' : 'group-hover:text-emerald-700'} transition-colors`}>
+                              <Upload className="w-10 h-10 mb-3 opacity-50 group-hover:scale-105 transition-transform" aria-hidden="true" />
+                              <span className="font-medium">{t.uploadFile}</span>
+                              <span className="text-xs mt-1 opacity-60">{t.formats}</span>
+                            </div>
+                          )}
+                       </div>
 
-                   <div className="space-y-2">
-                     <label htmlFor="userContext" className={`block text-sm font-bold ${textSub}`}>
-                       {t.contextOptional}
-                     </label>
-                     <textarea
-                        id="userContext"
-                        value={userContext}
-                        onChange={(e) => setUserContext(e.target.value)}
-                        placeholder={t.contextPlaceholder}
-                        className={`w-full rounded-xl p-3 text-sm min-h-[80px] resize-none border transition-all ${inputBg}`}
-                     />
-                   </div>
-                 </>
-               )}
-            </div>
+                       <div className="space-y-2">
+                         <label htmlFor="userContext" className={`block text-sm font-bold ${textSub}`}>
+                           {t.contextOptional}
+                         </label>
+                         <textarea
+                            id="userContext"
+                            value={userContext}
+                            onChange={(e) => setUserContext(e.target.value)}
+                            placeholder={t.contextPlaceholder}
+                            className={`w-full rounded-xl p-3 text-sm min-h-[80px] resize-none border transition-all ${inputBg}`}
+                         />
+                       </div>
+                     </>
+                   )}
+                </div>
 
-            {/* 4. CTA (Mobile: Order 4, Desktop: Bottom Right) */}
-            <div className="order-4 lg:order-2 lg:col-start-2 space-y-2">
-                   {/* Attempts Indicator */}
-                   <div className="text-center mb-1">
-                      <span className={`text-xs font-bold uppercase tracking-wider ${textSub}`}>
-                         {attempts} {t.attemptsRemaining}
-                      </span>
-                   </div>
+                {/* 4. CTA (Mobile: Order 4) */}
+                <div className="order-4 space-y-2 mt-4">
+                       {/* Attempts Indicator */}
+                       <div className="text-center mb-1">
+                          <span className={`text-xs font-bold uppercase tracking-wider ${textSub}`}>
+                             {attempts} {t.attemptsRemaining}
+                          </span>
+                       </div>
 
-                   <button
-                      onClick={handleAnalyze}
-                      disabled={!image || isLocked}
-                      className={`w-full py-4 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl font-bold text-lg transition-all flex items-center justify-center gap-3 border border-transparent active:scale-95 ${
-                          isDark 
-                            ? 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 shadow-[0_0_20px_rgba(22,163,74,0.3)] hover:border-white/20' 
-                            : 'bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 shadow-lg shadow-emerald-500/30 hover:border-white/20'
-                      }`}
-                    >
-                        <ScanEye className="w-6 h-6" aria-hidden="true" /> {t.analyzeBtn}
-                    </button>
+                       <button
+                          onClick={handleAnalyze}
+                          disabled={!image || isLocked}
+                          className={`w-full py-4 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl font-bold text-lg transition-all flex items-center justify-center gap-3 border border-transparent active:scale-95 ${
+                              isDark 
+                                ? 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 shadow-[0_0_20px_rgba(22,163,74,0.3)] hover:border-white/20' 
+                                : 'bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 shadow-lg shadow-emerald-500/30 hover:border-white/20'
+                          }`}
+                        >
+                            <ScanEye className="w-6 h-6" aria-hidden="true" /> {t.analyzeBtn}
+                        </button>
+                </div>
             </div>
           </div>
         </div>
@@ -797,7 +800,7 @@ export const CheckerMode: React.FC<CheckerModeProps> = ({ language, theme }) => 
               <button onClick={handleReset} className="text-red-500 hover:text-red-600 font-bold underline rounded px-2">{t.tryAgain}</button>
            </div>
         ) : (
-          <div className={`grid gap-8 ${isDesktopScreenshot ? 'grid-cols-1' : 'lg:grid-cols-12'}`}>
+          <div className={`grid gap-8 items-start ${isDesktopScreenshot ? 'grid-cols-1' : 'lg:grid-cols-12'}`}>
              
              {/* LEFT/TOP: Image with Interactive Overlay */}
              <div className={`${isDesktopScreenshot ? 'w-full' : 'lg:col-span-4'} space-y-6`}>
@@ -822,14 +825,15 @@ export const CheckerMode: React.FC<CheckerModeProps> = ({ language, theme }) => 
                        </div>
                    )}
                    
-                   <div className="relative w-full group">
+                   <div className="relative w-full group select-none">
                       <img 
                         src={`data:image/png;base64,${image}`} 
                         alt="Analyzed UI" 
-                        className="w-full h-auto block"
+                        className="w-full h-auto block pointer-events-none"
                       />
                       
-                      <div className="absolute inset-0 z-10" aria-hidden="true">
+                      {/* Overlay Container: pointer-events-none to let clicks pass to image/bg if not on button, but buttons have pointer-events-auto */}
+                      <div className="absolute inset-0 z-10 pointer-events-none" aria-hidden="true">
                         {result.complexSections?.map((section, idx) => {
                             if (!section.box_2d) return null;
                             const [ymin, xmin, ymax, xmax] = section.box_2d;
@@ -837,15 +841,19 @@ export const CheckerMode: React.FC<CheckerModeProps> = ({ language, theme }) => 
                                 <button
                                     key={idx}
                                     type="button"
-                                    onClick={() => handleZoneClick(idx)}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        handleZoneClick(idx);
+                                    }}
                                     onMouseEnter={() => setHoveredSectionIndex(idx)}
                                     onMouseLeave={() => setHoveredSectionIndex(null)}
                                     onFocus={() => setHoveredSectionIndex(idx)}
                                     onBlur={() => setHoveredSectionIndex(null)}
                                     tabIndex={-1}
-                                    className={`absolute cursor-pointer transition-all duration-200 outline-none
+                                    className={`absolute cursor-pointer transition-all duration-200 outline-none pointer-events-auto
                                         ${selectedSectionIndex === idx
-                                            ? 'border-2 border-blue-400 bg-blue-500/20 shadow-[0_0_15px_rgba(59,130,246,0.3)] z-30' 
+                                            ? 'border-2 border-blue-400 bg-blue-500/30 shadow-[0_0_15px_rgba(59,130,246,0.3)] z-30' 
                                             : hoveredSectionIndex === idx
                                                 ? `border-2 z-20 ${isDark ? 'border-white/50 bg-white/10' : 'border-blue-500/50 bg-blue-500/10'}` 
                                                 : 'border border-transparent hover:border-white/30 z-10'
@@ -855,7 +863,8 @@ export const CheckerMode: React.FC<CheckerModeProps> = ({ language, theme }) => 
                                         top: `${ymin / 10}%`,
                                         left: `${xmin / 10}%`,
                                         width: `${(xmax - xmin) / 10}%`,
-                                        height: `${(ymax - ymin) / 10}%`
+                                        height: `${(ymax - ymin) / 10}%`,
+                                        backgroundColor: selectedSectionIndex === idx ? undefined : (hoveredSectionIndex === idx ? undefined : 'rgba(255, 255, 255, 0.01)') // Tiny alpha to ensure hit test works
                                     }}
                                 >
                                     {(hoveredSectionIndex === idx || selectedSectionIndex === idx) && (
@@ -868,8 +877,8 @@ export const CheckerMode: React.FC<CheckerModeProps> = ({ language, theme }) => 
                         })}
                       </div>
                       
-                      <div className="absolute bottom-2 right-2 bg-black/60 backdrop-blur-md text-[10px] text-white/80 px-2 py-1 rounded-md pointer-events-none flex items-center gap-1" aria-hidden="true">
-                         <MousePointerClick className="w-3 h-3" /> Haz click en los elementos para filtrar
+                      <div className="absolute bottom-2 right-2 bg-black/60 backdrop-blur-md text-[10px] text-white/80 px-2 py-1 rounded-md pointer-events-none flex items-center gap-1 z-20" aria-hidden="true">
+                         <MousePointerClick className="w-3 h-3" /> Click regions to filter
                       </div>
                    </div>
 
@@ -978,8 +987,3 @@ export const CheckerMode: React.FC<CheckerModeProps> = ({ language, theme }) => 
       </div>
     );
   };
-
-}
-
-     export default CheckerMode;
-
