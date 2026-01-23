@@ -1,69 +1,107 @@
 import { GoogleGenAI, Type } from "@google/genai";
-import { Difficulty, TestType, CheckerResult, Language, StudyLesson, AdaptiveContext } from "../types";
+import { Difficulty, TestType, CheckerResult, Language, StudyLesson, AdaptiveContext, TestQuestion } from "../types";
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 const modelName = 'gemini-3-flash-preview';
 
-// Helper to clean Markdown JSON blocks and parse safely
-const cleanAndParseJSON = (text: string) => {
-  try {
-    const cleaned = text.replace(/```json/g, '').replace(/```/g, '').trim();
-    return JSON.parse(cleaned);
-  } catch (e) {
-    console.error("JSON Parse Error:", e);
-    throw new Error("Failed to parse AI response. Please try again.");
-  }
+// ============================================================================
+// CONSTANTES CENTRALIZADAS
+// ============================================================================
+const LANGUAGE_NAMES: Record<Language, string> = {
+  es: 'Español',
+  en: 'English',
+  zh: '中文',
+  ru: 'Русский',
+  hi: 'हिन्दी'
 };
 
-const getLanguageName = (language: Language): string => {
-  const map: Record<Language, string> = {
-    es: 'Español',
-    en: 'English',
-    zh: 'Chinese (Simplified)',
-    ru: 'Russian',
-    hi: 'Hindi'
-  };
-  return map[language] || 'English';
-};
-
-/**
- * Genera una explicación simplificada para un concepto técnico de accesibilidad.
- */
-export const explainConceptSimply = async (phrase: string, topic: string, language: Language): Promise<string> => {
-  const langName = getLanguageName(language);
-  const prompt = `Actúa como un experto en accesibilidad digital y pedagogía. 
-  CONTEXTO: Estoy estudiando conceptos fundamentales de accesibilidad sobre "${topic}".
-  FRASE TÉCNICA: "${phrase}"
+// ============================================================================
+// PLANTILLAS DE PROMPTS REUTILIZABLES
+// ============================================================================
+const PROMPT_TEMPLATES = {
+  roleContext: (language: Language) => 
+    `You are an expert Accessibility Auditor (WCAG 2.1 AA+). Output strictly in ${LANGUAGE_NAMES[language]}.`,
   
-  TAREA: Explica esta frase de forma muy simple, como si se la explicaras a un niño de 10 años (Nivel B2). 
-  Usa un lenguaje cercano, amable y analogías si es necesario. Máximo 2 párrafos cortos.
-  IDIOMA: ${langName}.`;
+  formatRules: `
+CRITICAL FORMAT RULES:
+- NO numbering (1., 2., 3.) in explanatory text
+- NO section prefixes like "CONTEXT:", "CONCLUSION:", "REQUIREMENT:"
+- Output only direct, clear sentences
+- Use Markdown ONLY where explicitly required`,
 
-  const response = await ai.models.generateContent({
-    model: modelName,
-    contents: prompt,
-    config: {
-      temperature: 0.7,
-      topP: 0.9,
+  screenReaderInstructions: `
+SCREEN READER OUTPUT FORMAT:
+Mobile (VoiceOver/TalkBack):
+- Gesture: [action]
+- Output: "[exact speech]"
+
+Desktop (NVDA):
+- Key: [shortcut]
+- Output: "[exact speech]"`,
+
+  codeStructure: `
+CODE REQUIREMENTS:
+- Complete, valid, production-ready code
+- Include all necessary ARIA attributes
+- Follow platform conventions (HTML5, Swift, Kotlin/XML)
+- Add inline comments for accessibility-critical parts`
+};
+
+// ============================================================================
+// HELPERS
+// ============================================================================
+const cleanAndParseJSON = <T>(text: string, context: string = 'AI response'): T => {
+  try {
+    // Remove markdown code blocks
+    let cleaned = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    
+    // Fix common JSON issues
+    cleaned = cleaned
+      // Fix unterminated strings by removing control characters
+      .replace(/[\n\r\t]/g, ' ')
+      // Fix multiple spaces
+      .replace(/\s+/g, ' ')
+      // Ensure proper string escaping
+      .replace(/\\(?!["\\/bfnrt])/g, '\\\\');
+    
+    return JSON.parse(cleaned) as T;
+  } catch (e) {
+    console.error(`JSON Parse Error in ${context}:`, e);
+    console.error('Raw text (first 500 chars):', text.substring(0, 500));
+    console.error('Raw text (last 500 chars):', text.substring(Math.max(0, text.length - 500)));
+    
+    // Try to salvage partial JSON
+    try {
+      // Find the last complete object
+      const lastBrace = text.lastIndexOf('}');
+      if (lastBrace > 0) {
+        const truncated = text.substring(0, lastBrace + 1);
+        const cleanedTruncated = truncated
+          .replace(/```json\n?/g, '').replace(/```\n?/g, '')
+          .replace(/[\n\r\t]/g, ' ')
+          .replace(/\s+/g, ' ')
+          .trim();
+        console.warn('Attempting to parse truncated JSON...');
+        return JSON.parse(cleanedTruncated) as T;
+      }
+    } catch (salvageError) {
+      console.error('Could not salvage JSON');
     }
-  });
-
-  return response.text || "No se pudo generar la explicación.";
-};
-
-const getSystemInstruction = (language: Language) => {
-  if (language === 'es') {
-    return `Eres una IA experta en accesibilidad digital (WCAG 2.1 AA+). Tu objetivo es formar a diseñadores y desarrolladores mediante contenido técnico de alta calidad y casos prácticos.`;
+    
+    throw new Error(`Failed to parse ${context}. The AI response was incomplete or malformed.`);
   }
-  return `You are an AI expert in digital accessibility (WCAG 2.1 AA+). Your goal is to train designers and developers through high-quality technical content and practical cases.`;
 };
 
-const getCheckerSystemInstruction = (language: Language) => {
-  const targetLang = getLanguageName(language);
-  return `You are an expert Accessibility Auditor (WCAG 2.1 AA+). Output Language: ${targetLang}. ...`;
+const getLanguageName = (language: Language): string => LANGUAGE_NAMES[language];
+
+const getSystemInstruction = (language: Language): string => {
+  const lang = getLanguageName(language);
+  return `Expert in WCAG 2.1 AA+ accessibility. Train designers/developers. Output: ${lang}. Be concise, technical, actionable.`;
 };
 
-// HARDCODED CONTENT FOR LEVEL 1 (Curated Onboarding)
+// ============================================================================
+// NIVEL 1 HARDCODED (CURADO)
+// ============================================================================
 const LEVEL_1_LESSON_ES: StudyLesson = {
     level: 1,
     topicTag: "Fundamentos",
@@ -106,31 +144,89 @@ const LEVEL_1_LESSON_ES: StudyLesson = {
     badPractices: ["Usar solo color.", "Depender del ratón.", "Ocultar info.", "Asumir uso estándar."],
     externalResources: [{ title: "WCAG 2.1 (W3C)", url: "https://www.w3.org/TR/WCAG21/" }],
     test: [
-        { question: "¿A quién beneficia?", options: ["Personas ciegas", "Sociedad", "Mayores", "Programadores"], correctIndex: 1, successMessage: "¡Correcto!", failureMessage: "Piénsalo bien." }
+        { 
+          question: "¿A quién beneficia la accesibilidad digital?", 
+          options: ["Solo personas ciegas", "A toda la sociedad", "Solo personas mayores", "Solo programadores"], 
+          correctIndex: 1, 
+          successMessage: "¡Correcto! La accesibilidad beneficia a todos.", 
+          failureMessage: "Piénsalo bien. La accesibilidad no es solo para un grupo específico." 
+        }
     ]
 };
 
-export const generateStudyLesson = async (level: number, language: Language, context?: AdaptiveContext) => {
+// ============================================================================
+// FUNCIONES EXPORTADAS
+// ============================================================================
+
+/**
+ * Explica un concepto técnico de accesibilidad de forma simple
+ */
+export const explainConceptSimply = async (
+  phrase: string, 
+  topic: string, 
+  language: Language
+): Promise<string> => {
   const langName = getLanguageName(language);
+  
+  const prompt = `Context: Student learning "${topic}" accessibility basics.
+Technical phrase: "${phrase}"
+
+Task: Explain in simple ${langName} (B2 level, age 10+).
+- Max 2 short paragraphs
+- Use friendly tone & analogies
+- Avoid jargon`;
+
+  const response = await ai.models.generateContent({
+    model: modelName,
+    contents: prompt,
+    config: {
+      temperature: 0.7,
+      topP: 0.9,
+      maxOutputTokens: 200,
+    }
+  });
+
+  return response.text || "No explanation generated.";
+};
+
+/**
+ * Genera una lección de estudio adaptada al nivel
+ */
+export const generateStudyLesson = async (
+  level: number, 
+  language: Language, 
+  context?: AdaptiveContext
+): Promise<StudyLesson> => {
+  const langName = getLanguageName(language);
+  
   if (level === 1) return LEVEL_1_LESSON_ES;
 
-  let baseFocus = "";
-  if (level >= 2 && level <= 10) {
-      baseFocus = "TECNICO AVANZADO. Salto de dificultad significativo. ARIA complejo, estados dinámicos.";
-  } else if (level <= 20) {
-      baseFocus = "EXPERTO. Widgets complejos, Live Regions.";
-  }
+  const difficulty = level <= 10 
+    ? "Advanced technical: Complex ARIA, dynamic states" 
+    : "Expert: Widgets, Live Regions, edge cases";
 
-  const prompt = `Genera una lección para el Nivel ${level} en ${langName}. 
-  ${baseFocus}
-  
-  REGLAS PARA EL PASO 4 (DOCUMENTACIÓN):
-  1. "nonTechnical": Explica claramente el Rol, Estado y Comportamiento esperado del componente visual elegido. Usa Markdown.
-  2. "codeExamples": Genera código completo y valido para HTML, Swift (iOS) y XML (Android) del componente.
-  3. "mobileScreenReader": Explica cómo VoiceOver/TalkBack deben leer el componente (gestos y output de voz).
-  4. "desktopScreenReader": Explica cómo NVDA debe leer el componente (teclas y output de voz).
-  
-  Devuelve JSON estricto.`;
+  const prompt = `Generate Level ${level} accessibility lesson (${langName}).
+Difficulty: ${difficulty}
+${context ? `Adaptive: User scored ${context.lastScore}%, trend: ${context.trend}` : ''}
+
+LESSON STRUCTURE:
+1. Topic & intro (clear, motivating)
+2. 4 learning pills (title, description, icon name)
+3. Visual component demo with props
+4. **DOCUMENTATION** (critical):
+   - nonTechnical: Role, State, Expected Behavior (Markdown)
+   - codeExamples: Complete HTML, Swift, XML/Kotlin
+   - mobileScreenReader: VoiceOver/TalkBack gestures & speech output
+   - desktopScreenReader: NVDA keys & speech output
+5. Do's & Don'ts (4 each, short)
+6. 1 external resource (W3C/MDN preferred)
+7. 1 test question (4 options)
+
+${PROMPT_TEMPLATES.formatRules}
+${PROMPT_TEMPLATES.codeStructure}
+${PROMPT_TEMPLATES.screenReaderInstructions}
+
+Return strict JSON matching schema.`;
 
   const response = await ai.models.generateContent({
     model: modelName,
@@ -138,6 +234,7 @@ export const generateStudyLesson = async (level: number, language: Language, con
     config: {
       systemInstruction: getSystemInstruction(language),
       responseMimeType: "application/json",
+      maxOutputTokens: 8192,
       responseSchema: {
          type: Type.OBJECT,
          properties: {
@@ -145,7 +242,18 @@ export const generateStudyLesson = async (level: number, language: Language, con
             topicTag: { type: Type.STRING },
             introTitle: { type: Type.STRING },
             introSubtitle: { type: Type.STRING },
-            learningPills: { type: Type.ARRAY, items: { type: Type.OBJECT, properties: { title: { type: Type.STRING }, description: { type: Type.STRING }, icon: { type: Type.STRING } } } },
+            learningPills: { 
+              type: Type.ARRAY, 
+              items: { 
+                type: Type.OBJECT, 
+                properties: { 
+                  title: { type: Type.STRING }, 
+                  description: { type: Type.STRING }, 
+                  icon: { type: Type.STRING } 
+                },
+                required: ["title", "description", "icon"]
+              } 
+            },
             visualComponent: { type: Type.STRING },
             visualComponentProps: { 
                 type: Type.OBJECT,
@@ -161,7 +269,7 @@ export const generateStudyLesson = async (level: number, language: Language, con
                     role: { type: Type.STRING },
                     state: { type: Type.STRING },
                     items: { type: Type.ARRAY, items: { type: Type.STRING } }
-                } 
+                }
             },
             documentation: { 
                 type: Type.OBJECT,
@@ -190,7 +298,8 @@ export const generateStudyLesson = async (level: number, language: Language, con
                     properties: {
                         title: { type: Type.STRING },
                         url: { type: Type.STRING }
-                    }
+                    },
+                    required: ["title", "url"]
                 } 
             },
             test: { 
@@ -203,25 +312,42 @@ export const generateStudyLesson = async (level: number, language: Language, con
                         correctIndex: { type: Type.INTEGER },
                         successMessage: { type: Type.STRING },
                         failureMessage: { type: Type.STRING }
-                    }
+                    },
+                    required: ["question", "options", "correctIndex", "successMessage", "failureMessage"]
                 } 
             }
          },
-         required: ["level", "topicTag", "introTitle", "introSubtitle", "learningPills", "visualComponent", "documentation", "goodPractices", "badPractices", "externalResources", "test"]
+         required: ["level", "topicTag", "introTitle", "introSubtitle", "learningPills", 
+                   "visualComponent", "documentation", "goodPractices", "badPractices", 
+                   "externalResources", "test"]
       }
     }
   });
 
-  return cleanAndParseJSON(response.text || "{}");
+  return cleanAndParseJSON<StudyLesson>(response.text || "{}", 'Study Lesson');
 };
 
-export const generateTest = async (difficulty: Difficulty, type: TestType, language: Language) => {
+/**
+ * Genera preguntas de test según dificultad y tipo
+ */
+export const generateTest = async (
+  difficulty: Difficulty, 
+  type: TestType, 
+  language: Language
+): Promise<TestQuestion[]> => {
   const langName = getLanguageName(language);
+  
+  const prompt = `10 ${difficulty} questions on "${type}" accessibility (${langName}).
+Format: Multiple choice, 4 options, 1 correct.
+Include brief explanation for each.`;
+
   const response = await ai.models.generateContent({
     model: modelName,
-    contents: `Genera 10 preguntas de test sobre ${type} con dificultad ${difficulty} en ${langName}.`,
+    contents: prompt,
     config: {
+      systemInstruction: getSystemInstruction(language),
       responseMimeType: "application/json",
+      maxOutputTokens: 2500,
       responseSchema: { 
         type: Type.ARRAY, 
         items: { 
@@ -233,70 +359,82 @@ export const generateTest = async (difficulty: Difficulty, type: TestType, langu
                 options: { type: Type.ARRAY, items: { type: Type.STRING } },
                 correctAnswerIndex: { type: Type.INTEGER },
                 explanation: { type: Type.STRING }
-            }
+            },
+            required: ["id", "type", "question", "options", "correctAnswerIndex", "explanation"]
         } 
       }
     }
   });
-  return cleanAndParseJSON(response.text || "[]");
+  
+  return cleanAndParseJSON<TestQuestion[]>(response.text || "[]", 'Test Questions');
 };
 
-export const analyzeImage = async (base64Image: string, language: Language, userContext?: string): Promise<CheckerResult> => {
+/**
+ * Analiza una imagen UI para auditoría de accesibilidad
+ */
+export const analyzeImage = async (
+  base64Image: string, 
+  language: Language, 
+  userContext?: string
+): Promise<CheckerResult> => {
   const langName = getLanguageName(language);
 
-  const prompt = `Analiza esta UI en ${langName}.
-  ${userContext ? `CONTEXTO DEL USUARIO: ${userContext}` : ''}
+  const prompt = `Analyze UI for WCAG 2.1 AA (${langName}).
+${userContext ? `Context: ${userContext}` : ''}
 
-  ERES UN AUDITOR EXPERTO EN ACCESIBILIDAD (WCAG 2.1 AA). ANALIZA Y DOCUMENTA:
+JSON RULES: Keep text concise. Max 80 chars per string. No line breaks.
 
-  === 1. TÍTULO DE VISTA (globalAnnotations.viewTitle) ===
-  Analiza el contenido detectado y devuelve un array de strings con frases directas.
-  IMPORTANTE - REGLAS DE FORMATO ESTRICTAS:
-  - NO uses numeración (1., 2., 3.) dentro del texto.
-  - NO uses prefijos de sección en negrita o mayúsculas (ej: NO pongas "CONTEXTO:", NO pongas "CONCLUSIÓN:", NO pongas "REQUISITO CRÍTICO:").
-  - Solo devuelve las frases explicativas directas.
+OUTPUT:
 
-  Guía de contenido para las frases:
-  - Indica si es una vista de app convencional o un documento/PDF incrustado.
-  - Explica las implicaciones de navegación (ej: si no tiene título de vista nativo).
-  - Menciona el requisito del nombre del archivo si es un documento (debe ser legible).
-  - Sugiere un título accesible específico para el contenedor/visor (ej: "Vista de Certificado - AAAQuest").
-  - Termina con una recomendación de implementación clara.
+1. VIEW TITLE (viewTitle array)
+Brief sentences about view type, navigation, suggested title.
 
-  === 2. ORDEN DE FOCO (globalAnnotations.focusOrder) ===
-  Analiza el contenido visual y genera una LISTA ORDENADA y JERÁRQUICA que represente fielmente el recorrido de un lector de pantalla (Screen Reader).
-  
-  REGLAS DE FORMATO (ESTRICTO):
-  1. Usa numeración secuencial (1., 2., 3., …).
-  2. Para cada elemento, indica el TIPO DE COMPONENTE seguido de su contenido.
-     Formato: "N. [Tipo] - [Contenido]"
-     
-     Ejemplos válidos:
-     "1. Botón - Menú Principal"
-     "2. Encabezado - Resultados de Búsqueda"
-     "3. Texto - 24 resultados encontrados"
+2. FOCUS ORDER (focusOrder array)
+List EVERY interactive element separately.
+Format: "N. [Type] - [Label]"
+Examples:
+"1. Image - Profile Avatar"
+"2. Button - Edit Profile"
+"3. Link - 123 Posts"
 
-  3. AGRUPACIÓN JERÁRQUICA (Subniveles):
-     Si detectas un bloque informativo (como una tarjeta, una fila de tabla o un grupo de datos relacionados), usa subnumeración para sus elementos internos.
-     Ejemplo:
-     "4. Tarjeta de Producto - Zapatillas Running"
-     "4.1. Imagen - Foto de las zapatillas"
-     "4.2. Texto - Precio: 99€"
-     "4.3. Botón - Añadir al carrito"
+DO NOT group elements. Each button/link/input = separate item.
 
-  4. RESTRICCIONES (CRÍTICO):
-     - NO uses bullets.
-     - NO incluyas conclusiones, resúmenes ni validaciones al final de la lista.
-     - Devuelve EXCLUSIVAMENTE los ítems de la lista detectada.
-     - Respeta estrictamente el orden visual (arriba-abajo, izquierda-derecha).
+3. STRUCTURE (structure array) & HEADINGS (heading array)
+Semantic landmarks and h1-h6 hierarchy.
 
-  Genera el reporte JSON estricto.`;
+4. SECTIONS (complexSections array)
+ONE element = ONE section.
+
+Each section needs:
+- regionTitle: Element name
+- box_2d: [ymin, xmin, ymax, xmax] (scale 0-1000, min 50 units)
+- categories:
+  * generalSpecific: ["role: X", "label: Y"]
+  * behavior: ["Keyboard: Tab/Enter", "Action: Opens X"]
+  * alt: ["Decorative" or "alt: description"]
+  * grouped: [] (only for form groups)
+
+CRITICAL: box_2d is MANDATORY. Format [ymin, xmin, ymax, xmax].
+Example: [20, 100, 80, 200] means top:2%, left:10%, bottom:8%, right:20%
+
+CTAs: Detect all buttons (text/icon/hybrid).
+Images: Profile avatars/logos = decorative. Products/charts = informative.
+
+Return valid JSON.`;
 
   const response = await ai.models.generateContent({
     model: modelName,
-    contents: { parts: [{ inlineData: { mimeType: "image/jpeg", data: base64Image } }, { text: prompt }] },
+    contents: { 
+      parts: [
+        { inlineData: { mimeType: "image/jpeg", data: base64Image } }, 
+        { text: prompt }
+      ] 
+    },
     config: {
+      systemInstruction: PROMPT_TEMPLATES.roleContext(language),
       responseMimeType: "application/json",
+      maxOutputTokens: 8192,
+      temperature: 0.3,
       responseSchema: { 
           type: Type.OBJECT,
           properties: {
@@ -320,7 +458,8 @@ export const analyzeImage = async (base64Image: string, language: Language, user
                       structure: { type: Type.ARRAY, items: { type: Type.STRING } },
                       heading: { type: Type.ARRAY, items: { type: Type.STRING } },
                       focusOrder: { type: Type.ARRAY, items: { type: Type.STRING } }
-                  }
+                  },
+                  required: ["viewTitle", "structure", "heading", "focusOrder"]
               },
               complexSections: {
                   type: Type.ARRAY,
@@ -328,7 +467,11 @@ export const analyzeImage = async (base64Image: string, language: Language, user
                       type: Type.OBJECT,
                       properties: {
                           regionTitle: { type: Type.STRING },
-                          box_2d: { type: Type.ARRAY, items: { type: Type.INTEGER } },
+                          box_2d: { 
+                              type: Type.ARRAY, 
+                              items: { type: Type.INTEGER },
+                              description: "MANDATORY: [ymin, xmin, ymax, xmax] scale 0-1000"
+                          },
                           categories: {
                               type: Type.OBJECT,
                               properties: {
@@ -336,33 +479,62 @@ export const analyzeImage = async (base64Image: string, language: Language, user
                                   behavior: { type: Type.ARRAY, items: { type: Type.STRING } },
                                   alt: { type: Type.ARRAY, items: { type: Type.STRING } },
                                   grouped: { type: Type.ARRAY, items: { type: Type.STRING } }
-                              }
+                              },
+                              required: ["generalSpecific", "behavior", "alt", "grouped"]
                           }
-                      }
+                      },
+                      required: ["regionTitle", "box_2d", "categories"]
                   }
               }
-          }
+          },
+          required: ["isValidUI", "layoutType", "screenContext", "globalAnnotations", "complexSections"]
       }
     }
   });
-  return cleanAndParseJSON(response.text || "{}");
+  
+  return cleanAndParseJSON<CheckerResult>(response.text || "{}", 'Image Analysis');
 };
 
-export const generateImage = async (prompt: string, size: '1K' | '2K' | '4K' = '1K'): Promise<string> => {
+/**
+ * Genera una imagen usando Gemini
+ */
+export const generateImage = async (
+  prompt: string, 
+  size: '1K' | '2K' | '4K' = '1K'
+): Promise<string> => {
   const response = await ai.models.generateContent({
     model: 'gemini-3-pro-image-preview',
     contents: { parts: [{ text: prompt }] },
     config: { imageConfig: { aspectRatio: "1:1", imageSize: size } },
   });
-  for (const part of response.candidates[0].content.parts) if (part.inlineData) return part.inlineData.data;
+  
+  for (const part of response.candidates[0].content.parts) {
+    if (part.inlineData) return part.inlineData.data;
+  }
+  
   throw new Error("No image generated");
 };
 
-export const editImage = async (base64Image: string, prompt: string): Promise<string> => {
+/**
+ * Edita una imagen existente
+ */
+export const editImage = async (
+  base64Image: string, 
+  prompt: string
+): Promise<string> => {
   const response = await ai.models.generateContent({
     model: 'gemini-2.5-flash-image',
-    contents: { parts: [{ inlineData: { data: base64Image, mimeType: 'image/jpeg' } }, { text: prompt }] },
+    contents: { 
+      parts: [
+        { inlineData: { data: base64Image, mimeType: 'image/jpeg' } }, 
+        { text: prompt }
+      ] 
+    },
   });
-  for (const part of response.candidates[0].content.parts) if (part.inlineData) return part.inlineData.data;
-  throw new Error("No image generated");
+  
+  for (const part of response.candidates[0].content.parts) {
+    if (part.inlineData) return part.inlineData.data;
+  }
+  
+  throw new Error("No image edited");
 };
