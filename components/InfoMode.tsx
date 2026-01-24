@@ -125,7 +125,7 @@ export const InfoMode: React.FC<InfoModeProps> = ({ setMode, language, theme }) 
                         onClick={() => setMode(AppMode.STUDY)}
                         className={`mt-8 px-10 py-5 rounded-2xl font-bold text-lg transition-all hover:scale-105 active:scale-95 flex items-center gap-3 ${isDark ? 'bg-white text-black hover:bg-slate-200' : 'bg-blue-600 text-white hover:bg-blue-700 shadow-xl shadow-blue-500/30'}`}
                     >
-                        {t.ctaChecker} <ArrowRight className="w-5 h-5" />
+                        {t.studyMode} <ArrowRight className="w-5 h-5" />
                     </button>
                 </Reveal>
             </div>
