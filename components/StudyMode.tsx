@@ -1,7 +1,8 @@
+
 import React, { useState, useEffect } from 'react';
 import { generateStudyLesson } from '../services/geminiService';
 import { StudyLesson, VisualComponentType, Language, TRANSLATIONS, Theme, UserProgress, AdaptiveContext, AppMode } from '../types';
-import { BookOpen, ArrowRight, ArrowLeft, Check, X, RotateCcw, Volume2, Eye, Layout, MousePointerClick, AlignLeft, Info, Globe, Image, Contrast, Type, Code, Ear, ChevronDown, Star, Lock, Sparkles, Smartphone, Monitor } from 'lucide-react';
+import { BookOpen, ArrowRight, ArrowLeft, Check, X, RotateCcw, Volume2, Eye, Layout, MousePointerClick, AlignLeft, Info, Globe, Image, Contrast, Type, Code, Ear, ChevronDown, Star, Lock, Sparkles, Smartphone, Monitor, Plus, Edit2, CircleDot } from 'lucide-react';
 import { Loader } from './Loader';
 import { Reveal } from './Reveal';
 
@@ -47,9 +48,9 @@ const renderFormattedText = (text: string, isDark: boolean) => {
             </div>
         );
     }
-    // Very basic header detection if AI returns it without ###
-    if (/^[A-Z][a-zA-Z\s]+:$/.test(trimmed) || trimmed.length < 50 && trimmed.endsWith(':')) {
-        return <h4 key={i} className={`mt-6 mb-3 font-bold text-lg ${isDark ? 'text-white' : 'text-slate-900'}`}>{trimmed}</h4>;
+    // Header detection from the updated prompt (Step 2)
+    if (/^¿?Qué es|Rol y|Nombre Accesible|Estados del|Comportamiento/.test(trimmed)) {
+        return <h3 key={i} className={`mt-8 mb-4 font-black text-xl tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>{trimmed}</h3>;
     }
     
     return <p key={i} className={`mb-4 leading-relaxed text-base ${isDark ? 'text-slate-200' : 'text-slate-700'}`}>{parseBold(line)}</p>;
@@ -130,8 +131,8 @@ export const StudyMode: React.FC<StudyModeProps> = ({ setFocusMode, language, th
   const [lesson, setLesson] = useState<StudyLesson | null>(null);
   const [loading, setLoading] = useState(false);
   
-  // Step 4 Tabs
-  const [docTab, setDocTab] = useState<'nonTech' | 'tech' | 'voiceOver'>('nonTech');
+  // Updated Tabs for Combined Step 3
+  const [activeTab, setActiveTab] = useState<'visual' | 'nonTech' | 'tech' | 'voiceOver'>('visual');
   const [codeTab, setCodeTab] = useState<'html' | 'ios' | 'android'>('html');
   const [srTab, setSrTab] = useState<'mobile' | 'desktop'>('mobile');
 
@@ -141,7 +142,6 @@ export const StudyMode: React.FC<StudyModeProps> = ({ setFocusMode, language, th
   const [showResult, setShowResult] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [levelComplete, setLevelComplete] = useState(false);
-  const [levelFailed, setLevelFailed] = useState(false);
 
   const t = TRANSLATIONS[language];
   const isDark = theme === 'dark';
@@ -159,30 +159,36 @@ export const StudyMode: React.FC<StudyModeProps> = ({ setFocusMode, language, th
   }, [view, step]);
 
   const startLevel = async (lvl: number) => {
-    setLoading(true);
-    setCurrentLevel(lvl);
-    setView('LESSON');
-    resetLessonState();
-    setFocusMode(true);
-    try {
-        if (userProgress.cachedLessons[lvl]) {
-            setLesson(userProgress.cachedLessons[lvl]);
-        } else {
-            const data = await generateStudyLesson(lvl, language);
-            setLesson(data);
-            setUserProgress(prev => ({ ...prev, cachedLessons: { ...prev.cachedLessons, [lvl]: data } }));
-        }
-    } catch (error) { setView('SELECTOR'); } finally { setLoading(false); }
-  };
+  setLoading(true);
+  setCurrentLevel(lvl);
+  setView('LESSON');
+  resetLessonState();
+  setFocusMode(true);
+  try {
+      if (userProgress.cachedLessons[lvl]) {
+          console.log(`✅ Loading cached lesson ${lvl} with ${userProgress.cachedLessons[lvl].test?.length || 0} questions`);
+          setLesson(userProgress.cachedLessons[lvl]);
+      } else {
+          console.log(`🔄 Generating new lesson ${lvl}`);
+          const data = await generateStudyLesson(lvl, language);
+          console.log(`✅ Generated lesson ${lvl} with ${data.test?.length || 0} questions`);
+          setLesson(data);
+          setUserProgress(prev => ({ ...prev, cachedLessons: { ...prev.cachedLessons, [lvl]: data } }));
+      }
+  } catch (error) { 
+      console.error("Error loading lesson:", error);
+      setView('SELECTOR'); 
+  } finally { setLoading(false); }
+};
 
   const resetLessonState = () => {
     setStep(1);
+    setActiveTab('visual'); // Reset tab to Visual by default
     setCurrentQuestionIndex(0);
     setTestScore(0);
     setShowResult(false);
     setSelectedAnswer(null);
     setLevelComplete(false);
-    setLevelFailed(false);
   };
 
   const returnToSelector = () => {
@@ -190,7 +196,7 @@ export const StudyMode: React.FC<StudyModeProps> = ({ setFocusMode, language, th
       setView('SELECTOR');
   };
 
-  // Test Logic (same as before)
+  // Test Logic
   const handleTestAnswer = (index: number) => {
     if (showResult || !lesson) return;
     setSelectedAnswer(index);
@@ -199,29 +205,35 @@ export const StudyMode: React.FC<StudyModeProps> = ({ setFocusMode, language, th
   };
 
   const nextQuestion = () => {
-    if (!lesson) return;
-    if (currentQuestionIndex < lesson.test.length - 1) {
-      setCurrentQuestionIndex(prev => prev + 1);
-      setShowResult(false);
-      setSelectedAnswer(null);
-    } else {
-      if (testScore >= 2) setLevelComplete(true); else setLevelFailed(true);
-    }
-  };
+  if (!lesson) return;
+  
+  if (!lesson.test || lesson.test.length === 0) {
+    console.error("No test questions available");
+    setLevelComplete(true);
+    return;
+  }
+  
+  if (currentQuestionIndex < lesson.test.length - 1) {
+    setCurrentQuestionIndex(prev => prev + 1);
+    setShowResult(false);
+    setSelectedAnswer(null);
+  } else {
+    setLevelComplete(true);
+  }
+};
 
-  const finishLevel = (success: boolean) => {
+  const finishLevel = () => {
       const newHistoryEntry = { levelId: currentLevel, score: testScore, timestamp: Date.now() };
       const updatedHistory = [...userProgress.history, newHistoryEntry];
       let newMaxLevel = userProgress.maxLevel;
       
-      if (success && currentLevel === userProgress.maxLevel && currentLevel < MAX_LEVELS) {
+      if (currentLevel === userProgress.maxLevel && currentLevel < MAX_LEVELS) {
           newMaxLevel = currentLevel + 1;
       }
 
       setUserProgress(prev => ({ ...prev, history: updatedHistory, maxLevel: newMaxLevel }));
       
-      // Check if finished level 10 successfully
-      if (success && currentLevel === MAX_LEVELS) {
+      if (currentLevel === MAX_LEVELS) {
           setFocusMode(false);
           setMode(AppMode.CERTIFICATE);
           return;
@@ -250,6 +262,9 @@ export const StudyMode: React.FC<StudyModeProps> = ({ setFocusMode, language, th
                       const bestAttempt = levelAttempts.length > 0 ? Math.max(...levelAttempts.map(h => h.score)) : 0;
                       const cachedLesson = userProgress.cachedLessons[levelNum];
                       const topic = cachedLesson ? cachedLesson.topicTag : `${t.level} ${levelNum}`;
+                      
+                      // Check if the user has attempted the level but has 0 correct answers (Failed)
+                      const hasFailed = levelAttempts.length > 0 && bestAttempt === 0;
 
                       return (
                           <button
@@ -259,16 +274,20 @@ export const StudyMode: React.FC<StudyModeProps> = ({ setFocusMode, language, th
                             className={`relative p-4 h-32 rounded-xl border flex flex-col items-center justify-center transition-all duration-300 group ${
                                 isLocked 
                                     ? `opacity-50 cursor-not-allowed ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200 shadow-none'}`
-                                    : `active:scale-95 ${isDark ? 'bg-slate-800 hover:bg-slate-700 border-slate-700 hover:border-blue-500' : 'bg-white border-slate-200 hover:border-blue-500 shadow-sm'}`
+                                    : `active:scale-95 ${
+                                        hasFailed 
+                                            ? (isDark ? 'bg-slate-800 hover:bg-slate-700 border-red-500 text-red-400' : 'bg-white border-red-500 text-red-600 shadow-sm shadow-red-100')
+                                            : (isDark ? 'bg-slate-800 hover:bg-slate-700 border-slate-700 hover:border-blue-500' : 'bg-white border-slate-200 hover:border-blue-500 shadow-sm')
+                                    }`
                             }`}
                           >
                               {isLocked ? <Lock className="w-8 h-8 text-slate-500 mb-2" /> : (
                                   <>
-                                    <span className={`text-[10px] font-bold uppercase tracking-wider mb-0.5 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{t.level}</span>
+                                    <span className={`text-[10px] font-bold uppercase tracking-wider mb-0.5 ${hasFailed ? (isDark ? 'text-red-400' : 'text-red-500') : (isDark ? 'text-slate-500' : 'text-slate-400')}`}>{t.level}</span>
                                     <span className={`text-2xl font-black mb-1 ${isDark ? 'text-white' : 'text-slate-900'}`}>{levelNum}</span>
-                                    <span className={`text-xs text-center line-clamp-2 px-2 ${textSub} group-hover:text-blue-500`}>{topic}</span>
+                                    <span className={`text-xs text-center line-clamp-2 px-2 ${hasFailed ? 'text-inherit' : textSub} group-hover:text-blue-500`}>{topic}</span>
                                     <div className="flex gap-0.5 mt-2">
-                                        {[1, 2, 3].map(star => (<Star key={star} className={`w-3 h-3 ${star <= bestAttempt ? 'fill-yellow-400 text-yellow-400' : 'text-slate-600'}`} />))}
+                                        {[1, 2, 3].map(star => (<Star key={star} className={`w-3 h-3 ${star <= bestAttempt ? 'fill-yellow-400 text-yellow-400' : (hasFailed ? 'text-red-200 dark:text-red-900' : 'text-slate-600')}`} />))}
                                     </div>
                                   </>
                               )}
@@ -284,11 +303,9 @@ export const StudyMode: React.FC<StudyModeProps> = ({ setFocusMode, language, th
   if (!lesson) return null;
 
   const p = lesson.visualComponentProps || {};
-  const hasVisual = lesson ? lesson.visualComponent !== 'NONE' : true;
-  const totalSteps = hasVisual ? 6 : 5;
-  const handleNext = () => { let n = step + 1; if (n === 3 && !hasVisual) n = 4; if (n <= 6) { setStep(n); } };
-  const handlePrev = () => { let p = step - 1; if (p === 3 && !hasVisual) p = 2; if (p >= 1) { setStep(p); } };
-  const getVisualStep = (s: number) => { if (hasVisual) return s; if (s > 3) return s - 1; return s; };
+  const totalSteps = 5; // Reduced from 6 to 5 because Step 3 & 4 are combined
+  const handleNext = () => { let n = step + 1; if (n <= totalSteps) { setStep(n); } };
+  const handlePrev = () => { let p = step - 1; if (p >= 1) { setStep(p); } };
 
   return (
     <>
@@ -299,7 +316,7 @@ export const StudyMode: React.FC<StudyModeProps> = ({ setFocusMode, language, th
                <span className={`text-xs font-semibold leading-none ${textMain}`}>{lesson.topicTag}</span>
           </div>
           <div className="flex items-center relative z-10">
-              <span className={`text-xs md:text-sm font-bold font-mono tracking-wider ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{t.step} <span className={isDark ? 'text-white' : 'text-black'}>{getVisualStep(step)}</span> / {totalSteps}</span>
+              <span className={`text-xs md:text-sm font-bold font-mono tracking-wider ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{t.step} <span className={isDark ? 'text-white' : 'text-black'}>{step}</span> / {totalSteps}</span>
           </div>
       </div>
 
@@ -330,81 +347,236 @@ export const StudyMode: React.FC<StudyModeProps> = ({ setFocusMode, language, th
             </div>
         )}
 
+        {/* COMBINED STEP 3: VISUAL + DOCUMENTATION */}
         {step === 3 && (
             <div className="space-y-6 animate-fade-in">
-                <h2 className={`text-2xl font-bold mb-6 ${textMain}`}>{t.visualExample}</h2>
-                <div className={`p-10 rounded-2xl flex items-center justify-center min-h-[350px] border ${isDark ? 'bg-slate-900 border-slate-700' : 'bg-slate-50 border-slate-200'}`}>
-                    {lesson.visualComponent === 'MATERIAL_INPUT' && (
-                        <div className="relative w-full max-w-xs">
-                             <input type="text" id="example-input" className={`peer w-full border-b-2 bg-transparent py-2 placeholder-transparent focus:outline-none transition-colors ${p.state === 'error' ? 'border-red-500 focus:border-red-600' : 'border-slate-400 focus:border-blue-500'}`} placeholder={p.placeholder || "Label"} aria-label={p.ariaLabel} aria-invalid={p.state === 'error'} aria-describedby={p.errorText ? "error-desc" : undefined} />
-                             <label htmlFor="example-input" className={`absolute left-0 -top-3.5 text-sm transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-focus:-top-3.5 peer-focus:text-sm ${p.state === 'error' ? 'text-red-500' : 'text-slate-500 peer-focus:text-blue-500'}`}>{p.label || "Name"}</label>
-                             {p.errorText && <p id="error-desc" className="text-xs text-red-500 mt-2 font-medium" role="alert">{p.errorText}</p>}
-                        </div>
-                    )}
-                    {lesson.visualComponent === 'IOS_BUTTON' && (
-                        <button className={`w-full max-w-xs rounded-xl py-4 font-bold active:opacity-80 transition-all ${p.state === 'disabled' ? 'bg-slate-300 cursor-not-allowed text-slate-500' : 'bg-blue-600 text-white shadow-lg'}`} aria-label={p.ariaLabel} disabled={p.state === 'disabled'}>{p.buttonText || "Action"}</button>
-                    )}
-                    {lesson.visualComponent === 'PRODUCT_CARD' && (
-                        <div className={`w-72 p-5 rounded-2xl border ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200 shadow-xl'}`}>
-                            <div className="h-40 bg-slate-200 rounded-xl mb-4 w-full flex items-center justify-center"><Image className="opacity-20 w-12 h-12" /></div>
-                            <h3 className={`font-bold text-lg mb-1 ${textMain}`}>{p.title || "Product"}</h3>
-                            <p className={`text-sm mb-4 ${textSub}`}>{p.description || "Brief info."}</p>
-                            <button className="w-full bg-blue-600 text-white py-3 rounded-xl text-sm font-bold shadow-md">Add to Cart</button>
-                        </div>
-                    )}
-                    {lesson.visualComponent === 'OTP_INPUT' && (
-                        <div className="flex flex-col items-center">
-                            <label className={`mb-4 font-bold ${textMain}`}>{p.label || "Verification Code"}</label>
-                            <div className="flex gap-2">{[1,2,3,4].map(i => <div key={i} className={`w-12 h-14 rounded-xl border-2 flex items-center justify-center font-bold text-xl ${isDark ? 'bg-slate-800 border-slate-700 text-white' : 'bg-white border-slate-300'}`}>-</div>)}</div>
-                        </div>
-                    )}
-                    {lesson.visualComponent === 'CHECKBOX_GROUP' && (
-                        <fieldset className="space-y-4">
-                            <legend className={`font-bold mb-4 ${textMain}`}>{p.label || "Options"}</legend>
-                            {(p.items || ["Option 1", "Option 2"]).map((item, i) => (
-                                <label key={i} className="flex items-center gap-3 cursor-pointer group">
-                                    <div className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-colors ${isDark ? 'border-slate-600 group-hover:border-blue-500' : 'border-slate-300 group-hover:border-blue-500'}`}><div className="w-3 h-3 bg-blue-500 rounded-sm scale-0 group-active:scale-100 transition-transform" /></div>
-                                    <span className={textMain}>{item}</span>
-                                </label>
-                            ))}
-                        </fieldset>
-                    )}
-                    {lesson.visualComponent === 'NONE' && <div className="text-center opacity-30"><BookOpen className={`w-20 h-20 mx-auto mb-4 ${textMain}`} /><p className={textSub}>Theoretical Lesson</p></div>}
-                </div>
-            </div>
-        )}
-
-        {step === 4 && (
-            <div className="space-y-6 animate-fade-in">
-                <h2 className={`text-2xl font-bold mb-4 text-center ${textMain}`}>Documentación</h2>
+                <h2 className={`text-2xl font-bold mb-4 text-center ${textMain}`}>Ejemplo de componente & Documentación</h2>
                 
-                {/* Main Tabs */}
-                <div className="flex justify-center mb-8">
-                    <div className={`inline-flex p-1 rounded-xl ${isDark ? 'bg-slate-900/50 border border-slate-800' : 'bg-white border border-slate-200'}`}>
-                        {[
-                            { id: 'nonTech', label: t.tabs.nonTech, icon: AlignLeft },
-                            { id: 'tech', label: t.tabs.tech, icon: Code },
-                            { id: 'voiceOver', label: t.tabs.voiceOver, icon: Ear },
-                        ].map((tab) => (
-                            <button
-                                key={tab.id}
-                                onClick={() => setDocTab(tab.id as any)}
-                                className={`flex items-center gap-2 px-6 py-3 rounded-lg font-bold text-sm transition-all ${
-                                    docTab === tab.id 
-                                        ? 'bg-blue-600 text-white shadow-lg' 
-                                        : `${isDark ? 'text-slate-400 hover:text-white hover:bg-slate-800' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'}`
-                                }`}
-                            >
-                                <tab.icon className="w-4 h-4" /> {tab.label}
-                            </button>
-                        ))}
-                    </div>
-                </div>
+                {/* Main Tabs - Mobile: Grid, Desktop: Horizontal Pills */}
+                {(() => {
+                    const tabs = [
+                        { id: 'visual', label: 'Ejemplo de componente', icon: Eye },
+                        { id: 'nonTech', label: t.tabs.nonTech, icon: AlignLeft },
+                        { id: 'tech', label: t.tabs.tech, icon: Code },
+                        { id: 'voiceOver', label: t.tabs.voiceOver, icon: Ear },
+                    ];
 
-                <div className={`p-8 rounded-2xl border min-h-[400px] ${cardBg} transition-all duration-300`}>
+                    return (
+                        <>
+                            {/* Mobile Grid Layout */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6 md:hidden">
+                                {tabs.map((tab) => (
+                                    <button
+                                        key={tab.id}
+                                        onClick={() => setActiveTab(tab.id as any)}
+                                        className={`flex items-center justify-center gap-2 p-3 rounded-xl font-bold text-sm border transition-all active:scale-95 ${
+                                            activeTab === tab.id 
+                                                ? 'bg-blue-600 text-white border-blue-600 shadow-lg' 
+                                                : `${isDark ? 'bg-slate-800 border-slate-700 text-slate-400' : 'bg-white border-slate-200 text-slate-600'}`
+                                        }`}
+                                    >
+                                        <tab.icon className="w-4 h-4" /> {tab.label}
+                                    </button>
+                                ))}
+                            </div>
+
+                            {/* Desktop Horizontal Layout */}
+                            <div className="hidden md:flex justify-center mb-8">
+                                <div className={`inline-flex p-1 rounded-xl whitespace-nowrap ${isDark ? 'bg-slate-900/50 border border-slate-800' : 'bg-white border border-slate-200'}`}>
+                                    {tabs.map((tab) => (
+                                        <button
+                                            key={tab.id}
+                                            onClick={() => setActiveTab(tab.id as any)}
+                                            className={`flex items-center gap-2 px-6 py-3 rounded-lg font-bold text-sm transition-all ${
+                                                activeTab === tab.id 
+                                                    ? 'bg-blue-600 text-white shadow-lg' 
+                                                    : `${isDark ? 'text-slate-400 hover:text-white hover:bg-slate-800' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'}`
+                                            }`}
+                                        >
+                                            <tab.icon className="w-4 h-4" /> {tab.label}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </>
+                    );
+                })()}
+
+                <div className={`p-4 md:p-8 rounded-2xl border min-h-[400px] ${cardBg} transition-all duration-300`}>
                     
-                    {/* 1. DOCUMENTACION NO TECNICA */}
-                    {docTab === 'nonTech' && (
+                    {/* 1. VISUAL EXAMPLE TAB */}
+                    {activeTab === 'visual' && (
+                        <div className="animate-fade-in flex flex-col items-center">
+                            <div className={`w-full p-4 md:p-10 rounded-2xl flex items-center justify-center min-h-[350px] border relative overflow-hidden ${isDark ? 'bg-slate-900 border-slate-700' : 'bg-slate-50 border-slate-200'}`}>
+                                <div className="font-sans antialiased flex flex-col items-center gap-4">
+                                    
+                                    {/* M3 TEXT FIELD */}
+                                    {lesson.visualComponent === 'M3_TEXT_FIELD' && (
+                                        <div className="relative w-full max-w-xs group">
+                                            <div className={`relative bg-slate-100 dark:bg-slate-800 rounded-t-lg border-b-2 flex items-center px-4 pt-6 pb-2 transition-colors ${
+                                                p.state === 'error' 
+                                                    ? 'border-red-600 dark:border-red-400 bg-red-50 dark:bg-red-900/10' 
+                                                    : 'border-slate-500 dark:border-slate-400 focus-within:border-blue-600 dark:focus-within:border-blue-400'
+                                            }`}>
+                                                <input 
+                                                    type="text" 
+                                                    id="m3-input"
+                                                    className="block w-full bg-transparent border-none focus:ring-0 p-0 text-base text-slate-900 dark:text-white placeholder-transparent peer"
+                                                    placeholder=" "
+                                                    disabled={p.state === 'disabled'}
+                                                    aria-invalid={p.state === 'error'}
+                                                    aria-describedby={p.errorText ? "error-desc" : undefined}
+                                                />
+                                                <label 
+                                                    htmlFor="m3-input"
+                                                    className={`absolute left-4 top-4 origin-[0] -translate-y-3 scale-75 transform text-sm duration-200 pointer-events-none peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:-translate-y-3 peer-focus:scale-75 ${
+                                                        p.state === 'error' 
+                                                            ? 'text-red-600 dark:text-red-400' 
+                                                            : 'text-slate-500 dark:text-slate-400 peer-focus:text-blue-600 dark:peer-focus:text-blue-400'
+                                                    }`}
+                                                >
+                                                    {p.label || "Label"}
+                                                </label>
+                                            </div>
+                                            {(p.helperText || p.errorText) && (
+                                                <p id="error-desc" className={`mt-1 text-xs px-4 ${p.state === 'error' ? 'text-red-600 dark:text-red-400' : 'text-slate-500'}`}>
+                                                    {p.errorText || p.helperText}
+                                                </p>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {/* M3 BUTTON */}
+                                    {lesson.visualComponent === 'M3_BUTTON' && (
+                                        <button 
+                                            className={`h-10 px-6 rounded-full font-medium text-sm transition-all shadow-sm active:shadow-none flex items-center justify-center gap-2 overflow-hidden relative ${
+                                                p.state === 'disabled' 
+                                                    ? 'bg-slate-100 text-slate-300 cursor-not-allowed dark:bg-slate-800 dark:text-slate-600' 
+                                                    : 'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 shadow-blue-500/20 dark:bg-blue-400 dark:text-blue-950 dark:hover:bg-blue-300'
+                                            }`}
+                                            aria-label={p.ariaLabel} 
+                                            disabled={p.state === 'disabled'}
+                                        >
+                                            {/* Ripple effect simulator could go here */}
+                                            {p.iconName && <Plus className="w-4 h-4" />}
+                                            {p.buttonText || p.label || "Button"}
+                                        </button>
+                                    )}
+
+                                    {/* M3 FAB */}
+                                    {lesson.visualComponent === 'M3_FAB' && (
+                                        <button 
+                                            className={`w-14 h-14 rounded-2xl transition-all shadow-lg hover:shadow-xl active:shadow-md flex items-center justify-center ${
+                                                p.state === 'disabled' 
+                                                    ? 'bg-slate-200 text-slate-400 cursor-not-allowed dark:bg-slate-800 dark:text-slate-600' 
+                                                    : 'bg-blue-200 text-blue-900 hover:bg-blue-300 dark:bg-blue-700 dark:text-blue-100'
+                                            }`}
+                                            aria-label={p.ariaLabel || "Floating Action Button"} 
+                                            disabled={p.state === 'disabled'}
+                                        >
+                                            <Edit2 className="w-6 h-6" />
+                                        </button>
+                                    )}
+
+                                    {/* M3 CARD */}
+                                    {lesson.visualComponent === 'M3_CARD' && (
+                                        <div className={`w-72 rounded-[12px] overflow-hidden border transition-all hover:shadow-md ${isDark ? 'bg-slate-800 border-slate-700 text-white' : 'bg-surface border-slate-200 text-slate-900 bg-white'}`}>
+                                            <div className={`h-40 w-full flex items-center justify-center ${isDark ? 'bg-slate-700' : 'bg-slate-100'}`}>
+                                                <Image className="opacity-20 w-12 h-12 text-slate-500" />
+                                            </div>
+                                            <div className="p-4">
+                                                <h3 className="font-bold text-xl mb-1 tracking-tight">{p.title || "Headline"}</h3>
+                                                <p className={`text-sm mb-6 ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>{p.description || "Explain a bit about this card."}</p>
+                                                <div className="flex justify-end gap-2">
+                                                    <button className={`px-3 py-1.5 rounded-full text-sm font-medium hover:bg-slate-500/10 ${isDark ? 'text-blue-300' : 'text-blue-600'}`}>Action</button>
+                                                    <button className={`px-4 py-1.5 rounded-full text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-400 dark:text-blue-950`}>{p.buttonText || "Primary"}</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* M3 SWITCH */}
+                                    {lesson.visualComponent === 'M3_SWITCH' && (
+                                        <div className="flex items-center justify-between w-64 p-4 border rounded-xl dark:border-slate-700">
+                                            <label className={`text-base font-medium ${textMain}`}>{p.label || "Settings"}</label>
+                                            <button 
+                                                role="switch" 
+                                                aria-checked={p.checked}
+                                                className={`w-[52px] h-8 rounded-full p-1 transition-colors relative border-2 ${
+                                                    p.checked 
+                                                        ? 'bg-blue-600 border-blue-600 dark:bg-blue-400 dark:border-blue-400' 
+                                                        : 'bg-transparent border-slate-400 dark:border-slate-500'
+                                                }`}
+                                            >
+                                                <div className={`w-4 h-4 rounded-full shadow-sm transition-transform duration-200 absolute top-1.5 ${
+                                                    p.checked 
+                                                        ? 'translate-x-[22px] bg-white dark:bg-blue-950 w-5 h-5 top-1' 
+                                                        : 'translate-x-[2px] bg-slate-500 dark:bg-slate-400'
+                                                }`} />
+                                            </button>
+                                        </div>
+                                    )}
+                                    
+                                    {/* M3 CHIPS */}
+                                    {lesson.visualComponent === 'M3_CHIPS' && (
+                                        <div className="flex flex-wrap gap-2">
+                                            {(p.items || ["Chip 1", "Chip 2"]).map((item, i) => (
+                                                <div key={i} className={`h-8 px-4 rounded-[8px] border flex items-center justify-center text-sm font-medium transition-colors cursor-pointer ${i === 0 ? (isDark ? 'bg-blue-900/50 border-transparent text-blue-200' : 'bg-blue-100 border-transparent text-blue-900') : (isDark ? 'border-slate-600 text-slate-300 hover:bg-slate-800' : 'border-slate-300 text-slate-700 hover:bg-slate-50')}`}>
+                                                    {i === 0 && <Check className="w-4 h-4 mr-2" />}
+                                                    {item}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {/* M3 CHECKBOX */}
+                                    {lesson.visualComponent === 'M3_CHECKBOX' && (
+                                        <fieldset className="space-y-2 p-4 border rounded-xl dark:border-slate-700">
+                                            <legend className={`text-sm font-medium px-2 ${textSub}`}>{p.label || "Select options"}</legend>
+                                            {(p.items || ["Option 1", "Option 2"]).map((item, i) => (
+                                                <label key={i} className="flex items-center gap-3 cursor-pointer group p-2 rounded-lg hover:bg-slate-500/10 -ml-2">
+                                                    <div className={`w-[18px] h-[18px] rounded-[2px] border-2 flex items-center justify-center transition-colors ${i === 0 ? 'bg-blue-600 border-blue-600 dark:bg-blue-400 dark:border-blue-400' : 'border-slate-500 group-hover:border-slate-700 dark:border-slate-400'}`}>
+                                                        {i === 0 && <Check className="w-3.5 h-3.5 text-white dark:text-blue-950" />}
+                                                    </div>
+                                                    <span className={`text-base ${textMain}`}>{item}</span>
+                                                </label>
+                                            ))}
+                                        </fieldset>
+                                    )}
+
+                                    {/* M3 RADIO GROUP */}
+                                    {lesson.visualComponent === 'M3_RADIO_GROUP' && (
+                                        <fieldset className="space-y-2 p-4 border rounded-xl dark:border-slate-700 w-64">
+                                            <legend className={`text-sm font-medium px-2 mb-2 ${textSub}`}>{p.label || "Choose one"}</legend>
+                                            {(p.items || ["Choice A", "Choice B"]).map((item, i) => (
+                                                <label key={i} className="flex items-center gap-3 cursor-pointer group p-2 rounded-lg hover:bg-slate-500/10 -ml-2">
+                                                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${i === 0 ? 'border-blue-600 dark:border-blue-400' : 'border-slate-500 dark:border-slate-400'}`}>
+                                                        {i === 0 && <div className="w-2.5 h-2.5 rounded-full bg-blue-600 dark:bg-blue-400" />}
+                                                    </div>
+                                                    <span className={`text-base ${textMain}`}>{item}</span>
+                                                </label>
+                                            ))}
+                                        </fieldset>
+                                    )}
+                                    
+                                    {lesson.visualComponent === 'NONE' && (
+                                        <div className="text-center opacity-40">
+                                            <Sparkles className={`w-16 h-16 mx-auto mb-4 ${isDark ? 'text-blue-400' : 'text-blue-600'}`} />
+                                            <p className={textSub}>Theoretical Lesson</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                            <div className="mt-4 flex justify-center">
+                               <a href="https://m3.material.io/" target="_blank" rel="noreferrer" className={`text-xs font-mono opacity-50 hover:opacity-100 transition-opacity ${textSub} flex items-center gap-1`}>
+                                   <CircleDot className="w-3 h-3" /> Style: Material Design 3
+                               </a>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* 2. DOCUMENTACION NO TECNICA */}
+                    {activeTab === 'nonTech' && (
                         <div className="animate-fade-in">
                             <div className="prose prose-slate dark:prose-invert max-w-none">
                                 {renderFormattedText(lesson.documentation.nonTechnical, isDark)}
@@ -412,8 +584,8 @@ export const StudyMode: React.FC<StudyModeProps> = ({ setFocusMode, language, th
                         </div>
                     )}
                     
-                    {/* 2. DOCUMENTACION TECNICA (CODIGO) */}
-                    {docTab === 'tech' && (
+                    {/* 3. DOCUMENTACION TECNICA (CODIGO) */}
+                    {activeTab === 'tech' && (
                         <div className="animate-fade-in">
                              {/* Sub-tabs for Code */}
                             <div className="flex border-b border-opacity-10 mb-6" style={{ borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' }}>
@@ -448,35 +620,29 @@ export const StudyMode: React.FC<StudyModeProps> = ({ setFocusMode, language, th
                         </div>
                     )}
 
-                    {/* 3. LECTORES DE PANTALLA */}
-                    {docTab === 'voiceOver' && (
+                    {/* 4. LECTORES DE PANTALLA */}
+                    {activeTab === 'voiceOver' && (
                         <div className="animate-fade-in">
-                            <div className="grid md:grid-cols-2 gap-4 mb-8">
-                                <button 
-                                    onClick={() => setSrTab('mobile')}
-                                    className={`p-6 rounded-xl border text-left transition-all ${
-                                        srTab === 'mobile' 
-                                            ? 'bg-blue-500/10 border-blue-500 ring-1 ring-blue-500' 
-                                            : `${isDark ? 'bg-slate-800 border-slate-700 hover:bg-slate-700' : 'bg-white border-slate-200 hover:border-blue-300'}`
-                                    }`}
-                                >
-                                    <Smartphone className={`w-8 h-8 mb-4 ${srTab === 'mobile' ? 'text-blue-500' : 'text-slate-400'}`} />
-                                    <h3 className={`font-bold mb-1 ${textMain}`}>iOS & Android</h3>
-                                    <p className={`text-xs ${textSub}`}>VoiceOver / TalkBack</p>
-                                </button>
-
-                                <button 
-                                    onClick={() => setSrTab('desktop')}
-                                    className={`p-6 rounded-xl border text-left transition-all ${
-                                        srTab === 'desktop' 
-                                            ? 'bg-purple-500/10 border-purple-500 ring-1 ring-purple-500' 
-                                            : `${isDark ? 'bg-slate-800 border-slate-700 hover:bg-slate-700' : 'bg-white border-slate-200 hover:border-purple-300'}`
-                                    }`}
-                                >
-                                    <Monitor className={`w-8 h-8 mb-4 ${srTab === 'desktop' ? 'text-purple-500' : 'text-slate-400'}`} />
-                                    <h3 className={`font-bold mb-1 ${textMain}`}>Windows</h3>
-                                    <p className={`text-xs ${textSub}`}>NVDA</p>
-                                </button>
+                            {/* Horizontal Tabs for Screen Readers - Replaces Grid Buttons */}
+                            <div className="flex border-b border-opacity-10 mb-6" style={{ borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' }}>
+                                {['mobile', 'desktop'].map((id) => {
+                                    const labels: any = { mobile: 'Mobile (VoiceOver/TalkBack)', desktop: 'Desktop (NVDA)' };
+                                    const isActive = srTab === id;
+                                    return (
+                                        <button 
+                                            key={id} 
+                                            onClick={() => setSrTab(id as any)} 
+                                            className={`px-6 py-3 text-sm font-bold border-b-2 transition-colors flex items-center gap-2 ${
+                                                isActive 
+                                                    ? 'border-blue-500 text-blue-500' 
+                                                    : 'border-transparent text-slate-500 hover:text-slate-700'
+                                            }`}
+                                        >
+                                            {id === 'mobile' ? <Smartphone className="w-4 h-4"/> : <Monitor className="w-4 h-4"/>}
+                                            {labels[id]}
+                                        </button>
+                                    );
+                                })}
                             </div>
 
                             <div className={`p-6 rounded-xl border ${isDark ? 'bg-slate-900/50 border-slate-700' : 'bg-slate-50 border-slate-200'}`}>
@@ -499,7 +665,7 @@ export const StudyMode: React.FC<StudyModeProps> = ({ setFocusMode, language, th
             </div>
         )}
 
-        {step === 5 && (
+        {step === 4 && (
             <div className="space-y-8 animate-fade-in">
                 <h2 className={`text-2xl font-bold ${textMain} text-center`}>{t.deepDive}</h2>
                 <div className="grid md:grid-cols-2 gap-6">
@@ -515,9 +681,9 @@ export const StudyMode: React.FC<StudyModeProps> = ({ setFocusMode, language, th
             </div>
         )}
 
-        {step === 6 && (
+        {step === 5 && (
             <div className="animate-fade-in max-w-2xl mx-auto">
-                {!levelComplete && !levelFailed ? (
+                {!levelComplete ? (
                     <div className={`p-8 rounded-2xl border ${glassPanel}`}>
                         <div className="flex justify-between items-center mb-6">
                             <h2 className={`text-xl font-bold ${textMain}`}>{t.question} {currentQuestionIndex + 1} / {lesson.test.length}</h2>
@@ -529,29 +695,32 @@ export const StudyMode: React.FC<StudyModeProps> = ({ setFocusMode, language, th
                                 <button key={idx} onClick={() => handleTestAnswer(idx)} disabled={showResult} className={`w-full text-left p-4 rounded-xl border transition-all ${showResult ? idx === lesson.test[currentQuestionIndex].correctIndex ? 'bg-green-500/20 border-green-500 text-green-600' : idx === selectedAnswer ? 'bg-red-500/20 border-red-500 text-red-600' : 'opacity-50' : isDark ? 'bg-slate-800 border-slate-700 hover:bg-slate-700 text-slate-200' : 'bg-white border-slate-200 hover:border-blue-300 shadow-sm'}`}>{opt}</button>
                             ))}
                         </div>
-                        {showResult && <div className="mt-6 pt-6 border-t border-slate-700/50 flex justify-end"><button onClick={nextQuestion} className="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2">{currentQuestionIndex < lesson.test.length - 1 ? t.next : t.finish} <ArrowRight className="w-5 h-5" /></button></div>}
+                        {showResult && (
+                            <div className="mt-6 pt-6 border-t border-slate-700/50 flex justify-end">
+                                <button onClick={nextQuestion} className="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2">
+                                    {/* Show Finish only if it's the last question */}
+                                    {currentQuestionIndex < lesson.test.length - 1 ? t.next : t.finish} <ArrowRight className="w-5 h-5" />
+                                </button>
+                            </div>
+                        )}
                     </div>
                 ) : (
                     <div className="text-center py-10">
-                        {levelComplete ? (
-                            <div className="space-y-6">
-                                <div className="flex justify-center gap-2">{[1,2,3].map(s => <Star key={s} className={`w-12 h-12 ${s <= testScore ? 'fill-yellow-400 text-yellow-500' : 'text-slate-600'}`} />)}</div>
-                                <h2 className={`text-3xl font-black ${textMain}`}>{t.levelComplete}</h2>
-                                <button onClick={() => finishLevel(true)} className="px-8 py-3 bg-green-600 text-white rounded-xl font-bold shadow-lg">{t.continue}</button>
+                        <div className="space-y-6">
+                            <div className="flex justify-center gap-2">
+                                {/* Always show 3 stars slots, fill based on score */}
+                                {[1,2,3].map(s => <Star key={s} className={`w-12 h-12 ${s <= testScore ? 'fill-yellow-400 text-yellow-500' : 'text-slate-600'}`} />)}
                             </div>
-                        ) : (
-                             <div className="space-y-6">
-                                <X className="w-20 h-20 text-red-500 mx-auto" />
-                                <h2 className={`text-3xl font-black ${textMain}`}>{t.levelFailed}</h2>
-                                <button onClick={() => finishLevel(false)} className="px-8 py-3 bg-slate-600 text-white rounded-xl font-bold shadow-lg flex items-center gap-2 mx-auto"><RotateCcw /> {t.tryAgain}</button>
-                            </div>
-                        )}
+                            <h2 className={`text-3xl font-black ${textMain}`}>{t.levelComplete}</h2>
+                            <p className={`${textSub} text-lg`}>{t.score}: {testScore}/{lesson.test.length}</p>
+                            <button onClick={finishLevel} className="px-8 py-3 bg-green-600 text-white rounded-xl font-bold shadow-lg hover:bg-green-500 transition-colors">{t.continue}</button>
+                        </div>
                     </div>
                 )}
             </div>
         )}
 
-        {step > 1 && step < 6 && (
+        {step > 1 && step < 5 && (
             <div className="mt-10 flex justify-between items-center w-full animate-fade-in">
                     <button onClick={handlePrev} className={`px-6 py-3 rounded-full font-bold flex items-center gap-2 border backdrop-blur-xl ${isDark ? 'bg-slate-900/90 border-slate-700 text-slate-300' : 'bg-white/90 border-slate-200 text-slate-600'}`}><ArrowLeft className="w-5 h-5" /> {t.back}</button>
                     <button onClick={handleNext} className="px-8 py-3 bg-blue-600 text-white rounded-full font-bold flex items-center gap-2 shadow-xl shadow-blue-500/30">{t.next} <ArrowRight className="w-5 h-5" /></button>
