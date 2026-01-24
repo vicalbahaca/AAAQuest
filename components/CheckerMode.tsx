@@ -762,8 +762,8 @@ export const CheckerMode: React.FC<CheckerModeProps> = ({ language, theme }) => 
 
     return (
       <div className="max-w-7xl mx-auto p-4 md:p-8 animate-fade-in pb-32">
-        <div className="flex justify-between items-start mb-8">
-           <div>
+        <div className="flex flex-col lg:flex-row justify-between items-start gap-6 lg:gap-0 mb-8">
+           <div className="w-full lg:w-auto">
               <h2 className={`text-3xl font-bold mb-2 ${textMain}`}>{t.checkerTitle}</h2>
               <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold border ${isComplete ? 'bg-green-500/10 text-green-500 border-green-500/20' : 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20'}`}>
                  {isComplete ? <CheckCircle className="w-3 h-3" /> : <AlertTriangle className="w-3 h-3" />}
@@ -771,17 +771,17 @@ export const CheckerMode: React.FC<CheckerModeProps> = ({ language, theme }) => 
               </div>
            </div>
            
-           <div className="flex gap-3">
+           <div className="flex flex-wrap gap-3 w-full lg:w-auto">
               <button 
                 onClick={handleReset}
-                className={`flex items-center gap-2 px-5 py-2 border rounded-xl text-sm font-bold transition-all active:scale-95 ${isDark ? 'bg-slate-800 hover:bg-slate-700 border-slate-700 text-white' : 'bg-white hover:bg-slate-100 border-slate-300 hover:border-black text-slate-700 hover:text-slate-900 shadow-sm hover:shadow-slate-300/50'}`}
+                className={`flex-1 lg:flex-none justify-center items-center flex gap-2 px-5 py-2 border rounded-xl text-sm font-bold transition-all active:scale-95 ${isDark ? 'bg-slate-800 hover:bg-slate-700 border-slate-700 text-white' : 'bg-white hover:bg-slate-100 border-slate-300 hover:border-black text-slate-700 hover:text-slate-900 shadow-sm hover:shadow-slate-300/50'}`}
               >
                 <RotateCcw className="w-4 h-4" /> {t.uploadAnother}
               </button>
               
               <button 
                 onClick={handleExportPDF}
-                className={`flex items-center gap-2 px-5 py-2 border border-transparent hover:border-white/20 rounded-xl text-sm font-bold text-white transition-all active:scale-95 ${
+                className={`flex-1 lg:flex-none justify-center items-center flex gap-2 px-5 py-2 border border-transparent hover:border-white/20 rounded-xl text-sm font-bold text-white transition-all active:scale-95 ${
                     isDark
                     ? 'bg-emerald-600 hover:bg-emerald-500 shadow-lg shadow-emerald-900/30'
                     : 'bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 shadow-lg shadow-emerald-500/30'
