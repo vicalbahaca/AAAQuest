@@ -1,5 +1,6 @@
+
 import { GoogleGenAI, Type } from "@google/genai";
-import { Difficulty, TestType, CheckerResult, Language, StudyLesson, AdaptiveContext, TestQuestion } from "../types";
+import { Difficulty, TestType, CheckerResult, Language, StudyLesson, AdaptiveContext, TestQuestion, TRANSLATIONS, VisualComponentType } from "../types";
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 const modelName = 'gemini-3-flash-preview';
@@ -15,36 +16,17 @@ const LANGUAGE_NAMES: Record<Language, string> = {
   hi: 'हिन्दी'
 };
 
-// ============================================================================
-// PLANTILLAS DE PROMPTS REUTILIZABLES
-// ============================================================================
-const PROMPT_TEMPLATES = {
-  roleContext: (language: Language) => 
-    `You are an expert Accessibility Auditor (WCAG 2.1 AA+). Output strictly in ${LANGUAGE_NAMES[language]}.`,
-  
-  formatRules: `
-CRITICAL FORMAT RULES:
-- NO numbering (1., 2., 3.) in explanatory text
-- NO section prefixes like "CONTEXT:", "CONCLUSION:", "REQUIREMENT:"
-- Output only direct, clear sentences
-- Use Markdown ONLY where explicitly required`,
-
-  screenReaderInstructions: `
-SCREEN READER OUTPUT FORMAT:
-Mobile (VoiceOver/TalkBack):
-- Gesture: [action]
-- Output: "[exact speech]"
-
-Desktop (NVDA):
-- Key: [shortcut]
-- Output: "[exact speech]"`,
-
-  codeStructure: `
-CODE REQUIREMENTS:
-- Complete, valid, production-ready code
-- Include all necessary ARIA attributes
-- Follow platform conventions (HTML5, Swift, Kotlin/XML)
-- Add inline comments for accessibility-critical parts`
+const LEVEL_SPECS: Record<number, { name: string, visual: VisualComponentType, description: string, label: string, prop: string }> = {
+  1: { name: "Button", visual: "M3_BUTTON", description: "Basic CTA button", label: "Enviar Formulario", prop: "buttonText" },
+  2: { name: "Checkbox", visual: "M3_CHECKBOX", description: "Single or group checkbox", label: "Acepto los términos y condiciones", prop: "items" },
+  3: { name: "Carousel", visual: "NONE", description: "Product carousel with multiple visible items", label: "Productos relacionados", prop: "ariaLabel" },
+  4: { name: "Link", visual: "NONE", description: "Text link and icon link", label: "Ir a la página de ayuda", prop: "label" },
+  5: { name: "Text Field", visual: "M3_TEXT_FIELD", description: "Material design input", label: "Correo electrónico", prop: "label" },
+  6: { name: "List", visual: "NONE", description: "Unordered/ordered with semantic structure", label: "Lista de tareas", prop: "label" },
+  7: { name: "Radio Button", visual: "M3_RADIO_GROUP", description: "Group with exclusive selection", label: "Opción Premium", prop: "items" },
+  8: { name: "Tabs", visual: "NONE", description: "Navigation with panel switching", label: "Mi Perfil", prop: "label" },
+  9: { name: "Loader", visual: "NONE", description: "Spinner with live region announcements", label: "Cargando contenido", prop: "ariaLabel" },
+  10: { name: "Switch", visual: "M3_SWITCH", description: "Toggle with on/off states", label: "Activar modo oscuro", prop: "label" }
 };
 
 // ============================================================================
@@ -52,43 +34,23 @@ CODE REQUIREMENTS:
 // ============================================================================
 const cleanAndParseJSON = <T>(text: string, context: string = 'AI response'): T => {
   try {
-    // Remove markdown code blocks
     let cleaned = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-    
-    // Fix common JSON issues
     cleaned = cleaned
-      // Fix unterminated strings by removing control characters
       .replace(/[\n\r\t]/g, ' ')
-      // Fix multiple spaces
       .replace(/\s+/g, ' ')
-      // Ensure proper string escaping
       .replace(/\\(?!["\\/bfnrt])/g, '\\\\');
     
     return JSON.parse(cleaned) as T;
   } catch (e) {
     console.error(`JSON Parse Error in ${context}:`, e);
-    console.error('Raw text (first 500 chars):', text.substring(0, 500));
-    console.error('Raw text (last 500 chars):', text.substring(Math.max(0, text.length - 500)));
-    
-    // Try to salvage partial JSON
     try {
-      // Find the last complete object
       const lastBrace = text.lastIndexOf('}');
       if (lastBrace > 0) {
         const truncated = text.substring(0, lastBrace + 1);
-        const cleanedTruncated = truncated
-          .replace(/```json\n?/g, '').replace(/```\n?/g, '')
-          .replace(/[\n\r\t]/g, ' ')
-          .replace(/\s+/g, ' ')
-          .trim();
-        console.warn('Attempting to parse truncated JSON...');
-        return JSON.parse(cleanedTruncated) as T;
+        return JSON.parse(truncated) as T;
       }
-    } catch (salvageError) {
-      console.error('Could not salvage JSON');
-    }
-    
-    throw new Error(`Failed to parse ${context}. The AI response was incomplete or malformed.`);
+    } catch (salvageError) {}
+    throw new Error(`Failed to parse ${context}.`);
   }
 };
 
@@ -96,139 +58,139 @@ const getLanguageName = (language: Language): string => LANGUAGE_NAMES[language]
 
 const getSystemInstruction = (language: Language): string => {
   const lang = getLanguageName(language);
-  return `Expert in WCAG 2.1 AA+ accessibility. Train designers/developers. Output: ${lang}. Be concise, technical, actionable.`;
+  return `You are an expert Accessibility Auditor (WCAG 2.1 AA+). Output strictly in ${lang}. Your mission is to train designers/developers with PERFECT CONSISTENCY between visual examples, code, and screen reader output.`;
 };
 
 // ============================================================================
-// NIVEL 1 HARDCODED (CURADO)
+// PROMPT BUILDER
 // ============================================================================
-const LEVEL_1_LESSON_ES: StudyLesson = {
-    level: 1,
-    topicTag: "Fundamentos",
-    introTitle: "Introducción a la accesibilidad digital",
-    introSubtitle: "¿Qué es, por qué es importante y por qué deberías aprenderlo?",
-    learningPills: [
-        {
-            title: "Inclusión para Todos",
-            description: "La accesibilidad digital asegura que todas las personas puedan usar la web, independientemente de sus capacidades.\n- Permite que personas con discapacidad visual, auditiva, motriz y cognitiva interactúen con sitios y apps.\n- Garantiza igualdad de acceso a la información.\n- No beneficia solo a unos pocos, beneficia a toda la sociedad.\nEs un derecho fundamental en el entorno digital.",
-            icon: "globe"
-        },
-        {
-            title: "¿Por qué es Importante?",
-            description: "Crear productos accesibles tiene múltiples beneficios:\n- Mejora la experiencia de usuario (UX) para todas las personas.\n- Facilita el uso a personas mayores o con limitaciones temporales (como un brazo roto).\n- Mejora el SEO y posicionamiento web.\n- Es un requisito legal en muchos países.\nRefleja valores éticos y responsabilidad social.",
-            icon: "star"
-        },
-        {
-            title: "Ejemplos Cotidianos",
-            description: "Probablemente ya usas funciones de accesibilidad a diario:\n- Subtítulos en vídeos (útiles en entornos ruidosos).\n- Texto alternativo en imágenes (mejora la búsqueda).\n- Buen contraste de texto (facilita la lectura bajo el sol).\n- Navegación con teclado (más rápida para usuarios avanzados).\nSon mejoras simples con impacto real.",
-            icon: "eye"
-        },
-        {
-            title: "Impacto Legal y Ético",
-            description: "La accesibilidad no es opcional, es necesaria:\n- Existen leyes como la ADA y estándares como las WCAG.\n- Hay riesgos legales significativos si no se cumple.\n- Tenemos la responsabilidad ética de no excluir a nadie.\n- Es vital para la dignidad y autonomía de las personas.\nEs una obligación moral y profesional.",
-            icon: "contrast"
-        }
-    ],
-    visualComponent: "NONE",
-    documentation: {
-        nonTechnical: "### Guía para Diseño y Producto\nLa documentación es el puente entre el diseño y el código. Para garantizar la accesibilidad, debemos especificar claramente qué hace cada elemento.\n\n**Elementos a definir:**\n- **Rol:** ¿Qué es este elemento? (Botón, Enlace, Encabezado)\n- **Nombre Accesible:** ¿Cómo se llama? (Ej: 'Cerrar', 'Enviar formulario')\n- **Estado:** ¿Cómo está? (Activo, Deshabilitado, Expandido)\n\n**Comportamiento esperado:**\n- El foco debe ser visible siempre.\n- El orden de tabulación debe ser lógico (izquierda a derecha, arriba a abajo).\n- Los mensajes de error deben ser descriptivos y no solo depender del color rojo.",
-        codeExamples: {
-            html: `<!-- Ejemplo: Botón Accesible -->\n<button type="button" aria-label="Cerrar modal">\n  <span aria-hidden="true">X</span>\n</button>\n\n<!-- Ejemplo: Imagen con Texto Alternativo -->\n<img src="perro.jpg" alt="Un perro labrador corriendo en el parque" />`,
-            ios: `// Ejemplo Swift (UIKit)\nlet closeButton = UIButton()\ncloseButton.accessibilityLabel = "Cerrar modal"\ncloseButton.accessibilityTraits = .button\ncloseButton.accessibilityHint = "Cierra la ventana actual"`,
-            android: `<!-- Ejemplo XML (Android) -->\n<ImageButton\n    android:id="@+id/close_btn"\n    android:contentDescription="Cerrar modal"\n    android:focusable="true" />`
-        },
-        mobileScreenReader: "### VoiceOver (iOS) y TalkBack (Android)\n\n**Gesto:** Tocar el elemento una vez.\n**Lectura esperada:**\n- 'Cerrar modal, Botón'\n- 'Un perro labrador corriendo en el parque, Imagen'\n\n**Gesto:** Deslizar (Swipe) a la derecha.\n**Acción:** Mueve el foco al siguiente elemento lógico.",
-        desktopScreenReader: "### NVDA (Windows)\n\n**Acción:** Pulsar tecla 'Tab' para llegar al botón.\n**Lectura esperada:**\n- 'Cerrar modal, botón'\n\n**Acción:** Flechas arriba/abajo para leer contenido.\n**Lectura esperada:**\n- 'Gráfico, Un perro labrador corriendo en el parque'"
-    },
-    goodPractices: ["Usar texto claro y sencillo.", "Pensar en todas las personas.", "Probar con teclado.", "Validar con lectores."],
-    badPractices: ["Usar solo color.", "Depender del ratón.", "Ocultar info.", "Asumir uso estándar."],
-    externalResources: [{ title: "WCAG 2.1 (W3C)", url: "https://www.w3.org/TR/WCAG21/" }],
-    test: [
-        { 
-          question: "¿A quién beneficia la accesibilidad digital?", 
-          options: ["Solo personas ciegas", "A toda la sociedad", "Solo personas mayores", "Solo programadores"], 
-          correctIndex: 1, 
-          successMessage: "¡Correcto! La accesibilidad beneficia a todos.", 
-          failureMessage: "Piénsalo bien. La accesibilidad no es solo para un grupo específico." 
-        }
-    ]
+const buildLessonPrompt = (level: number, language: Language, context?: AdaptiveContext): string => {
+  const spec = LEVEL_SPECS[level] || LEVEL_SPECS[1];
+  const langName = getLanguageName(language);
+  
+  // Specific instructions per level
+  let specificInstructions = "";
+  if (level === 3) {
+     specificInstructions = `
+**SPECIAL CASE: CAROUSEL (Level 3)**
+- Carousel Type: Product carousel with multiple visible items (3 visible, 6 total).
+- Key Features:
+  1. Use 'inert' attribute on hidden products (items 4-6).
+  2. Implement navigation buttons (Previous/Next) with proper ARIA labels.
+  3. Add live region for announcing navigation changes.
+  4. Focus management: when reaching end, move focus to opposite arrow.
+  5. Visible range indicator: "Mostrando productos 1 a 3 de 6".
+- ARIA Structure:
+  <section aria-roledescription="carrusel" aria-label="${spec.label}">
+    <div role="group" aria-roledescription="slide" aria-label="Productos 1 a 3 de 6">...</div>
+    <div inert>...</div>
+    <div aria-live="polite" class="sr-only"></div>
+  </section>
+`;
+  }
+
+  // Construct prop specific prompt
+  let propInstruction = "";
+  if (spec.prop === 'items') {
+      propInstruction = `Set 'visualComponentProps.items' to ["${spec.label}"].`;
+  } else {
+      propInstruction = `Set 'visualComponentProps.${spec.prop}' to "${spec.label}".`;
+  }
+
+  return `
+CRITICAL MISSION: Generate a comprehensive accessibility lesson for Level ${level} (${spec.name}).
+Language: ${langName}
+Visual Component to generate: ${spec.visual} (${spec.description})
+${context ? `User Context: Last Score ${context.lastScore}%, Trend ${context.trend}` : ''}
+
+${specificInstructions}
+
+**CRITICAL RULES (MUST FOLLOW):**
+1. **NO 'dp' UNITS**: NEVER mention "dp". ALWAYS use "píxeles" or "px".
+2. **MARKDOWN HEADERS**: In 'documentation.nonTechnical', use '###' for these exact sections:
+   - ### ¿Qué es este componente?
+   - ### Rol y Elemento Nativo
+   - ### Nombre Accesible
+   - ### Estados del Componente
+   - ### Comportamiento y Contexto de Uso
+3. **EXACT LABEL CONSISTENCY**: The label "${spec.label}" MUST be used identically in:
+   - visualComponentProps
+   - HTML code (<label> or aria-label)
+   - Swift code (accessibilityLabel)
+   - Android code (android:text or contentDescription)
+   - Screen Reader outputs ("${spec.label}, ...")
+
+STEP 1: VISUAL COMPONENT PROPS
+Set 'visualComponent' to "${spec.visual}".
+${propInstruction}
+If the component is M3_BUTTON, set 'buttonText' to "${spec.label}".
+If the component is M3_TEXT_FIELD, set 'label' to "${spec.label}".
+If the component is M3_CHECKBOX or M3_RADIO_GROUP, set 'items' array containing "${spec.label}".
+If the component is M3_SWITCH, set 'label' to "${spec.label}".
+
+STEP 2: NON-TECHNICAL DOCUMENTATION (Markdown)
+Write clear explanations using the ### headers defined above.
+Explain the importance of the specific label "${spec.label}".
+
+STEP 3: CODE EXAMPLES
+Generate COMPLETE, PRODUCTION-READY code in 3 platforms.
+**CRITICAL**: Use "${spec.label}" in the code.
+
+<!-- HTML Example -->
+<button>${spec.label}</button> or <label>${spec.label}</label>
+
+<!-- iOS Example (Swift) -->
+button.setTitle("${spec.label}", ...) or accessibilityLabel = "${spec.label}"
+
+<!-- Android Example (XML) -->
+android:text="${spec.label}" or android:contentDescription="${spec.label}"
+
+STEP 4: SCREEN READER DOCUMENTATION (Markdown)
+
+**Mobile (VoiceOver/TalkBack)**:
+- Gesto: [Specific Gesture]
+- Salida: "${spec.label}, [ROLE], [STATE]"
+
+**Desktop (NVDA)**:
+- Tecla: [Specific Key]
+- Salida: "[ROLE], ${spec.label}, [STATE]"
+
+STEP 5: TEST QUESTIONS
+Generate EXACTLY 3 questions.
+
+Output strict JSON matching the StudyLesson schema.
+`;
 };
 
 // ============================================================================
 // FUNCIONES EXPORTADAS
 // ============================================================================
 
-/**
- * Explica un concepto técnico de accesibilidad de forma simple
- */
 export const explainConceptSimply = async (
   phrase: string, 
   topic: string, 
   language: Language
 ): Promise<string> => {
   const langName = getLanguageName(language);
-  
-  const prompt = `Context: Student learning "${topic}" accessibility basics.
-Technical phrase: "${phrase}"
-
-Task: Explain in simple ${langName} (B2 level, age 10+).
-- Max 2 short paragraphs
-- Use friendly tone & analogies
-- Avoid jargon`;
+  const prompt = `Context: Student learning "${topic}". Explain "${phrase}" in simple ${langName} (B2 level). Max 2 paragraphs. Avoid jargon.`;
 
   const response = await ai.models.generateContent({
     model: modelName,
     contents: prompt,
-    config: {
-      temperature: 0.7,
-      topP: 0.9,
-      maxOutputTokens: 200,
-    }
+    config: { temperature: 0.7, maxOutputTokens: 200 }
   });
 
   return response.text || "No explanation generated.";
 };
 
-/**
- * Genera una lección de estudio adaptada al nivel
- */
 export const generateStudyLesson = async (
   level: number, 
   language: Language, 
   context?: AdaptiveContext
 ): Promise<StudyLesson> => {
-  const langName = getLanguageName(language);
-  
-  if (level === 1) return LEVEL_1_LESSON_ES;
+  const prompt = buildLessonPrompt(level, language, context);
 
-  const difficulty = level <= 10 
-    ? "Advanced technical: Complex ARIA, dynamic states" 
-    : "Expert: Widgets, Live Regions, edge cases";
-
-  const prompt = `Generate Level ${level} accessibility lesson (${langName}).
-Difficulty: ${difficulty}
-${context ? `Adaptive: User scored ${context.lastScore}%, trend: ${context.trend}` : ''}
-
-LESSON STRUCTURE:
-1. Topic & intro (clear, motivating)
-2. 4 learning pills (title, description, icon name)
-3. Visual component demo with props
-4. **DOCUMENTATION** (critical):
-   - nonTechnical: Role, State, Expected Behavior (Markdown)
-   - codeExamples: Complete HTML, Swift, XML/Kotlin
-   - mobileScreenReader: VoiceOver/TalkBack gestures & speech output
-   - desktopScreenReader: NVDA keys & speech output
-5. Do's & Don'ts (4 each, short)
-6. 1 external resource (W3C/MDN preferred)
-7. 1 test question (4 options)
-
-${PROMPT_TEMPLATES.formatRules}
-${PROMPT_TEMPLATES.codeStructure}
-${PROMPT_TEMPLATES.screenReaderInstructions}
-
-Return strict JSON matching schema.`;
-
-  const response = await ai.models.generateContent({
+  const aiResponse = await ai.models.generateContent({
     model: modelName,
     contents: prompt,
     config: {
@@ -254,7 +216,10 @@ Return strict JSON matching schema.`;
                 required: ["title", "description", "icon"]
               } 
             },
-            visualComponent: { type: Type.STRING },
+            visualComponent: { 
+              type: Type.STRING, 
+              enum: ['M3_TEXT_FIELD', 'M3_BUTTON', 'M3_CARD', 'M3_SWITCH', 'M3_CHIPS', 'M3_CHECKBOX', 'M3_RADIO_GROUP', 'M3_FAB', 'NONE']
+            },
             visualComponentProps: { 
                 type: Type.OBJECT,
                 properties: {
@@ -268,7 +233,10 @@ Return strict JSON matching schema.`;
                     ariaLabel: { type: Type.STRING },
                     role: { type: Type.STRING },
                     state: { type: Type.STRING },
-                    items: { type: Type.ARRAY, items: { type: Type.STRING } }
+                    items: { type: Type.ARRAY, items: { type: Type.STRING } },
+                    secondaryText: { type: Type.STRING },
+                    checked: { type: Type.BOOLEAN },
+                    iconName: { type: Type.STRING }
                 }
             },
             documentation: { 
@@ -324,22 +292,34 @@ Return strict JSON matching schema.`;
     }
   });
 
-  return cleanAndParseJSON<StudyLesson>(response.text || "{}", 'Study Lesson');
+  const parsedLesson = cleanAndParseJSON<StudyLesson>(aiResponse.text || "{}", 'Study Lesson');
+
+  if (!parsedLesson.test || parsedLesson.test.length !== 3) {
+    if (parsedLesson.test && parsedLesson.test.length > 3) {
+      parsedLesson.test = parsedLesson.test.slice(0, 3);
+    }
+    while (!parsedLesson.test || parsedLesson.test.length < 3) {
+      if (!parsedLesson.test) parsedLesson.test = [];
+      parsedLesson.test.push({
+        question: "Review Question",
+        options: ["Option A", "Option B", "Option C", "Option D"],
+        correctIndex: 0,
+        successMessage: "Correct",
+        failureMessage: "Review content"
+      });
+    }
+  }
+
+  return parsedLesson;
 };
 
-/**
- * Genera preguntas de test según dificultad y tipo
- */
 export const generateTest = async (
   difficulty: Difficulty, 
   type: TestType, 
   language: Language
 ): Promise<TestQuestion[]> => {
   const langName = getLanguageName(language);
-  
-  const prompt = `10 ${difficulty} questions on "${type}" accessibility (${langName}).
-Format: Multiple choice, 4 options, 1 correct.
-Include brief explanation for each.`;
+  const prompt = `10 ${difficulty} questions on "${type}" accessibility (${langName}). Multiple choice, 4 options, 1 correct. Include brief explanation.`;
 
   const response = await ai.models.generateContent({
     model: modelName,
@@ -369,106 +349,13 @@ Include brief explanation for each.`;
   return cleanAndParseJSON<TestQuestion[]>(response.text || "[]", 'Test Questions');
 };
 
-/**
- * Analiza una imagen UI para auditoría de accesibilidad
- */
 export const analyzeImage = async (
   base64Image: string, 
   language: Language, 
   userContext?: string
 ): Promise<CheckerResult> => {
   const langName = getLanguageName(language);
-
-  const prompt = `Analyze UI for WCAG 2.1 AA (${langName}).
-${userContext ? `Context: ${userContext}` : ''}
-
-JSON RULES: Keep text concise. Max 80 chars per string. No line breaks.
-
-OUTPUT:
-
-1. SCREEN CONTEXT (screenContext)
-- screenType: Describe the PURPOSE (e.g., "Generacion de extracto", "Perfil de usuario", "Formulario de pago")
-- description: Brief context
-
-2. VIEW TITLE (viewTitle array)
-CRITICAL RULES:
-- For normal screens: Use the H1 text with minimal context. Example: "Generar Extracto EUR"
-- For modals: State "Modal sobre [main screen title]" + modal's title
-- For elements without native title: State "Este elemento no requiere title" + suggest one
-- Output ONE clear sentence only
-
-3. STRUCTURE (structure array)
-Always include native mobile elements:
-- "Menu nativo superior" (if present)
-- "Main: [content description]"
-- "Footer fijo inferior" (if fixed bottom button/nav present)
-
-4. HEADINGS (heading array)
-List all h1-h6 detected with format "hN: Text"
-
-5. FOCUS ORDER (focusOrder array)
-List EVERY interactive element separately.
-Format: "N. [Type] - [Label]"
-Examples:
-"1. Button - Volver"
-"2. Heading - EUR Extracto"
-"3. Tab - PDF"
-
-6. COMPLEX SECTIONS (complexSections array)
-ONE element = ONE section.
-
-Each section needs:
-- regionTitle: Descriptive element name
-- box_2d: [ymin, xmin, ymax, xmax] (scale 0-1000, min 50 units) - MANDATORY
-- categories:
-  * generalSpecific: ["role: X", "Alt/label: Y"] OR ["role: X", "label: Y"] if no alt
-  * behavior: 
-    - Keyboard: NEVER use "Deslizar". Use "Enter/Space", "Tab", "Flechas", "Esc"
-    - Action: Be specific (e.g., "Regresa a pantalla anterior", "Ajusta posicion horizontalmente")
-  * alt: 
-    - For icons/images WITH decorative purpose: ["alt: \"\""]
-    - For icons/images WITH informative purpose: ["alt: description"]
-    - For elements WITHOUT icons/images: [] (empty array)
-  * grouped: [] (ONLY for actual form groups like radio buttons, otherwise EMPTY)
-
-ALT RULES (CRITICAL):
-- Icon buttons: Combine in generalSpecific as "Alt/label: X"
-- Decorative icons: alt array contains ["alt: \"\""]
-- No icon/image: alt array is EMPTY []
-- NEVER put "Decorative" as text, use alt: ""
-
-KEYBOARD RULES:
-- Pickers/Selectors: "Flechas" (not "Deslizar")
-- Buttons: "Enter/Space"
-- Tabs: "Flechas"
-
-GROUPED RULES:
-- ONLY use for semantic groups (radio buttons in same fieldset, related checkboxes)
-- DO NOT use for visual grouping
-- Most elements: [] (empty)
-
-Example correct output:
-{
-  "regionTitle": "Boton Volver",
-  "categories": {
-    "generalSpecific": ["role: button", "Alt/label: Volver"],
-    "behavior": ["Keyboard: Enter/Space", "Action: Regresa a pantalla anterior"],
-    "alt": [],
-    "grouped": []
-  }
-}
-
-{
-  "regionTitle": "Selector de Periodo",
-  "categories": {
-    "generalSpecific": ["role: button", "label: Periodo Mes"],
-    "behavior": ["Keyboard: Enter", "Action: Abre menu de seleccion"],
-    "alt": ["alt: \"\""],
-    "grouped": []
-  }
-}
-
-Return valid JSON.`;
+  const prompt = `Analyze UI for WCAG 2.1 AA (${langName}). ${userContext ? `Context: ${userContext}` : ''}. Output valid JSON compatible with CheckerResult type.`;
 
   const response = await ai.models.generateContent({
     model: modelName,
@@ -479,7 +366,7 @@ Return valid JSON.`;
       ] 
     },
     config: {
-      systemInstruction: PROMPT_TEMPLATES.roleContext(language),
+      systemInstruction: getSystemInstruction(language),
       responseMimeType: "application/json",
       maxOutputTokens: 8192,
       temperature: 0.3,
@@ -515,11 +402,7 @@ Return valid JSON.`;
                       type: Type.OBJECT,
                       properties: {
                           regionTitle: { type: Type.STRING },
-                          box_2d: { 
-                              type: Type.ARRAY, 
-                              items: { type: Type.INTEGER },
-                              description: "MANDATORY: [ymin, xmin, ymax, xmax] scale 0-1000"
-                          },
+                          box_2d: { type: Type.ARRAY, items: { type: Type.INTEGER } },
                           categories: {
                               type: Type.OBJECT,
                               properties: {
@@ -543,46 +426,25 @@ Return valid JSON.`;
   return cleanAndParseJSON<CheckerResult>(response.text || "{}", 'Image Analysis');
 };
 
-/**
- * Genera una imagen usando Gemini
- */
-export const generateImage = async (
-  prompt: string, 
-  size: '1K' | '2K' | '4K' = '1K'
-): Promise<string> => {
+export const generateImage = async (prompt: string, size: '1K' | '2K' | '4K' = '1K'): Promise<string> => {
   const response = await ai.models.generateContent({
     model: 'gemini-3-pro-image-preview',
     contents: { parts: [{ text: prompt }] },
     config: { imageConfig: { aspectRatio: "1:1", imageSize: size } },
   });
-  
   for (const part of response.candidates[0].content.parts) {
     if (part.inlineData) return part.inlineData.data;
   }
-  
   throw new Error("No image generated");
 };
 
-/**
- * Edita una imagen existente
- */
-export const editImage = async (
-  base64Image: string, 
-  prompt: string
-): Promise<string> => {
+export const editImage = async (base64Image: string, prompt: string): Promise<string> => {
   const response = await ai.models.generateContent({
     model: 'gemini-2.5-flash-image',
-    contents: { 
-      parts: [
-        { inlineData: { data: base64Image, mimeType: 'image/jpeg' } }, 
-        { text: prompt }
-      ] 
-    },
+    contents: { parts: [{ inlineData: { data: base64Image, mimeType: 'image/jpeg' } }, { text: prompt }] },
   });
-  
   for (const part of response.candidates[0].content.parts) {
     if (part.inlineData) return part.inlineData.data;
   }
-  
   throw new Error("No image edited");
 };
