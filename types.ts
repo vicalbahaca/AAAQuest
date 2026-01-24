@@ -31,7 +31,16 @@ export enum TestType {
   MODALS = 'Modales & Overlays'
 }
 
-export type VisualComponentType = 'MATERIAL_INPUT' | 'IOS_BUTTON' | 'PRODUCT_CARD' | 'MODAL_DIALOG' | 'OTP_INPUT' | 'CHECKBOX_GROUP' | 'NONE';
+export type VisualComponentType = 
+  | 'M3_TEXT_FIELD' 
+  | 'M3_BUTTON' 
+  | 'M3_CARD' 
+  | 'M3_SWITCH' 
+  | 'M3_CHIPS'
+  | 'M3_CHECKBOX'
+  | 'M3_RADIO_GROUP'
+  | 'M3_FAB'
+  | 'NONE';
 
 export type Language = 'es' | 'en' | 'zh' | 'ru' | 'hi';
 
@@ -59,6 +68,10 @@ export interface StudyLesson {
     role?: string;
     state?: 'default' | 'error' | 'success' | 'disabled';
     items?: string[];
+    // M3 Specifics
+    iconName?: string; // Material Symbol name
+    secondaryText?: string;
+    checked?: boolean;
   };
   documentation: {
     nonTechnical: string;
@@ -170,7 +183,7 @@ export const TRANSLATIONS = {
     concepts: 'Conceptos Fundamentales',
     deepDive: 'Buenas Prácticas',
     evaluation: 'Evaluación',
-    visualExample: 'Ejemplo práctico',
+    visualExample: 'Ejemplo de componente',
     tabs: { nonTech: 'Documentación Funcional', tech: 'Documentación Técnica', voiceOver: 'Lectores de Pantalla' },
     audioOutput: 'Salida de Audio',
     testTitle: 'Hora del examen',
@@ -322,7 +335,7 @@ export const TRANSLATIONS = {
     concepts: 'Key Concepts',
     deepDive: 'Best Practices',
     evaluation: 'Evaluation',
-    visualExample: 'Accessibility Example',
+    visualExample: 'Component Example',
     tabs: { nonTech: 'Functional Spec', tech: 'Technical Code', voiceOver: 'Screen Readers' },
     audioOutput: 'Audio Output',
     testTitle: 'Exam Time',
@@ -441,7 +454,7 @@ export const TRANSLATIONS = {
     enterName: 'Please enter your name for the certificate:',
     certText: 'For successfully completing the demo levels of intensive training in digital accessibility and inclusive design in digital products.',
     lockedTitle: 'You have used all available screenshot analysis attempts',
-    lockedDesc: 'You can request more credits by writing to the tool creator Victor Saiz via LinkedIn or email:',
+    lockedDesc: 'You can request more credits by writing to the tool creator Victor Saiz Alfageme via LinkedIn or email:',
     lockedThanks: 'Thanks for using AAAQuest Accessibility Detector!'
   },
   zh: {
@@ -474,7 +487,7 @@ export const TRANSLATIONS = {
     concepts: '核心概念',
     deepDive: '最佳实践',
     evaluation: '评估',
-    visualExample: '无障碍示例',
+    visualExample: '组件示例',
     tabs: { nonTech: '功能规范', tech: '技术代码', voiceOver: '屏幕阅读器' },
     audioOutput: '音频输出',
     testTitle: '考试时间',
@@ -626,7 +639,7 @@ export const TRANSLATIONS = {
     concepts: 'Ключевые концепции',
     deepDive: 'Лучшие практики',
     evaluation: 'Оценка',
-    visualExample: 'Пример доступности',
+    visualExample: 'Пример компонента',
     tabs: { nonTech: 'Функциональная Спек.', tech: 'Технический Код', voiceOver: 'Скринридеры' },
     audioOutput: 'Аудиовыход',
     testTitle: 'Время теста',
@@ -778,7 +791,7 @@ export const TRANSLATIONS = {
     concepts: 'प्रमुख अवधारणाएं',
     deepDive: 'सर्वोत्तम प्रथाएं',
     evaluation: 'मूल्यांकन',
-    visualExample: 'पहुंच का उदाहरण',
+    visualExample: 'घटक उदाहरण',
     tabs: { nonTech: 'कार्यात्मक विवरण', tech: 'तकनीकी कोड', voiceOver: 'स्क्रीन रीडर' },
     audioOutput: 'ऑडियो आउटपुट',
     testTitle: 'परीक्षा का समय',
