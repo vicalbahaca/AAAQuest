@@ -1,35 +1,28 @@
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface RevealProps {
   children: React.ReactNode;
   delay?: number;
   className?: string;
   duration?: number;
-  threshold?: number;
+  threshold?: number; // Kept for compatibility, but ignored
 }
 
-export const Reveal: React.FC<RevealProps> = ({ children, delay = 0, className = "", duration = 800, threshold = 0.1 }) => {
+export const Reveal: React.FC<RevealProps> = ({ children, delay = 0, className = "", duration = 800 }) => {
   const [isVisible, setIsVisible] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.unobserve(entry.target);
-        }
-      },
-      { threshold, rootMargin: "0px 0px -50px 0px" }
-    );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, [threshold]);
+    // Trigger visibility immediately after mount instead of waiting for scroll
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 100); // Small buffer to ensure smooth transition
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div
-      ref={ref}
       className={`transition-all cubic-bezier(0.2, 0.8, 0.2, 1) transform will-change-transform ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
       } ${className}`}
