@@ -218,6 +218,8 @@ export const CheckerMode: React.FC<CheckerModeProps> = ({ language, theme }) => 
   const [imageResolution, setImageResolution] = useState<string | null>(null);
   const [result, setResult] = useState<CheckerResult | null>(null);
   const [userContext, setUserContext] = useState('');
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragError, setDragError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Interaction State
@@ -246,38 +248,79 @@ export const CheckerMode: React.FC<CheckerModeProps> = ({ language, theme }) => 
   const glassPanelClass = isDark ? 'glass-panel' : 'bg-white/60 backdrop-blur-xl border border-slate-200/60 shadow-xl';
   const inputBg = isDark ? 'bg-slate-900/50 border-slate-700 text-slate-200 placeholder-slate-600' : 'bg-white border-slate-300 text-slate-800 placeholder-slate-400';
   
+  const processFile = (file: File) => {
+    setDragError(null);
+    // Check for valid image types
+    const validTypes = ['image/png', 'image/jpeg', 'image/webp'];
+    if (!validTypes.includes(file.type)) {
+        setDragError("Formato no soportado. Usa PNG, JPG o WEBP.");
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = document.createElement('img');
+      img.onload = () => {
+        setImageResolution(`${img.naturalWidth}x${img.naturalHeight}`);
+        const MAX_SIZE = 1024;
+        let width = img.naturalWidth;
+        let height = img.naturalHeight;
+        if (width > MAX_SIZE || height > MAX_SIZE) {
+          if (width > height) {
+            height = Math.round((height * MAX_SIZE) / width);
+            width = MAX_SIZE;
+          } else {
+            width = Math.round((width * MAX_SIZE) / height);
+            height = MAX_SIZE;
+          }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx?.drawImage(img, 0, 0, width, height);
+        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+        const base64Data = compressedDataUrl.split(',')[1];
+        setImage(base64Data);
+      };
+      img.src = e.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = document.createElement('img');
-        img.onload = () => {
-          setImageResolution(`${img.naturalWidth}x${img.naturalHeight}`);
-          const MAX_SIZE = 1024;
-          let width = img.naturalWidth;
-          let height = img.naturalHeight;
-          if (width > MAX_SIZE || height > MAX_SIZE) {
-            if (width > height) {
-              height = Math.round((height * MAX_SIZE) / width);
-              width = MAX_SIZE;
-            } else {
-              width = Math.round((width * MAX_SIZE) / height);
-              height = MAX_SIZE;
-            }
-          }
-          const canvas = document.createElement('canvas');
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx?.drawImage(img, 0, 0, width, height);
-          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
-          const base64Data = compressedDataUrl.split(',')[1];
-          setImage(base64Data);
-        };
-        img.src = e.target?.result as string;
-      };
-      reader.readAsDataURL(file);
+        processFile(file);
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isLocked) {
+        setIsDragging(true);
+        if (dragError) setDragError(null);
+    }
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    setDragError(null);
+    
+    if (isLocked) return;
+
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      processFile(file);
     }
   };
 
@@ -666,10 +709,23 @@ export const CheckerMode: React.FC<CheckerModeProps> = ({ language, theme }) => 
                      <>
                        <div 
                           className={`border-2 rounded-xl p-8 text-center transition-all group ${
-                            image ? 'border-green-500/50 bg-green-500/5 border-dashed' : isDark ? 'border-slate-700 hover:border-white hover:bg-slate-800/50 border-dashed' : 'border-slate-300 hover:border-black hover:bg-emerald-50/50 border-dashed'} cursor-pointer active:scale-[0.99]`}
+                            dragError
+                                ? (isDark ? 'border-red-500 bg-red-900/10' : 'border-red-500 bg-red-50')
+                                : isDragging 
+                                    ? (isDark ? 'border-emerald-400 bg-emerald-900/20 scale-[1.02]' : 'border-emerald-500 bg-emerald-50 scale-[1.02]')
+                                    : image 
+                                        ? 'border-green-500/50 bg-green-500/5 border-dashed' 
+                                        : isDark ? 'border-slate-700 hover:border-white hover:bg-slate-800/50 border-dashed' : 'border-slate-300 hover:border-black hover:bg-emerald-50/50 border-dashed'
+                          } cursor-pointer active:scale-[0.99]`}
                           role="button"
                           tabIndex={0}
-                          onClick={() => fileInputRef.current?.click()}
+                          onClick={() => {
+                              setDragError(null);
+                              fileInputRef.current?.click();
+                          }}
+                          onDragOver={handleDragOver}
+                          onDragLeave={handleDragLeave}
+                          onDrop={handleDrop}
                           onKeyDown={(e) => {
                             if (e.key === 'Enter' || e.key === ' ') {
                                 e.preventDefault();
@@ -686,16 +742,22 @@ export const CheckerMode: React.FC<CheckerModeProps> = ({ language, theme }) => 
                             onChange={handleFileUpload}
                           />
                           
-                          {image ? (
-                            <div className="text-green-500 flex flex-col items-center">
+                          {dragError ? (
+                            <div className={`${isDark ? 'text-red-400' : 'text-red-500'} flex flex-col items-center pointer-events-none`}>
+                              <AlertTriangle className="w-10 h-10 mb-2" aria-hidden="true" />
+                              <span className="font-bold">{dragError}</span>
+                              <span className="text-xs opacity-60 mt-1">{t.clickToChange || "Click to try again"}</span>
+                            </div>
+                          ) : image ? (
+                            <div className="text-green-500 flex flex-col items-center pointer-events-none">
                               <CheckCircle className="w-10 h-10 mb-2" aria-hidden="true" />
                               <span className="font-bold">{t.imageLoaded}</span>
                               <span className="text-xs opacity-60">{t.clickToChange}</span>
                             </div>
                           ) : (
-                            <div className={`${textSub} flex flex-col items-center ${isDark ? 'group-hover:text-white' : 'group-hover:text-emerald-700'} transition-colors`}>
-                              <Upload className="w-10 h-10 mb-3 opacity-50 group-hover:scale-105 transition-transform" aria-hidden="true" />
-                              <span className="font-medium">{t.uploadFile}</span>
+                            <div className={`${textSub} flex flex-col items-center pointer-events-none ${isDark ? 'group-hover:text-white' : 'group-hover:text-emerald-700'} transition-colors`}>
+                              <Upload className={`w-10 h-10 mb-3 opacity-50 transition-transform ${isDragging ? 'scale-110 text-emerald-500' : 'group-hover:scale-105'}`} aria-hidden="true" />
+                              <span className="font-medium">{isDragging ? 'Suelta el archivo aquí' : t.uploadFile}</span>
                               <span className="text-xs mt-1 opacity-60">{t.formats}</span>
                             </div>
                           )}
