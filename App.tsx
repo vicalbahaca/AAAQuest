@@ -249,13 +249,22 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
             </Reveal>
 
             <Reveal delay={300}>
-              <button
-                onClick={() => setMode(AppMode.CHECKER)}
-                className={`flex items-center gap-2 px-6 py-2 rounded-full transition-all text-sm border active:scale-95 ${infoButtonClasses}`}
-              >
-                {t.ctaChecker}
-                <ArrowRight className="w-4 h-4" />
-              </button>
+              <div className="flex flex-col sm:flex-row items-center gap-3">
+                <a
+                  href="/signin"
+                  className={`flex items-center gap-2 px-6 py-2 rounded-full transition-all text-sm border active:scale-95 ${infoButtonClasses}`}
+                  aria-label={t.signIn}
+                >
+                  {t.signIn}
+                </a>
+                <button
+                  onClick={() => setMode(AppMode.CHECKER)}
+                  className={`flex items-center gap-2 px-6 py-2 rounded-full transition-all text-sm border active:scale-95 ${infoButtonClasses}`}
+                >
+                  {t.ctaChecker}
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
             </Reveal>
           </div>
 
