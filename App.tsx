@@ -156,7 +156,7 @@ const App: React.FC = () => {
               className={`flex items-center justify-center px-4 h-10 border rounded-full transition-all active:scale-95 text-xs font-bold ${navButtonClasses}`}
               aria-label={t.signUpNav}
             >
-              <span className="pt-0.5 leading-none">{t.signUpNav}</span>
+              <span className="pt-0.5 leading-none">{t.signUpForFree}</span>
             </button>
             {/* Pricing Button */}
             <a
@@ -272,10 +272,6 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
             
             <Reveal>
               <div className="flex flex-col items-center gap-4">
-                <span className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider border ${theme === 'dark' ? 'bg-emerald-500/10 border-emerald-400/30 text-emerald-300' : 'bg-emerald-100 border-emerald-200 text-emerald-700'}`}>
-                  {t.signUpForFree}
-                </span>
-
                 <div className="relative inline-block">
                 <h1 className={`text-5xl md:text-7xl font-black tracking-tight drop-shadow-xl ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
                   {t.appTitle}
