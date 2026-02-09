@@ -150,7 +150,7 @@ const App: React.FC = () => {
             {/* Pricing Button */}
             <a
               href="/pricing"
-              className={`flex items-center justify-center gap-2 px-4 h-10 border rounded-full transition-all active:scale-95 text-xs font-bold ${navButtonClasses}`}
+              className={`flex items-center justify-center gap-2 px-4 h-10 border rounded-full transition-all active:scale-95 text-xs font-normal ${navButtonClasses}`}
               aria-label={t.pricingTitle}
             >
               <span className="pt-0.5 leading-none">{t.pricingTitle}</span>
@@ -158,7 +158,7 @@ const App: React.FC = () => {
             <button
               type="button"
               onClick={() => openAuth('signup')}
-              className="flex items-center justify-center px-4 h-10 border rounded-full transition-all active:scale-95 text-xs font-bold text-white border-[#038759] bg-[#038759] hover:bg-[#026e49]"
+              className="flex items-center justify-center px-4 h-10 border rounded-full transition-all active:scale-95 text-xs font-normal text-white border-[#038759] bg-[#038759] hover:bg-[#026e49]"
               aria-label={t.signUpNav}
             >
               <span className="pt-0.5 leading-none">{t.signUpForFree}</span>
@@ -284,7 +284,7 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
                 <button
                   type="button"
                   onClick={() => onOpenAuth('signup')}
-                  className="flex items-center gap-2 px-6 py-2 rounded-full transition-all text-sm font-bold border border-[#038759] bg-[#038759] text-white hover:bg-[#026e49] active:scale-95"
+                  className="flex items-center gap-2 px-6 py-2 rounded-full transition-all text-sm font-normal border border-[#038759] bg-[#038759] text-white hover:bg-[#026e49] active:scale-95"
                   aria-label={t.signUpNav}
                 >
                   <UserPlus className="w-4 h-4" />
@@ -292,7 +292,7 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
                 </button>
                 <button
                   onClick={() => setMode(AppMode.CHECKER)}
-                  className={`flex items-center gap-2 px-6 py-2 rounded-full transition-all text-sm font-bold border active:scale-95 ${theme === 'dark' ? 'bg-slate-900 text-white border-slate-700 hover:bg-slate-800' : 'bg-slate-100 text-slate-900 border-slate-200 hover:bg-slate-200'}`}
+                  className={`flex items-center gap-2 px-6 py-2 rounded-full transition-all text-sm font-normal border active:scale-95 ${theme === 'dark' ? 'bg-slate-900 text-white border-slate-700 hover:bg-slate-800' : 'bg-slate-100 text-slate-900 border-slate-200 hover:bg-slate-200'}`}
                 >
                   <LogIn className="w-4 h-4" />
                   {t.launchApp}
