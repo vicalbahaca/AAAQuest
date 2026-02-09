@@ -132,20 +132,6 @@ const App: React.FC = () => {
           </button>
           
           <nav className="flex items-center gap-2" aria-label="Main Navigation">
-            {/* Pricing Button */}
-            <a
-              href="#pricing"
-              className={`flex items-center justify-center gap-2 px-4 h-10 border rounded-full transition-all active:scale-95 text-xs font-bold text-white ${
-                theme === 'dark' 
-                ? 'bg-emerald-600 hover:bg-emerald-500 border-emerald-500/50' 
-                : 'bg-emerald-600 hover:bg-emerald-700 border-emerald-600/20 shadow-sm'
-              }`}
-              aria-label={t.supportBtn}
-            >
-              <Award className="w-3.5 h-3.5 shrink-0" />
-              <span className="hidden sm:inline pt-0.5 leading-none">{t.supportBtn}</span>
-            </a>
-
             {/* Language Dropdown */}
             <div className="relative">
               <button 
@@ -273,7 +259,23 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme}> = ({
             </Reveal>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 w-full max-w-4xl" role="list">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl" role="list">
+            <Reveal delay={400} className="h-full">
+              <Card 
+                title={t.studyMode}
+                desc={t.studyModeDesc}
+                // Study Mode: BLUE
+                icon={<BookOpen className={`w-8 h-8 ${theme === 'dark' ? 'text-blue-400' : 'text-white'}`} aria-hidden="true" />}
+                onClick={() => setMode(AppMode.STUDY)}
+                theme={theme}
+                darkColor="from-blue-500/20 to-blue-900/20"
+                lightColor="bg-gradient-to-br from-white to-blue-50 border-slate-200"
+                lightIconBg="bg-gradient-to-br from-blue-500 to-indigo-600"
+                ariaLabel={`${t.studyMode}: ${t.studyModeDesc}`}
+                badge={t.locked}
+                disabled
+              />
+            </Reveal>
             <Reveal delay={400} className="h-full">
               <Card 
                 title={t.checkerMode}
@@ -290,118 +292,6 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme}> = ({
             </Reveal>
           </div>
 
-          <section id="pricing" className="w-full mt-20">
-            <Reveal delay={600}>
-              <div className="text-center mb-10">
-                <h2 className={`text-3xl md:text-4xl font-black tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
-                  {t.pricingTitle}
-                </h2>
-                <p className={`mt-3 text-sm md:text-base ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>
-                  {t.pricingSubtitle}
-                </p>
-              </div>
-            </Reveal>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {[
-                {
-                  name: t.pricingStarterName,
-                  desc: t.pricingStarterDesc,
-                  tokens: 50,
-                  perToken: 0.33,
-                  total: 16.5,
-                  cta: t.pricingStarterCta
-                },
-                {
-                  name: t.pricingProName,
-                  desc: t.pricingProDesc,
-                  tokens: 200,
-                  perToken: 0.21,
-                  total: 42,
-                  cta: t.pricingProCta,
-                  highlight: true
-                },
-                {
-                  name: t.pricingEnterpriseName,
-                  desc: t.pricingEnterpriseDesc,
-                  tokens: null,
-                  perToken: null,
-                  total: null,
-                  cta: t.pricingEnterpriseCta,
-                  isContact: true
-                }
-              ].map((plan, idx) => {
-                const isDark = theme === 'dark';
-                const cardBase = isDark
-                  ? 'bg-gradient-to-br from-slate-900/80 to-slate-800/60 border-white/10'
-                  : 'bg-white border-slate-200 shadow-sm';
-                const ring = plan.highlight
-                  ? (isDark ? 'ring-2 ring-emerald-500/60' : 'ring-2 ring-emerald-500/40')
-                  : '';
-
-                return (
-                  <Reveal key={plan.name} delay={700 + idx * 100} className="h-full">
-                    <div className={`h-full rounded-2xl border p-6 flex flex-col ${cardBase} ${ring}`}>
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <h3 className={`text-lg font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>
-                            {plan.name}
-                          </h3>
-                          <p className={`text-sm mt-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-                            {plan.desc}
-                          </p>
-                        </div>
-                        {plan.highlight && (
-                          <span className={`text-[10px] uppercase tracking-widest font-black px-2 py-1 rounded border ${
-                            isDark ? 'bg-emerald-500/20 text-emerald-200 border-emerald-500/40' : 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                          }`}>
-                            {t.pricingPopular}
-                          </span>
-                        )}
-                      </div>
-
-                      <div className="mt-6">
-                        {plan.isContact ? (
-                          <div className={`text-2xl font-black ${isDark ? 'text-white' : 'text-slate-900'}`}>
-                            {t.pricingContactOnly}
-                          </div>
-                        ) : (
-                          <>
-                            <div className={`text-3xl font-black ${isDark ? 'text-white' : 'text-slate-900'}`}>
-                              €{plan.total?.toFixed(2)}
-                              <span className={`text-sm font-semibold ml-2 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-                                {t.pricingPerMonth}
-                              </span>
-                            </div>
-                            <div className={`mt-2 text-sm ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
-                              {plan.tokens} {t.pricingTokensPerMonth}
-                            </div>
-                            <div className={`text-xs mt-1 ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>
-                              €{plan.perToken?.toFixed(2)} {t.pricingPerToken}
-                            </div>
-                          </>
-                        )}
-                      </div>
-
-                      <button
-                        className={`mt-6 w-full py-2 rounded-full text-sm font-bold border transition-all active:scale-95 ${
-                          isDark
-                            ? 'bg-emerald-600 hover:bg-emerald-500 border-emerald-500/50 text-white'
-                            : 'bg-emerald-600 hover:bg-emerald-700 border-emerald-600/20 text-white shadow-sm'
-                        }`}
-                      >
-                        {plan.cta}
-                      </button>
-                    </div>
-                  </Reveal>
-                );
-              })}
-            </div>
-
-            <p className={`mt-6 text-xs text-center ${theme === 'dark' ? 'text-slate-500' : 'text-slate-500'}`}>
-              {t.pricingFootnote}
-            </p>
-          </section>
         </div>
       </div>
     </div>
@@ -418,14 +308,17 @@ const Card: React.FC<{
   lightColor: string, 
   lightIconBg: string, 
   ariaLabel: string,
-  badge?: string
-}> = ({title, desc, icon, onClick, theme, darkColor, lightColor, lightIconBg, ariaLabel, badge}) => {
+  badge?: string,
+  disabled?: boolean
+}> = ({title, desc, icon, onClick, theme, darkColor, lightColor, lightIconBg, ariaLabel, badge, disabled}) => {
     const isDark = theme === 'dark';
     
     // Updated Hover: Border changes to white (Dark) or black (Light), and subtle scale zoom
-    const hoverInteraction = isDark 
+    const hoverInteraction = disabled
+        ? ""
+        : (isDark 
         ? "hover:border-white hover:scale-[1.02]" 
-        : "hover:border-black hover:scale-[1.02]";
+        : "hover:border-black hover:scale-[1.02]");
 
     const cardClass = isDark
         ? `bg-gradient-to-br ${darkColor} border-white/5 shadow-lg ${hoverInteraction}` 
@@ -438,9 +331,13 @@ const Card: React.FC<{
     return (
         <div role="listitem" className="h-full">
             <button 
-                onClick={onClick}
-                className={`${cardClass} w-full backdrop-blur-md p-6 rounded-xl border text-center flex flex-col items-center transition-all duration-300 active:scale-95 group relative overflow-hidden h-full`}
+                onClick={disabled ? undefined : onClick}
+                disabled={disabled}
+                className={`${cardClass} w-full backdrop-blur-md p-6 rounded-xl border text-center flex flex-col items-center transition-all duration-300 active:scale-95 group relative overflow-hidden h-full ${
+                  disabled ? 'opacity-60 cursor-not-allowed' : ''
+                }`}
                 aria-label={ariaLabel}
+                aria-disabled={disabled ? "true" : "false"}
             >
                 {badge && (
                   <div className={`absolute top-3 right-3 text-[10px] font-black px-2 py-1 rounded border tracking-widest uppercase ${
