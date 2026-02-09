@@ -273,22 +273,8 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme}> = ({
             </Reveal>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl" role="list">
+          <div className="grid grid-cols-1 gap-6 w-full max-w-4xl" role="list">
             <Reveal delay={400} className="h-full">
-              <Card 
-                title={t.studyMode}
-                desc={t.studyModeDesc}
-                // Study Mode: BLUE
-                icon={<BookOpen className={`w-8 h-8 ${theme === 'dark' ? 'text-blue-400' : 'text-white'}`} aria-hidden="true" />}
-                onClick={() => setMode(AppMode.STUDY)}
-                theme={theme}
-                darkColor="from-blue-500/20 to-blue-900/20"
-                lightColor="bg-gradient-to-br from-white to-blue-50 border-slate-200"
-                lightIconBg="bg-gradient-to-br from-blue-500 to-indigo-600"
-                ariaLabel={`${t.studyMode}: ${t.studyModeDesc}`}
-              />
-            </Reveal>
-            <Reveal delay={500} className="h-full">
               <Card 
                 title={t.checkerMode}
                 desc={t.checkerModeDesc}
