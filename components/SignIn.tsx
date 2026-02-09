@@ -15,7 +15,6 @@ export const SignIn: React.FC<SignInProps> = ({ setMode, language, theme }) => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [ssoDomain, setSsoDomain] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -59,30 +58,11 @@ export const SignIn: React.FC<SignInProps> = ({ setMode, language, theme }) => {
     setIsSubmitting(false);
   };
 
-  const handleOAuthSignIn = async (provider: 'google' | 'apple') => {
+  const handleOAuthSignIn = async (provider: 'google') => {
     resetMessages();
     setIsSubmitting(true);
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
-      options: {
-        redirectTo: window.location.origin,
-      },
-    });
-    if (error) {
-      setErrorMessage(error.message || t.signInError);
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleSSOSignIn = async () => {
-    resetMessages();
-    if (!ssoDomain.trim()) {
-      setErrorMessage(t.signInError);
-      return;
-    }
-    setIsSubmitting(true);
-    const { error } = await supabase.auth.signInWithSSO({
-      domain: ssoDomain.trim(),
       options: {
         redirectTo: window.location.origin,
       },
@@ -146,46 +126,14 @@ export const SignIn: React.FC<SignInProps> = ({ setMode, language, theme }) => {
       <Reveal delay={250}>
         <div className={`mt-10 rounded-3xl border p-8 shadow-xl ${isDark ? 'bg-slate-900/60 border-white/10' : 'bg-white border-slate-200 shadow-slate-200/60'}`}>
           <div className="flex flex-col gap-5">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <button
-                type="button"
-                onClick={() => handleOAuthSignIn('google')}
-                disabled={isSubmitting}
-                className={`rounded-full px-6 py-3 text-sm font-bold border transition-all active:scale-95 disabled:opacity-60 ${isDark ? 'border-white/10 text-white hover:border-white/30' : 'border-slate-200 text-slate-700 hover:border-slate-300'}`}
-              >
-                {t.signInGoogle}
-              </button>
-              <button
-                type="button"
-                onClick={() => handleOAuthSignIn('apple')}
-                disabled={isSubmitting}
-                className={`rounded-full px-6 py-3 text-sm font-bold border transition-all active:scale-95 disabled:opacity-60 ${isDark ? 'border-white/10 text-white hover:border-white/30' : 'border-slate-200 text-slate-700 hover:border-slate-300'}`}
-              >
-                {t.signInApple}
-              </button>
-            </div>
-
-            <div className={`rounded-2xl border p-4 ${isDark ? 'border-white/10 bg-slate-900/40' : 'border-slate-200 bg-slate-50'}`}>
-              <div className={`text-sm font-semibold ${isDark ? 'text-slate-200' : 'text-slate-700'}`}>{t.signInSSO}</div>
-              <div className="mt-3 flex flex-col sm:flex-row gap-3">
-                <input
-                  type="text"
-                  value={ssoDomain}
-                  onChange={(event) => setSsoDomain(event.target.value)}
-                  placeholder={t.signInSSOPlaceholder}
-                  className={`flex-1 rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500/40 ${inputClasses}`}
-                  autoComplete="organization"
-                />
-                <button
-                  type="button"
-                  onClick={handleSSOSignIn}
-                  disabled={isSubmitting}
-                  className={`rounded-full px-6 py-3 text-sm font-bold transition-all active:scale-95 disabled:opacity-60 ${buttonClasses}`}
-                >
-                  {t.signInSSOButton}
-                </button>
-              </div>
-            </div>
+            <button
+              type="button"
+              onClick={() => handleOAuthSignIn('google')}
+              disabled={isSubmitting}
+              className={`rounded-full px-6 py-3 text-sm font-bold border transition-all active:scale-95 disabled:opacity-60 ${isDark ? 'border-white/10 text-white hover:border-white/30' : 'border-slate-200 text-slate-700 hover:border-slate-300'}`}
+            >
+              {t.signInGoogle}
+            </button>
 
             <label className="text-left">
               <span className={`text-sm font-semibold ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
