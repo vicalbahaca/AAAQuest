@@ -40,6 +40,24 @@
         50% { transform: translateY(-10px); }
       }
       .animate-float { animation: float 6s ease-in-out infinite; }
+      @keyframes floatSlow {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-16px); }
+      }
+      .animate-float-slow { animation: floatSlow 9s ease-in-out infinite; }
+
+      @keyframes floatFast {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-8px); }
+      }
+      .animate-float-fast { animation: floatFast 4.5s ease-in-out infinite; }
+
+      .tilt-hover {
+        transition: transform 400ms ease, box-shadow 400ms ease;
+      }
+      .tilt-hover:hover {
+        transform: translateY(-6px) rotateX(2deg) rotateY(-2deg);
+      }
 
       @keyframes pulse-glow {
         0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }

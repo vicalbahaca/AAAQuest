@@ -158,6 +158,75 @@ export const TRANSLATIONS = {
     appTitle: 'AAAQuest',
     homeTitle: 'Documenta accesibilidad de diseños en minutos',
     homeSubtitle: 'Detecta errores de accesibilidad según los criterios WCAG y genera documentación lista para desarrollo con IA.',
+    homeEyebrow: 'IA para accesibilidad de producto',
+    featuresTitle: 'Todo lo que necesitas para documentar accesibilidad',
+    featuresSubtitle: 'Convierte capturas o diseños en entregables claros para producto, diseño y desarrollo.',
+    features: [
+      {
+        title: 'Auditoría WCAG en segundos',
+        desc: 'Detección automática de errores críticos y recomendaciones accionables.'
+      },
+      {
+        title: 'Documentación lista para desarrollo',
+        desc: 'Entregables funcionales, técnicos y de lectores de pantalla en un clic.'
+      },
+      {
+        title: 'Flujo colaborativo con Figma',
+        desc: 'Genera documentación directamente desde tu archivo de diseño.'
+      },
+      {
+        title: 'Multi-plataforma',
+        desc: 'Web, iOS y Android con los mismos criterios y lenguaje común.'
+      }
+    ],
+    workflowTitle: 'De diseño a documentación en 3 pasos',
+    workflowSubtitle: 'Un flujo simple para equipos de diseño, PM y desarrollo.',
+    workflowSteps: [
+      { title: 'Sube una pantalla', desc: 'Captura, maqueta o frame de Figma.' },
+      { title: 'IA analiza con WCAG', desc: 'Errores, contexto y severidad en segundos.' },
+      { title: 'Comparte y exporta', desc: 'PDF, checklist o notas para el equipo.' }
+    ],
+    pluginTitle: 'Plugin de Figma',
+    pluginSubtitle: 'Documenta accesibilidad sin salir de Figma. Sincroniza frames y exporta la documentación.',
+    pluginBullets: [
+      'Detecta issues desde el diseño',
+      'Anota criterios WCAG automáticamente',
+      'Exporta entregables listos para desarrollo'
+    ],
+    pluginCta: 'Abrir plugin de Figma',
+    pluginNote: 'Disponible próximamente',
+    showcaseTitle: 'Ilustraciones y ejemplos de salida',
+    showcaseSubtitle: 'Visualiza cómo se ve la documentación generada por IA.',
+    pricingTitle: 'Planes y precios',
+    pricingSubtitle: 'Paga solo por las pantallas que documentas.',
+    pricingScreensPerMonth: 'pantallas / mes',
+    pricingBefore: 'Antes',
+    pricingStarterName: 'Starter',
+    pricingStarterDesc: 'Para proyectos pequeños y validaciones rápidas.',
+    pricingProName: 'Pro',
+    pricingProDesc: 'Para equipos que documentan cada sprint.',
+    pricingEnterpriseName: 'Enterprise',
+    pricingEnterpriseDesc: 'Seguridad, soporte y escalado a medida.',
+    pricingEnterpriseCta: 'Contactar',
+    pricingPopular: 'Más popular',
+    pricingContactOnly: 'Contactar',
+    pricingPerMonth: '/ mes',
+    pricingFootnote: 'Los planes incluyen soporte por email.',
+    faqTitle: 'Preguntas frecuentes',
+    faqItems: [
+      {
+        q: '¿Qué formatos puedo subir?',
+        a: 'PNG, JPG o capturas de pantalla de productos digitales.'
+      },
+      {
+        q: '¿Qué criterios cubre?',
+        a: 'WCAG 2.1 y mejores prácticas para web y mobile.'
+      },
+      {
+        q: '¿Puedo usarlo con Figma?',
+        a: 'Sí, el plugin te permite documentar directamente desde tus archivos.'
+      }
+    ],
     studyMode: 'Modo estudio',
     studyModeDesc: 'Aprende sobre accesibilidad digital de forma fácil y práctica en diferentes niveles',
     testMode: 'Hora del examen',
@@ -329,22 +398,22 @@ export const TRANSLATIONS = {
     comingSoon: "Próximamente más funcionalidades",
     supportBtn: 'Apoya el proyecto',
     pricingTitle: 'Planes y precios',
-    pricingSubtitle: 'Elige el plan que mejor se adapta a tu ritmo.',
+    pricingSubtitle: 'Paga solo por las pantallas que documentas.',
     pricingStarterName: 'Starter',
-    pricingStarterDesc: 'Ideal para empezar con tokens mensuales.',
+    pricingStarterDesc: 'Para proyectos pequeños y validaciones rápidas.',
     pricingStarterCta: 'Elegir Starter',
     pricingProName: 'Pro',
-    pricingProDesc: 'Para equipos y uso frecuente.',
+    pricingProDesc: 'Para equipos que documentan cada sprint.',
     pricingProCta: 'Elegir Pro',
     pricingEnterpriseName: 'Enterprise',
-    pricingEnterpriseDesc: 'Soluciones a medida y soporte dedicado.',
+    pricingEnterpriseDesc: 'Seguridad, soporte y escalado a medida.',
     pricingEnterpriseCta: 'Contactar',
     pricingPopular: 'Popular',
     pricingContactOnly: 'Contactar',
     pricingPerMonth: '/ mes',
-    pricingTokensPerMonth: 'tokens / mes',
+    pricingTokensPerMonth: 'pantallas / mes',
     pricingPerToken: 'por token',
-    pricingFootnote: 'Los tokens no son acumulables.',
+    pricingFootnote: 'Los planes incluyen soporte por email.',
     attemptsRemaining: 'intentos restantes',
     limitReached: 'Límite alcanzado',
     certTitle: 'Certificación AAAQuest',
@@ -363,6 +432,75 @@ export const TRANSLATIONS = {
     appTitle: 'AAAQuest',
     homeTitle: 'Document accessibility of designs in minutes',
     homeSubtitle: 'Detect accessibility issues using WCAG criteria and generate development-ready documentation with AI.',
+    homeEyebrow: 'AI for product accessibility',
+    featuresTitle: 'Everything you need to document accessibility',
+    featuresSubtitle: 'Turn screenshots or designs into clear deliverables for product, design, and engineering.',
+    features: [
+      {
+        title: 'WCAG audit in seconds',
+        desc: 'Automatic detection of critical issues with actionable guidance.'
+      },
+      {
+        title: 'Development-ready docs',
+        desc: 'Functional, technical, and screen-reader specs in one click.'
+      },
+      {
+        title: 'Figma-native workflow',
+        desc: 'Generate documentation straight from your design file.'
+      },
+      {
+        title: 'Multi-platform coverage',
+        desc: 'Web, iOS, and Android aligned on the same criteria.'
+      }
+    ],
+    workflowTitle: 'From design to documentation in 3 steps',
+    workflowSubtitle: 'A simple flow for design, PM, and engineering teams.',
+    workflowSteps: [
+      { title: 'Upload a screen', desc: 'Screenshot, mockup, or Figma frame.' },
+      { title: 'AI checks WCAG', desc: 'Issues, context, and severity in seconds.' },
+      { title: 'Share and export', desc: 'PDF, checklist, or notes for your team.' }
+    ],
+    pluginTitle: 'Figma plugin',
+    pluginSubtitle: 'Document accessibility without leaving Figma. Sync frames and export reports.',
+    pluginBullets: [
+      'Detect issues directly from design',
+      'Auto-annotate WCAG criteria',
+      'Export dev-ready deliverables'
+    ],
+    pluginCta: 'Open Figma plugin',
+    pluginNote: 'Coming soon',
+    showcaseTitle: 'Illustrations and output previews',
+    showcaseSubtitle: 'See how AI-generated documentation looks.',
+    pricingTitle: 'Plans & pricing',
+    pricingSubtitle: 'Only pay for the screens you document.',
+    pricingScreensPerMonth: 'screens / month',
+    pricingBefore: 'Before',
+    pricingStarterName: 'Starter',
+    pricingStarterDesc: 'For small projects and quick validations.',
+    pricingProName: 'Pro',
+    pricingProDesc: 'For teams documenting every sprint.',
+    pricingEnterpriseName: 'Enterprise',
+    pricingEnterpriseDesc: 'Custom security, support, and scale.',
+    pricingEnterpriseCta: 'Contact us',
+    pricingPopular: 'Most popular',
+    pricingContactOnly: 'Contact us',
+    pricingPerMonth: '/ month',
+    pricingFootnote: 'Plans include email support.',
+    faqTitle: 'FAQ',
+    faqItems: [
+      {
+        q: 'What formats can I upload?',
+        a: 'PNG, JPG, or product screenshots.'
+      },
+      {
+        q: 'Which criteria are covered?',
+        a: 'WCAG 2.1 plus best practices for web and mobile.'
+      },
+      {
+        q: 'Can I use it in Figma?',
+        a: 'Yes, the plugin lets you document directly from your files.'
+      }
+    ],
     studyMode: 'Study Mode',
     studyModeDesc: 'Learn about digital accessibility easily and practically across different levels.',
     testMode: 'Exam Time',
@@ -534,22 +672,22 @@ export const TRANSLATIONS = {
     comingSoon: "More features coming soon",
     supportBtn: 'Support the project',
     pricingTitle: 'Plans & pricing',
-    pricingSubtitle: 'Choose the plan that fits your pace.',
+    pricingSubtitle: 'Only pay for the screens you document.',
     pricingStarterName: 'Starter',
-    pricingStarterDesc: 'Perfect to begin with monthly tokens.',
+    pricingStarterDesc: 'For small projects and quick validations.',
     pricingStarterCta: 'Choose Starter',
     pricingProName: 'Pro',
-    pricingProDesc: 'Built for teams and frequent use.',
+    pricingProDesc: 'For teams documenting every sprint.',
     pricingProCta: 'Choose Pro',
     pricingEnterpriseName: 'Enterprise',
-    pricingEnterpriseDesc: 'Custom solutions and dedicated support.',
+    pricingEnterpriseDesc: 'Custom security, support, and scale.',
     pricingEnterpriseCta: 'Contact us',
     pricingPopular: 'Popular',
     pricingContactOnly: 'Contact us',
     pricingPerMonth: '/ month',
-    pricingTokensPerMonth: 'tokens / month',
+    pricingTokensPerMonth: 'screens / month',
     pricingPerToken: 'per token',
-    pricingFootnote: 'Tokens do not roll over.',
+    pricingFootnote: 'Plans include email support.',
     attemptsRemaining: 'attempts remaining',
     limitReached: 'Limit reached',
     certTitle: 'AAAQuest Certification',
