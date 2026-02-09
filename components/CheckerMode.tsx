@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { analyzeImage } from '../services/geminiService';
 import { CheckerResult, Language, TRANSLATIONS, Theme } from '../types';
-import { Upload, ScanEye, CheckCircle, Layers, Layout, Type, Image, AppWindow, ListOrdered, Monitor, Globe, RotateCcw, AlertTriangle, ChevronDown, MessageSquareText, Languages, Component, Maximize, MousePointerClick, ArrowLeft, FileText, Download, Lock, Linkedin, Mail } from 'lucide-react';
+import { Upload, ScanEye, CheckCircle, Layers, Layout, Type, Image, AppWindow, ListOrdered, Monitor, Globe, RotateCcw, AlertTriangle, ChevronDown, MessageSquareText, Languages, Component, Maximize, MousePointerClick, ArrowLeft, FileText, Download } from 'lucide-react';
 import { Loader } from './Loader';
 import { jsPDF } from "jspdf";
 
@@ -656,102 +656,76 @@ export const CheckerMode: React.FC<CheckerModeProps> = ({ language, theme }) => 
 
                 {/* 3. INPUTS (Mobile: Order 2) */}
                 <div className="order-2 space-y-6">
-                   {isLocked ? (
-                     <div className={`border rounded-xl p-8 text-center flex flex-col items-center justify-center gap-4 ${isDark ? 'border-red-500/30 bg-red-900/10' : 'border-red-200 bg-red-50'}`}>
-                        <h3 className={`text-xl font-bold ${textMain}`}>{t.lockedTitle}</h3>
-                        <div className={`text-sm leading-relaxed max-w-md ${textSub}`}>
-                           <p className="mb-6">{t.lockedDesc}</p>
-                           <ul className="space-y-3 font-medium flex flex-col items-center">
-                              <li className="w-full">
-                                  <a href="https://www.linkedin.com/in/victorsaizalfageme/" target="_blank" rel="noopener noreferrer" className={`hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border transition-all w-full max-w-xs mx-auto ${isDark ? 'bg-slate-800 border-slate-700 hover:border-white text-white' : 'bg-white border-slate-200 hover:border-black hover:text-black text-slate-700 shadow-sm'}`}>
-                                     <Linkedin className="w-4 h-4 text-[#0A66C2]" />
-                                     <span>Linkedin Victor Saiz</span>
-                                  </a>
-                              </li>
-                              <li className="w-full">
-                                  <a href="mailto:victorsaizalfageme@gmail.com" className={`hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border transition-all w-full max-w-xs mx-auto ${isDark ? 'bg-slate-800 border-slate-700 hover:border-white text-white' : 'bg-white border-slate-200 hover:border-black hover:text-black text-slate-700 shadow-sm'}`}>
-                                     <Mail className="w-4 h-4 text-red-500" />
-                                     <span>victorsaizalfageme@gmail.com</span>
-                                  </a>
-                              </li>
-                           </ul>
-                        </div>
-                        <p className={`text-xs font-bold tracking-wider mt-4 ${isDark ? 'text-white' : 'text-black'}`}>
-                           {t.lockedThanks}
-                        </p>
-                     </div>
-                   ) : (
-                     <>
-                       <div 
-                          className={`border-2 rounded-xl p-8 text-center transition-all group ${
-                            dragError
-                                ? (isDark ? 'border-red-500 bg-red-900/10' : 'border-red-500 bg-red-50')
-                                : isDragging 
-                                    ? (isDark ? 'border-emerald-400 bg-emerald-900/20 scale-[1.02]' : 'border-emerald-500 bg-emerald-50 scale-[1.02]')
-                                    : image 
-                                        ? 'border-green-500/50 bg-green-500/5 border-dashed' 
-                                        : isDark ? 'border-slate-700 hover:border-white hover:bg-slate-800/50 border-dashed' : 'border-slate-300 hover:border-black hover:bg-emerald-50/50 border-dashed'
-                          } cursor-pointer active:scale-[0.99]`}
-                          role="button"
-                          tabIndex={0}
-                          onClick={() => {
-                              setDragError(null);
+                   <>
+                     <div 
+                        className={`border-2 rounded-xl p-8 text-center transition-all group ${
+                          dragError
+                              ? (isDark ? 'border-red-500 bg-red-900/10' : 'border-red-500 bg-red-50')
+                              : isDragging 
+                                  ? (isDark ? 'border-emerald-400 bg-emerald-900/20 scale-[1.02]' : 'border-emerald-500 bg-emerald-50 scale-[1.02]')
+                                  : image 
+                                      ? 'border-green-500/50 bg-green-500/5 border-dashed' 
+                                      : isDark ? 'border-slate-700 hover:border-white hover:bg-slate-800/50 border-dashed' : 'border-slate-300 hover:border-black hover:bg-emerald-50/50 border-dashed'
+                        } cursor-pointer active:scale-[0.99]`}
+                        role="button"
+                        tabIndex={0}
+                        onClick={() => {
+                            setDragError(null);
+                            fileInputRef.current?.click();
+                        }}
+                        onDragOver={handleDragOver}
+                        onDragLeave={handleDragLeave}
+                        onDrop={handleDrop}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault();
                               fileInputRef.current?.click();
-                          }}
-                          onDragOver={handleDragOver}
-                          onDragLeave={handleDragLeave}
-                          onDrop={handleDrop}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter' || e.key === ' ') {
-                                e.preventDefault();
-                                fileInputRef.current?.click();
-                            }
-                          }}
-                          aria-label={image ? `${t.imageLoaded}. ${t.clickToChange}` : t.uploadFile}
-                        >
-                          <input 
-                            type="file" 
-                            ref={fileInputRef} 
-                            className="hidden" 
-                            accept="image/*"
-                            onChange={handleFileUpload}
-                          />
-                          
-                          {dragError ? (
-                            <div className={`${isDark ? 'text-red-400' : 'text-red-500'} flex flex-col items-center pointer-events-none`}>
-                              <AlertTriangle className="w-10 h-10 mb-2" aria-hidden="true" />
-                              <span className="font-bold">{dragError}</span>
-                              <span className="text-xs opacity-60 mt-1">{t.clickToChange || "Click to try again"}</span>
-                            </div>
-                          ) : image ? (
-                            <div className="text-green-500 flex flex-col items-center pointer-events-none">
-                              <CheckCircle className="w-10 h-10 mb-2" aria-hidden="true" />
-                              <span className="font-bold">{t.imageLoaded}</span>
-                              <span className="text-xs opacity-60">{t.clickToChange}</span>
-                            </div>
-                          ) : (
-                            <div className={`${textSub} flex flex-col items-center pointer-events-none ${isDark ? 'group-hover:text-white' : 'group-hover:text-emerald-700'} transition-colors`}>
-                              <Upload className={`w-10 h-10 mb-3 opacity-50 transition-transform ${isDragging ? 'scale-110 text-emerald-500' : 'group-hover:scale-105'}`} aria-hidden="true" />
-                              <span className="font-medium">{isDragging ? 'Suelta el archivo aquí' : t.uploadFile}</span>
-                              <span className="text-xs mt-1 opacity-60">{t.formats}</span>
-                            </div>
-                          )}
-                       </div>
+                          }
+                        }}
+                        aria-label={image ? `${t.imageLoaded}. ${t.clickToChange}` : t.uploadFile}
+                      >
+                        <input 
+                          type="file" 
+                          ref={fileInputRef} 
+                          className="hidden" 
+                          accept="image/*"
+                          onChange={handleFileUpload}
+                        />
+                        
+                        {dragError ? (
+                          <div className={`${isDark ? 'text-red-400' : 'text-red-500'} flex flex-col items-center pointer-events-none`}>
+                            <AlertTriangle className="w-10 h-10 mb-2" aria-hidden="true" />
+                            <span className="font-bold">{dragError}</span>
+                            <span className="text-xs opacity-60 mt-1">{t.clickToChange || "Click to try again"}</span>
+                          </div>
+                        ) : image ? (
+                          <div className="text-green-500 flex flex-col items-center pointer-events-none">
+                            <CheckCircle className="w-10 h-10 mb-2" aria-hidden="true" />
+                            <span className="font-bold">{t.imageLoaded}</span>
+                            <span className="text-xs opacity-60">{t.clickToChange}</span>
+                          </div>
+                        ) : (
+                          <div className={`${textSub} flex flex-col items-center pointer-events-none ${isDark ? 'group-hover:text-white' : 'group-hover:text-emerald-700'} transition-colors`}>
+                            <Upload className={`w-10 h-10 mb-3 opacity-50 transition-transform ${isDragging ? 'scale-110 text-emerald-500' : 'group-hover:scale-105'}`} aria-hidden="true" />
+                            <span className="font-medium">{isDragging ? 'Suelta el archivo aquí' : t.uploadFile}</span>
+                            <span className="text-xs mt-1 opacity-60">{t.formats}</span>
+                          </div>
+                        )}
+                     </div>
 
-                       <div className="space-y-2">
-                         <label htmlFor="userContext" className={`block text-sm font-bold ${textSub}`}>
-                           {t.contextOptional}
-                         </label>
-                         <textarea
-                            id="userContext"
-                            value={userContext}
-                            onChange={(e) => setUserContext(e.target.value)}
-                            placeholder={t.contextPlaceholder}
-                            className={`w-full rounded-xl p-3 text-sm min-h-[80px] resize-none border transition-all ${inputBg}`}
-                         />
-                       </div>
-                     </>
-                   )}
+                     <div className="space-y-2">
+                       <label htmlFor="userContext" className={`block text-sm font-bold ${textSub}`}>
+                         {t.contextOptional}
+                       </label>
+                       <textarea
+                          id="userContext"
+                          value={userContext}
+                          onChange={(e) => setUserContext(e.target.value)}
+                          placeholder={t.contextPlaceholder}
+                          className={`w-full rounded-xl p-3 text-sm min-h-[80px] resize-none border transition-all ${inputBg}`}
+                       />
+                     </div>
+                   </>
                 </div>
 
                 {/* 4. CTA (Mobile: Order 4) */}
