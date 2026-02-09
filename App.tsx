@@ -61,9 +61,6 @@ const App: React.FC = () => {
     switch(lang) {
       case 'es': return 'Español';
       case 'en': return 'English';
-      case 'zh': return '中文';
-      case 'ru': return 'Русский';
-      case 'hi': return 'हिन्दी';
       default: return 'English';
     }
   };
@@ -194,7 +191,7 @@ const App: React.FC = () => {
                     }`}
                     role="menu"
                   >
-                    {(['es', 'en', 'zh', 'ru', 'hi'] as Language[]).map((lang) => (
+                    {(['es', 'en'] as Language[]).map((lang) => (
                       <button 
                         key={lang}
                         onClick={() => changeLanguage(lang)} 

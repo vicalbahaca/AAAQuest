@@ -43,7 +43,7 @@ export type VisualComponentType =
   | 'M3_FAB'
   | 'NONE';
 
-export type Language = 'es' | 'en' | 'zh' | 'ru' | 'hi';
+export type Language = 'es' | 'en';
 
 export interface StudyLesson {
   level: number;
