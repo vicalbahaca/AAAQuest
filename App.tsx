@@ -158,11 +158,7 @@ const App: React.FC = () => {
             <button
               type="button"
               onClick={() => openAuth('signup')}
-              className={`flex items-center justify-center px-4 h-10 border rounded-full transition-all active:scale-95 text-xs font-bold text-white ${
-                theme === 'dark' 
-                ? 'bg-emerald-600 hover:bg-emerald-500 border-emerald-500/50' 
-                : 'bg-emerald-600 hover:bg-emerald-700 border-emerald-600/20 shadow-sm'
-              }`}
+              className="flex items-center justify-center px-4 h-10 border rounded-full transition-all active:scale-95 text-xs font-bold text-white border-[#038759] bg-[#038759] hover:bg-[#026e49]"
               aria-label={t.signUpNav}
             >
               <span className="pt-0.5 leading-none">{t.signUpForFree}</span>

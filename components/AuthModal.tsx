@@ -111,9 +111,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
     ? 'bg-slate-900 border-slate-700 text-white placeholder:text-slate-500'
     : 'bg-white border-slate-200 text-slate-900 placeholder:text-slate-400';
 
-  const buttonClasses = isDark
-    ? 'bg-emerald-500 text-black hover:bg-emerald-400'
-    : 'bg-emerald-600 text-white hover:bg-emerald-700';
+  const buttonClasses = 'bg-[#038759] text-white hover:bg-[#026e49]';
 
   return (
     <div className="fixed inset-0 z-[70] flex items-center justify-center px-4 py-10">

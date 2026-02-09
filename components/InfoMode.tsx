@@ -227,12 +227,12 @@ export const InfoMode: React.FC<InfoModeProps> = ({ setMode, language, theme, va
 
                 <Reveal delay={400}>
                     {showCheckerCta && (
-                      <button 
-                          onClick={() => setMode(AppMode.CHECKER)}
-                          className={`px-10 py-5 rounded-2xl font-bold text-lg transition-all hover:scale-105 active:scale-95 flex items-center gap-3 shadow-2xl ${isDark ? 'bg-emerald-600 text-white hover:bg-emerald-500 shadow-emerald-900/40' : 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-emerald-500/30'}`}
-                      >
-                          {t.ctaChecker} <ArrowRight className="w-5 h-5" />
-                      </button>
+                    <button 
+                        onClick={() => setMode(AppMode.CHECKER)}
+                        className="px-10 py-5 rounded-2xl font-bold text-lg transition-all hover:scale-105 active:scale-95 flex items-center gap-3 shadow-2xl bg-[#038759] text-white hover:bg-[#026e49] shadow-emerald-900/40"
+                    >
+                        {t.ctaChecker} <ArrowRight className="w-5 h-5" />
+                    </button>
                     )}
                 </Reveal>
             </div>
@@ -304,11 +304,7 @@ export const InfoMode: React.FC<InfoModeProps> = ({ setMode, language, theme, va
                   href="https://buymeacoffee.com/victorsaiz"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`flex items-center justify-center gap-2 px-6 py-3 border rounded-full transition-all active:scale-95 text-sm font-bold text-white shadow-lg hover:shadow-xl hover:-translate-y-1 ${
-                    theme === 'dark' 
-                    ? 'bg-emerald-600 hover:bg-emerald-500 border-emerald-500/50 shadow-emerald-900/20' 
-                    : 'bg-emerald-600 hover:bg-emerald-700 border-emerald-600/20 shadow-emerald-200'
-                  }`}
+                  className="flex items-center justify-center gap-2 px-6 py-3 border border-[#038759] rounded-full transition-all active:scale-95 text-sm font-bold text-white shadow-lg hover:shadow-xl hover:-translate-y-1 bg-[#038759] hover:bg-[#026e49]"
                   aria-label={t.supportBtn}
                 >
                   <Coffee className="w-5 h-5 shrink-0" />

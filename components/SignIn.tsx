@@ -104,9 +104,7 @@ export const SignIn: React.FC<SignInProps> = ({ setMode, language, theme }) => {
     ? 'bg-slate-900 border-slate-700 text-white placeholder:text-slate-500'
     : 'bg-white border-slate-200 text-slate-900 placeholder:text-slate-400';
 
-  const buttonClasses = isDark
-    ? 'bg-emerald-500 text-black hover:bg-emerald-400'
-    : 'bg-emerald-600 text-white hover:bg-emerald-700';
+  const buttonClasses = 'bg-[#038759] text-white hover:bg-[#026e49]';
 
   return (
     <div className="w-full max-w-3xl mx-auto px-4 md:px-6 pb-24">
