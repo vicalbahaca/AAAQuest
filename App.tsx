@@ -7,7 +7,7 @@ import { CheckerMode } from './components/CheckerMode';
 import { InfoMode } from './components/InfoMode';
 import { CertificateMode } from './components/CertificateMode';
 import { NeuralCore } from './components/NeuralCore';
-import { BookOpen, ScanEye, Globe, ChevronDown, Sun, Moon, ArrowRight, Award } from 'lucide-react';
+import { BookOpen, ScanEye, Globe, ChevronDown, Sun, Moon, ArrowRight, Coffee } from 'lucide-react';
 import { Loader } from './components/Loader';
 import { Reveal } from './components/Reveal';
 
@@ -132,6 +132,22 @@ const App: React.FC = () => {
           </button>
           
           <nav className="flex items-center gap-2" aria-label="Main Navigation">
+            {/* Support Button */}
+            <a
+              href="https://buymeacoffee.com/victorsaiz"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`flex items-center justify-center gap-2 px-4 h-10 border rounded-full transition-all active:scale-95 text-xs font-bold text-white ${
+                theme === 'dark' 
+                ? 'bg-emerald-600 hover:bg-emerald-500 border-emerald-500/50' 
+                : 'bg-emerald-600 hover:bg-emerald-700 border-emerald-600/20 shadow-sm'
+              }`}
+              aria-label={t.supportBtn}
+            >
+              <Coffee className="w-3.5 h-3.5 shrink-0" />
+              <span className="hidden sm:inline pt-0.5 leading-none">{t.supportBtn}</span>
+            </a>
+
             {/* Language Dropdown */}
             <div className="relative">
               <button 
