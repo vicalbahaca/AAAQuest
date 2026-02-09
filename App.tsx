@@ -63,7 +63,7 @@ const App: React.FC = () => {
       case AppMode.CERTIFICATE:
         return <CertificateMode language={language} theme={theme} setMode={setMode} />;
       default:
-        return <Home setMode={setMode} t={t} theme={theme} />;
+        return <Home setMode={setMode} t={t} theme={theme} language={language} />;
     }
   };
 
@@ -213,7 +213,7 @@ const App: React.FC = () => {
   );
 };
 
-const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme}> = ({ setMode, t, theme }) => {
+const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, language: Language}> = ({ setMode, t, theme, language }) => {
   const infoButtonClasses = theme === 'dark'
     ? "bg-slate-800/50 hover:bg-slate-700 border-slate-700 hover:border-white/20 text-slate-300 hover:text-white"
     : "bg-white hover:bg-slate-50 border-slate-200 hover:border-black text-slate-600 hover:text-emerald-700 shadow-sm";
@@ -250,114 +250,42 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme}> = ({
 
             <Reveal delay={300}>
               <button
-                onClick={() => setMode(AppMode.INFO)}
+                onClick={() => setMode(AppMode.STUDY)}
                 className={`flex items-center gap-2 px-6 py-2 rounded-full transition-all text-sm border active:scale-95 ${infoButtonClasses}`}
               >
-                {t.homeInfoButton}
+                {t.studyMode}
                 <ArrowRight className="w-4 h-4" />
               </button>
             </Reveal>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 w-full max-w-3xl" role="list">
-            <Reveal delay={400} className="h-full">
-              <Card 
-                title={t.checkerMode}
-                desc={t.checkerModeDesc}
-                // Checker Mode: GREEN
-                icon={<ScanEye className={`w-8 h-8 ${theme === 'dark' ? 'text-green-400' : 'text-white'}`} aria-hidden="true" />}
-                onClick={() => setMode(AppMode.CHECKER)}
-                theme={theme}
-                darkColor="from-green-500/20 to-green-900/20"
-                lightColor="bg-gradient-to-br from-white to-emerald-50 border-slate-200"
-                lightIconBg="bg-gradient-to-br from-emerald-500 to-teal-600"
-                ariaLabel={`${t.checkerMode}: ${t.checkerModeDesc}`}
-              />
-            </Reveal>
-          </div>
+        </div>
 
-          <div className="w-full max-w-6xl mx-auto mt-10 md:mt-14">
-            <div className={`rounded-[2rem] overflow-hidden border ${theme === 'dark' ? 'bg-slate-900 border-white/10 shadow-2xl shadow-black/50' : 'bg-white border-slate-200 shadow-2xl shadow-slate-200/70'}`}>
-              <video
-                className="w-full h-auto block"
-                src={homeVideoSrc}
-                autoPlay
-                muted
-                loop
-                playsInline
-                controls
-                preload="metadata"
-                aria-label="Video demo del detector de accesibilidad"
-              />
-            </div>
+        <div className="w-full max-w-6xl mx-auto mt-10 md:mt-14">
+          <div className={`rounded-[2rem] overflow-hidden border ${theme === 'dark' ? 'bg-slate-900 border-white/10 shadow-2xl shadow-black/50' : 'bg-white border-slate-200 shadow-2xl shadow-slate-200/70'}`}>
+            <video
+              className="w-full h-auto block"
+              src={homeVideoSrc}
+              autoPlay
+              muted
+              loop
+              playsInline
+              controls
+              preload="metadata"
+              onLoadedMetadata={(event) => {
+                event.currentTarget.playbackRate = 1.5;
+              }}
+              aria-label="Video demo del detector de accesibilidad"
+            />
           </div>
+        </div>
 
+        <div className="w-full mt-16">
+          <InfoMode setMode={setMode} language={language} theme={theme} variant="home" />
         </div>
       </div>
     </div>
   );
-};
-
-const Card: React.FC<{
-  title: string, 
-  desc: string, 
-  icon: React.ReactNode, 
-  onClick: () => void, 
-  theme: Theme, 
-  darkColor: string, 
-  lightColor: string, 
-  lightIconBg: string, 
-  ariaLabel: string,
-  badge?: string,
-  disabled?: boolean
-}> = ({title, desc, icon, onClick, theme, darkColor, lightColor, lightIconBg, ariaLabel, badge, disabled}) => {
-    const isDark = theme === 'dark';
-    
-    // Updated Hover: Border changes to white (Dark) or black (Light), and subtle scale zoom
-    const hoverInteraction = disabled
-        ? ""
-        : (isDark 
-        ? "hover:border-white hover:scale-[1.02]" 
-        : "hover:border-black hover:scale-[1.02]");
-
-    const cardClass = isDark
-        ? `bg-gradient-to-br ${darkColor} border-white/5 shadow-lg ${hoverInteraction}` 
-        : `${lightColor} shadow-sm ${hoverInteraction}`; 
-        
-    const iconBg = isDark
-        ? 'bg-slate-950/40 border-white/10'
-        : `${lightIconBg} shadow-lg shadow-black/5`;
-
-    return (
-        <div role="listitem" className="h-full">
-            <button 
-                onClick={disabled ? undefined : onClick}
-                disabled={disabled}
-                className={`${cardClass} w-full backdrop-blur-md p-6 rounded-xl border text-center flex flex-col items-center transition-all duration-300 active:scale-95 group relative overflow-hidden h-full ${
-                  disabled ? 'opacity-60 cursor-not-allowed' : ''
-                }`}
-                aria-label={ariaLabel}
-                aria-disabled={disabled ? "true" : "false"}
-            >
-                {badge && (
-                  <div className={`absolute top-3 right-3 text-[10px] font-black px-2 py-1 rounded border tracking-widest uppercase ${
-                    isDark 
-                      ? 'bg-white/10 text-white border-white/20' 
-                      : 'bg-black/5 text-black/60 border-black/10'
-                  }`}>
-                    {badge}
-                  </div>
-                )}
-                
-                <div className={`mb-4 w-14 h-14 rounded-xl flex items-center justify-center border-none transition-transform duration-300 ${iconBg}`}>
-                {icon}
-                </div>
-                {/* Neutral Text Colors as requested */}
-                <h3 className={`text-lg font-bold mb-2 tracking-wide ${isDark ? 'text-white' : 'text-slate-900'}`}>{title}</h3>
-                <p className={`text-sm leading-relaxed transition-colors ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{desc}</p>
-            </button>
-        </div>
-    );
 };
 
 export default App;

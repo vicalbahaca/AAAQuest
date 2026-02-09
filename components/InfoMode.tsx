@@ -8,6 +8,7 @@ interface InfoModeProps {
   setMode: (mode: AppMode) => void;
   language: Language;
   theme: Theme;
+  variant?: 'page' | 'home';
 }
 
 // --- LOGOS ---
@@ -21,116 +22,127 @@ const AndroidLogo = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" className={className} fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M17.523 15.3414C17.523 15.3414 17.523 15.3414 17.523 15.3414C17.523 15.3414 17.523 15.3414 17.523 15.3414ZM14.908 4.3879L16.299 1.979C16.375 1.847 16.331 1.678 16.199 1.602C16.067 1.526 15.898 1.57 15.822 1.702L14.414 4.141C12.986 3.489 11.411 3.125 9.718 3.125C8.025 3.125 6.45 3.489 5.022 4.141L3.614 1.702C3.538 1.57 3.369 1.526 3.237 1.602C3.105 1.678 3.061 1.847 3.137 1.979L4.528 4.3879C2.071 5.7369 0.384 8.2449 0.054 11.1719H19.382C19.052 8.2449 17.365 5.7369 14.908 4.3879ZM5.385 8.783C4.942 8.783 4.583 8.424 4.583 7.981C4.583 7.538 4.942 7.179 5.385 7.179C5.828 7.179 6.187 7.538 6.187 7.981C6.187 8.424 5.828 8.783 5.385 8.783ZM14.051 8.783C13.608 8.783 13.249 8.424 13.249 7.981C13.249 7.538 13.608 7.179 14.051 7.179C14.494 7.179 14.853 7.538 14.853 7.981C14.853 8.424 14.494 8.783 14.051 8.783Z" /></svg>
 );
 
-export const InfoMode: React.FC<InfoModeProps> = ({ setMode, language, theme }) => {
+export const InfoMode: React.FC<InfoModeProps> = ({ setMode, language, theme, variant = 'page' }) => {
   const t = TRANSLATIONS[language];
   const isDark = theme === 'dark';
+  const isHome = variant === 'home';
+  const showHero = !isHome;
+  const showStudySection = !isHome;
+  const showCheckerCta = !isHome;
 
   const textMain = isDark ? 'text-white' : 'text-slate-900';
   const textSub = isDark ? 'text-slate-400' : 'text-slate-600';
   const glassCard = isDark 
     ? 'bg-slate-900/60 backdrop-blur-xl border border-white/10' 
     : 'bg-white/80 backdrop-blur-xl border border-slate-200 shadow-xl shadow-slate-200/50';
+  const containerClasses = isHome
+    ? 'w-full max-w-7xl mx-auto px-4 md:px-8 pb-24'
+    : 'w-full max-w-7xl mx-auto px-6 md:px-8 pb-32';
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-6 md:px-8 pb-32">
+    <div className={containerClasses}>
       
       {/* --- HERO SECTION --- */}
-      <section className="min-h-[50vh] flex flex-col items-center justify-center text-center pt-0 pb-10 relative">
-        <Reveal delay={200}>
-          <h1 className={`text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter mb-8 leading-[0.9] ${textMain}`}>
-            {t.infoTitle.split(':')[0]}<span className={isDark ? 'text-emerald-500' : 'text-emerald-600'}>.</span>
-          </h1>
-        </Reveal>
+      {showHero && (
+        <section className="min-h-[50vh] flex flex-col items-center justify-center text-center pt-0 pb-10 relative">
+          <Reveal delay={200}>
+            <h1 className={`text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter mb-8 leading-[0.9] ${textMain}`}>
+              {t.infoTitle.split(':')[0]}<span className={isDark ? 'text-emerald-500' : 'text-emerald-600'}>.</span>
+            </h1>
+          </Reveal>
 
-        <Reveal delay={400}>
-          <p className={`text-xl md:text-2xl font-light leading-relaxed max-w-3xl mx-auto ${textSub}`}>
-            {t.infoSubtitle}
-          </p>
-        </Reveal>
-      </section>
+          <Reveal delay={400}>
+            <p className={`text-xl md:text-2xl font-light leading-relaxed max-w-3xl mx-auto ${textSub}`}>
+              {t.infoSubtitle}
+            </p>
+          </Reveal>
+        </section>
+      )}
 
       {/* --- SECTION 1: LEARNING (Large Visual Left) --- */}
-      <section className="py-24">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-            
-            {/* Visual: Abstract "Knowledge Stack" */}
-            <Reveal className="relative order-2 lg:order-1 h-[500px]">
-               <div className={`w-full h-full rounded-[3rem] overflow-hidden relative border ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200 shadow-2xl'}`}>
-                  {/* Decorative Gradient Background */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${isDark ? 'from-blue-900/20 via-slate-900 to-purple-900/20' : 'from-blue-50 via-white to-indigo-50'}`} />
-                  
-                  {/* Floating Elements */}
-                  <div className="absolute inset-0 flex flex-col items-center justify-center p-8">
-                      {/* Card 1 */}
-                      <div className={`w-full max-w-sm p-6 rounded-2xl mb-[-40px] z-10 transform scale-90 opacity-60 ${glassCard}`}>
-                          <div className="h-2 w-1/3 bg-slate-400/30 rounded mb-4"/>
-                          <div className="h-2 w-full bg-slate-400/20 rounded"/>
-                      </div>
-                      {/* Card 2 */}
-                      <div className={`w-full max-w-sm p-6 rounded-2xl mb-[-40px] z-20 transform scale-95 opacity-80 shadow-lg ${glassCard}`}>
-                          <div className="flex justify-between items-center mb-4">
-                             <div className="h-2 w-1/2 bg-blue-500/40 rounded"/>
-                             <div className="w-6 h-6 rounded-full bg-blue-500/20"/>
-                          </div>
-                          <div className="space-y-2">
-                             <div className="h-2 w-full bg-slate-400/20 rounded"/>
-                             <div className="h-2 w-3/4 bg-slate-400/20 rounded"/>
-                          </div>
-                      </div>
-                      {/* Card 3 (Main) */}
-                      <div className={`w-full max-w-sm p-8 rounded-3xl z-30 shadow-2xl border-t border-white/20 relative ${isDark ? 'bg-gradient-to-br from-blue-600 to-blue-800' : 'bg-white'}`}>
-                          <div className={`absolute top-0 right-0 p-8 opacity-20`}>
-                             <BookOpen className={`w-24 h-24 ${isDark ? 'text-white' : 'text-blue-500'}`} />
-                          </div>
-                          <div className="relative z-10">
-                              <span className={`text-xs font-bold uppercase tracking-wider mb-2 block ${isDark ? 'text-blue-200' : 'text-blue-600'}`}>{t.infoLevel1}</span>
-                              <h3 className={`text-3xl font-bold mb-4 ${isDark ? 'text-white' : 'text-slate-900'}`}>{t.infoFoundations}</h3>
-                              <div className="flex gap-2">
-                                  <span className={`px-3 py-1 rounded-full text-xs font-bold ${isDark ? 'bg-white/20 text-white' : 'bg-blue-100 text-blue-700'}`}>WCAG</span>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-               </div>
-            </Reveal>
-
-            {/* Content */}
-            <div className="order-1 lg:order-2 space-y-8">
-                <Reveal delay={200}>
-                    <div className="mb-8">
-                      <span className={`px-4 py-2 rounded-full text-sm font-bold border ${isDark ? 'bg-blue-500/10 border-blue-500/20 text-blue-400' : 'bg-blue-100 border-blue-200 text-blue-800'}`}>
-                        {t.studyMode}
-                      </span>
-                      
-                    </div>
-                    <h2 className={`text-4xl md:text-5xl font-bold leading-tight mb-12 ${textMain}`}>
-                        {t.learnSectionTitle}
-                    </h2>
-                    <p className={`text-xl leading-relaxed ${textSub}`}>
-                        {t.learnSectionDesc}
-                    </p>
+      {showStudySection && (
+        <section className="py-24">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+              
+              {/* Visual: Abstract "Knowledge Stack" */}
+              <Reveal className="relative order-2 lg:order-1 h-[500px]">
+                 <div className={`w-full h-full rounded-[3rem] overflow-hidden relative border ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200 shadow-2xl'}`}>
+                    {/* Decorative Gradient Background */}
+                    <div className={`absolute inset-0 bg-gradient-to-br ${isDark ? 'from-blue-900/20 via-slate-900 to-purple-900/20' : 'from-blue-50 via-white to-indigo-50'}`} />
                     
-                    <ul className="space-y-4 mt-8">
-                         {t.infoLearnList.map((item: string, i: number) => (
-                             <li key={i} className="flex items-start gap-4">
-                                 <div className={`mt-1 p-1 rounded-full ${isDark ? 'bg-blue-500/20 text-blue-400' : 'bg-blue-100 text-blue-600'}`}>
-                                     <CheckCircle className="w-4 h-4" />
-                                 </div>
-                                 <span className={`text-lg ${textMain}`}>{item}</span>
-                             </li>
-                         ))}
-                     </ul>
+                    {/* Floating Elements */}
+                    <div className="absolute inset-0 flex flex-col items-center justify-center p-8">
+                        {/* Card 1 */}
+                        <div className={`w-full max-w-sm p-6 rounded-2xl mb-[-40px] z-10 transform scale-90 opacity-60 ${glassCard}`}>
+                            <div className="h-2 w-1/3 bg-slate-400/30 rounded mb-4"/>
+                            <div className="h-2 w-full bg-slate-400/20 rounded"/>
+                        </div>
+                        {/* Card 2 */}
+                        <div className={`w-full max-w-sm p-6 rounded-2xl mb-[-40px] z-20 transform scale-95 opacity-80 shadow-lg ${glassCard}`}>
+                            <div className="flex justify-between items-center mb-4">
+                               <div className="h-2 w-1/2 bg-blue-500/40 rounded"/>
+                               <div className="w-6 h-6 rounded-full bg-blue-500/20"/>
+                            </div>
+                            <div className="space-y-2">
+                               <div className="h-2 w-full bg-slate-400/20 rounded"/>
+                               <div className="h-2 w-3/4 bg-slate-400/20 rounded"/>
+                            </div>
+                        </div>
+                        {/* Card 3 (Main) */}
+                        <div className={`w-full max-w-sm p-8 rounded-3xl z-30 shadow-2xl border-t border-white/20 relative ${isDark ? 'bg-gradient-to-br from-blue-600 to-blue-800' : 'bg-white'}`}>
+                            <div className={`absolute top-0 right-0 p-8 opacity-20`}>
+                               <BookOpen className={`w-24 h-24 ${isDark ? 'text-white' : 'text-blue-500'}`} />
+                            </div>
+                            <div className="relative z-10">
+                                <span className={`text-xs font-bold uppercase tracking-wider mb-2 block ${isDark ? 'text-blue-200' : 'text-blue-600'}`}>{t.infoLevel1}</span>
+                                <h3 className={`text-3xl font-bold mb-4 ${isDark ? 'text-white' : 'text-slate-900'}`}>{t.infoFoundations}</h3>
+                                <div className="flex gap-2">
+                                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${isDark ? 'bg-white/20 text-white' : 'bg-blue-100 text-blue-700'}`}>WCAG</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                 </div>
+              </Reveal>
 
-                    <button 
-                        onClick={() => setMode(AppMode.STUDY)}
-                        className={`mt-8 px-10 py-5 rounded-2xl font-bold text-lg transition-all hover:scale-105 active:scale-95 flex items-center gap-3 ${isDark ? 'bg-white text-black hover:bg-slate-200' : 'bg-blue-600 text-white hover:bg-blue-700 shadow-xl shadow-blue-500/30'}`}
-                    >
-                        {t.studyMode} <ArrowRight className="w-5 h-5" />
-                    </button>
-                </Reveal>
-            </div>
-        </div>
-      </section>
+              {/* Content */}
+              <div className="order-1 lg:order-2 space-y-8">
+                  <Reveal delay={200}>
+                      <div className="mb-8">
+                        <span className={`px-4 py-2 rounded-full text-sm font-bold border ${isDark ? 'bg-blue-500/10 border-blue-500/20 text-blue-400' : 'bg-blue-100 border-blue-200 text-blue-800'}`}>
+                          {t.studyMode}
+                        </span>
+                        
+                      </div>
+                      <h2 className={`text-4xl md:text-5xl font-bold leading-tight mb-12 ${textMain}`}>
+                          {t.learnSectionTitle}
+                      </h2>
+                      <p className={`text-xl leading-relaxed ${textSub}`}>
+                          {t.learnSectionDesc}
+                      </p>
+                      
+                      <ul className="space-y-4 mt-8">
+                           {t.infoLearnList.map((item: string, i: number) => (
+                               <li key={i} className="flex items-start gap-4">
+                                   <div className={`mt-1 p-1 rounded-full ${isDark ? 'bg-blue-500/20 text-blue-400' : 'bg-blue-100 text-blue-600'}`}>
+                                       <CheckCircle className="w-4 h-4" />
+                                   </div>
+                                   <span className={`text-lg ${textMain}`}>{item}</span>
+                               </li>
+                           ))}
+                       </ul>
+
+                      <button 
+                          onClick={() => setMode(AppMode.STUDY)}
+                          className={`mt-8 px-10 py-5 rounded-2xl font-bold text-lg transition-all hover:scale-105 active:scale-95 flex items-center gap-3 ${isDark ? 'bg-white text-black hover:bg-slate-200' : 'bg-blue-600 text-white hover:bg-blue-700 shadow-xl shadow-blue-500/30'}`}
+                      >
+                          {t.studyMode} <ArrowRight className="w-5 h-5" />
+                      </button>
+                  </Reveal>
+              </div>
+          </div>
+        </section>
+      )}
 
       {/* --- SECTION 2: SCREEN READERS (Modern Cards) --- */}
       <section className="py-24">
@@ -214,12 +226,14 @@ export const InfoMode: React.FC<InfoModeProps> = ({ setMode, language, theme }) 
                 </Reveal>
 
                 <Reveal delay={400}>
-                    <button 
-                        onClick={() => setMode(AppMode.CHECKER)}
-                        className={`px-10 py-5 rounded-2xl font-bold text-lg transition-all hover:scale-105 active:scale-95 flex items-center gap-3 shadow-2xl ${isDark ? 'bg-emerald-600 text-white hover:bg-emerald-500 shadow-emerald-900/40' : 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-emerald-500/30'}`}
-                    >
-                        {t.ctaChecker} <ArrowRight className="w-5 h-5" />
-                    </button>
+                    {showCheckerCta && (
+                      <button 
+                          onClick={() => setMode(AppMode.CHECKER)}
+                          className={`px-10 py-5 rounded-2xl font-bold text-lg transition-all hover:scale-105 active:scale-95 flex items-center gap-3 shadow-2xl ${isDark ? 'bg-emerald-600 text-white hover:bg-emerald-500 shadow-emerald-900/40' : 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-emerald-500/30'}`}
+                      >
+                          {t.ctaChecker} <ArrowRight className="w-5 h-5" />
+                      </button>
+                    )}
                 </Reveal>
             </div>
 
