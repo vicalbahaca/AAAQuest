@@ -292,7 +292,7 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
                 <button
                   type="button"
                   onClick={() => onOpenAuth('signup')}
-                  className={`flex items-center gap-2 px-6 py-2 rounded-full transition-all text-sm font-bold border active:scale-95 ${theme === 'dark' ? 'bg-emerald-500 border-emerald-400/40 text-white hover:bg-emerald-400' : 'bg-emerald-600 border-emerald-600/40 text-white hover:bg-emerald-700'}`}
+                  className="flex items-center gap-2 px-6 py-2 rounded-full transition-all text-sm font-bold border border-[#038759] bg-[#038759] text-white hover:bg-[#026e49] active:scale-95"
                   aria-label={t.signUpNav}
                 >
                   <UserPlus className="w-4 h-4" />
@@ -300,7 +300,7 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
                 </button>
                 <button
                   onClick={() => setMode(AppMode.CHECKER)}
-                  className={`flex items-center gap-2 px-6 py-2 rounded-full transition-all text-sm font-bold border active:scale-95 ${theme === 'dark' ? 'bg-white text-slate-900 border-white/40 hover:bg-slate-100' : 'bg-white text-slate-900 border-slate-200 hover:border-slate-300'}`}
+                  className={`flex items-center gap-2 px-6 py-2 rounded-full transition-all text-sm font-bold border active:scale-95 ${theme === 'dark' ? 'bg-slate-900 text-white border-slate-700 hover:bg-slate-800' : 'bg-slate-100 text-slate-900 border-slate-200 hover:bg-slate-200'}`}
                 >
                   <LogIn className="w-4 h-4" />
                   {t.launchApp}
