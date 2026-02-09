@@ -6,6 +6,7 @@ import { TestMode } from './components/TestMode';
 import { CheckerMode } from './components/CheckerMode';
 import { InfoMode } from './components/InfoMode';
 import { CertificateMode } from './components/CertificateMode';
+import { SignIn } from './components/SignIn';
 import { NeuralCore } from './components/NeuralCore';
 import { ScanEye, Globe, ChevronDown, ArrowRight } from 'lucide-react';
 import { Loader } from './components/Loader';
@@ -62,6 +63,8 @@ const App: React.FC = () => {
         return <InfoMode setMode={setMode} language={language} theme={theme} />;
       case AppMode.CERTIFICATE:
         return <CertificateMode language={language} theme={theme} setMode={setMode} />;
+      case AppMode.SIGNIN:
+        return <SignIn language={language} theme={theme} setMode={setMode} />;
       default:
         return <Home setMode={setMode} t={t} theme={theme} language={language} />;
     }
@@ -250,13 +253,14 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
 
             <Reveal delay={300}>
               <div className="flex flex-col sm:flex-row items-center gap-3">
-                <a
-                  href="/signin"
+                <button
+                  type="button"
+                  onClick={() => setMode(AppMode.SIGNIN)}
                   className={`flex items-center gap-2 px-6 py-2 rounded-full transition-all text-sm border active:scale-95 ${infoButtonClasses}`}
                   aria-label={t.signIn}
                 >
                   {t.signIn}
-                </a>
+                </button>
                 <button
                   onClick={() => setMode(AppMode.CHECKER)}
                   className={`flex items-center gap-2 px-6 py-2 rounded-full transition-all text-sm border active:scale-95 ${infoButtonClasses}`}
