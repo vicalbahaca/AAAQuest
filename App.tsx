@@ -11,6 +11,8 @@ import { ScanEye, Globe, ChevronDown, ArrowRight } from 'lucide-react';
 import { Loader } from './components/Loader';
 import { Reveal } from './components/Reveal';
 
+const homeVideoSrc = new URL('./files/VideoHome.mp4', import.meta.url).href;
+
 const App: React.FC = () => {
   const [mode, setMode] = useState<AppMode>(AppMode.HOME);
   const [focusMode, setFocusMode] = useState(false);
@@ -272,6 +274,22 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme}> = ({
                 ariaLabel={`${t.checkerMode}: ${t.checkerModeDesc}`}
               />
             </Reveal>
+          </div>
+
+          <div className="w-full max-w-6xl mx-auto mt-10 md:mt-14">
+            <div className={`rounded-[2rem] overflow-hidden border ${theme === 'dark' ? 'bg-slate-900 border-white/10 shadow-2xl shadow-black/50' : 'bg-white border-slate-200 shadow-2xl shadow-slate-200/70'}`}>
+              <video
+                className="w-full h-auto block"
+                src={homeVideoSrc}
+                autoPlay
+                muted
+                loop
+                playsInline
+                controls
+                preload="metadata"
+                aria-label="Video demo del detector de accesibilidad"
+              />
+            </div>
           </div>
 
         </div>
