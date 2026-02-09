@@ -250,10 +250,10 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
 
             <Reveal delay={300}>
               <button
-                onClick={() => setMode(AppMode.STUDY)}
+                onClick={() => setMode(AppMode.CHECKER)}
                 className={`flex items-center gap-2 px-6 py-2 rounded-full transition-all text-sm border active:scale-95 ${infoButtonClasses}`}
               >
-                {t.studyMode}
+                {t.ctaChecker}
                 <ArrowRight className="w-4 h-4" />
               </button>
             </Reveal>
