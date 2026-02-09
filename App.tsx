@@ -271,10 +271,16 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
           <div className="space-y-8 mb-16 max-w-3xl flex flex-col items-center">
             
             <Reveal>
-              <div className="relative inline-block">
+              <div className="flex flex-col items-center gap-4">
+                <span className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider border ${theme === 'dark' ? 'bg-emerald-500/10 border-emerald-400/30 text-emerald-300' : 'bg-emerald-100 border-emerald-200 text-emerald-700'}`}>
+                  {t.signUpForFree}
+                </span>
+
+                <div className="relative inline-block">
                 <h1 className={`text-5xl md:text-7xl font-black tracking-tight drop-shadow-xl ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
                   {t.appTitle}
                 </h1>
+                </div>
               </div>
             </Reveal>
 
@@ -288,17 +294,17 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
               <div className="flex flex-col sm:flex-row items-center gap-3">
                 <button
                   type="button"
-                  onClick={() => onOpenAuth('signin')}
-                  className={`flex items-center gap-2 px-6 py-2 rounded-full transition-all text-sm border active:scale-95 ${infoButtonClasses}`}
-                  aria-label={t.signIn}
+                  onClick={() => onOpenAuth('signup')}
+                  className={`flex items-center gap-2 px-6 py-2 rounded-full transition-all text-sm font-bold border active:scale-95 ${theme === 'dark' ? 'bg-emerald-500 border-emerald-400/40 text-black hover:bg-emerald-400' : 'bg-emerald-600 border-emerald-600/40 text-white hover:bg-emerald-700'}`}
+                  aria-label={t.signUpNav}
                 >
-                  {t.signIn}
+                  {t.signUpNav}
                 </button>
                 <button
                   onClick={() => setMode(AppMode.CHECKER)}
-                  className={`flex items-center gap-2 px-6 py-2 rounded-full transition-all text-sm border active:scale-95 ${infoButtonClasses}`}
+                  className={`flex items-center gap-2 px-6 py-2 rounded-full transition-all text-sm font-bold border active:scale-95 ${theme === 'dark' ? 'bg-white text-slate-900 border-white/40 hover:bg-slate-100' : 'bg-white text-slate-900 border-slate-200 hover:border-slate-300'}`}
                 >
-                  {t.ctaChecker}
+                  {t.launchApp}
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
