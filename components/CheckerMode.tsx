@@ -790,7 +790,7 @@ export const CheckerMode: React.FC<CheckerModeProps> = ({ language, theme }) => 
 
                        <button
                           onClick={handleAnalyze}
-                          disabled={!image || isLocked}
+                          disabled
                           className={`w-full py-4 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl font-bold text-lg transition-all flex items-center justify-center gap-3 border border-transparent active:scale-95 ${
                               isDark 
                                 ? 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 shadow-[0_0_20px_rgba(22,163,74,0.3)] hover:border-white/20' 
