@@ -221,10 +221,10 @@ const App: React.FC = () => {
         {renderContent()}
       </main>
 
-      <footer className={`fixed bottom-0 left-0 w-full border-t py-4 backdrop-blur-md z-50 transition-all duration-300 ${theme === 'dark' ? 'border-white/5 bg-black/80' : 'border-slate-200 bg-white/80'}`}>
+      <footer className={`w-full border-t py-4 backdrop-blur-md transition-all duration-300 ${theme === 'dark' ? 'border-white/5 bg-black/80' : 'border-slate-200 bg-white/80'}`}>
         <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-center gap-4 text-center">
           <p className={`text-xs md:text-sm ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>
-            {t.footer}{' '}
+            <span>{t.footer} </span>
             <a 
               href="https://www.linkedin.com/in/victorsaizalfageme/" 
               target="_blank" 
@@ -232,7 +232,7 @@ const App: React.FC = () => {
               className={`transition-colors hover:underline underline-offset-4 font-medium ${footerLinkClasses}`}
               aria-label="Victor Saiz Alfageme LinkedIn Profile"
             >
-            Victor Saiz Alfageme
+              Victor Saiz Alfageme
             </a>
           </p>
         </div>
