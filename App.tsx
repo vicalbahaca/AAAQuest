@@ -274,7 +274,8 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
               <div className="flex flex-col items-center gap-4">
                 <div className="relative inline-block">
                 <h1 className={`text-5xl md:text-7xl font-black tracking-tight drop-shadow-xl ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
-                  Document accessibility of designs in minutes
+                  <span className="block">Document accessibility</span>
+                  <span className="block">of designs in minutes</span>
                 </h1>
                 </div>
               </div>
