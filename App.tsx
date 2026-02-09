@@ -150,26 +150,26 @@ const App: React.FC = () => {
           </button>
           
           <nav className="flex items-center gap-2" aria-label="Main Navigation">
-            <button
-              type="button"
-              onClick={() => openAuth('signup')}
-              className={`flex items-center justify-center px-4 h-10 border rounded-full transition-all active:scale-95 text-xs font-bold ${navButtonClasses}`}
-              aria-label={t.signUpNav}
-            >
-              <span className="pt-0.5 leading-none">{t.signUpForFree}</span>
-            </button>
             {/* Pricing Button */}
             <a
               href="/pricing"
-              className={`flex items-center justify-center gap-2 px-4 h-10 border rounded-full transition-all active:scale-95 text-xs font-bold text-white ${
-                theme === 'dark' 
-                ? 'bg-emerald-600 hover:bg-emerald-500 border-emerald-500/50' 
-                : 'bg-emerald-600 hover:bg-emerald-700 border-emerald-600/20 shadow-sm'
-              }`}
+              className={`flex items-center justify-center gap-2 px-4 h-10 border rounded-full transition-all active:scale-95 text-xs font-bold ${navButtonClasses}`}
               aria-label={t.pricingTitle}
             >
               <span className="pt-0.5 leading-none">{t.pricingTitle}</span>
             </a>
+            <button
+              type="button"
+              onClick={() => openAuth('signup')}
+              className={`flex items-center justify-center px-4 h-10 border rounded-full transition-all active:scale-95 text-xs font-bold text-white ${
+                theme === 'dark' 
+                ? 'bg-emerald-600 hover:bg-emerald-500 border-emerald-500/50' 
+                : 'bg-emerald-600 hover:bg-emerald-700 border-emerald-600/20 shadow-sm'
+              }`}
+              aria-label={t.signUpNav}
+            >
+              <span className="pt-0.5 leading-none">{t.signUpForFree}</span>
+            </button>
 
             {/* Language Dropdown */}
             <div className="relative">
