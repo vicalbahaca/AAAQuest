@@ -8,7 +8,7 @@ import { InfoMode } from './components/InfoMode';
 import { CertificateMode } from './components/CertificateMode';
 import { SignIn } from './components/SignIn';
 import { NeuralCore } from './components/NeuralCore';
-import { ScanEye, Globe, ChevronDown, ArrowRight } from 'lucide-react';
+import { ScanEye, Globe, ChevronDown, ArrowRight, X } from 'lucide-react';
 import { Loader } from './components/Loader';
 import { Reveal } from './components/Reveal';
 
@@ -21,11 +21,21 @@ const App: React.FC = () => {
   const theme: Theme = 'light'; // Light mode only
   const [isLoadingLanguage, setIsLoadingLanguage] = useState(false);
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
+  const [isSignUpOpen, setIsSignUpOpen] = useState(false);
 
   // Scroll to top whenever mode changes
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [mode]);
+
+  useEffect(() => {
+    if (!isSignUpOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isSignUpOpen]);
 
   const t = TRANSLATIONS[language];
 
@@ -133,6 +143,14 @@ const App: React.FC = () => {
           </button>
           
           <nav className="flex items-center gap-2" aria-label="Main Navigation">
+            <button
+              type="button"
+              onClick={() => setIsSignUpOpen(true)}
+              className={`flex items-center justify-center px-4 h-10 border rounded-full transition-all active:scale-95 text-xs font-bold ${navButtonClasses}`}
+              aria-label={t.signUpNav}
+            >
+              <span className="pt-0.5 leading-none">{t.signUpNav}</span>
+            </button>
             {/* Pricing Button */}
             <a
               href="/pricing"
@@ -212,6 +230,97 @@ const App: React.FC = () => {
           </p>
         </div>
       </footer>
+
+      {isSignUpOpen && (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center px-4 py-10">
+          <div
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => setIsSignUpOpen(false)}
+            aria-hidden="true"
+          />
+          <div
+            role="dialog"
+            aria-modal="true"
+            className={`relative w-full max-w-5xl overflow-hidden rounded-[2rem] border shadow-2xl ${theme === 'dark' ? 'bg-slate-950 border-white/10' : 'bg-slate-950 border-white/10'}`}
+          >
+            <button
+              type="button"
+              onClick={() => setIsSignUpOpen(false)}
+              className="absolute right-4 top-4 z-20 w-9 h-9 rounded-full bg-white/10 text-white flex items-center justify-center transition hover:bg-white/20"
+              aria-label="Close sign up"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            <div className="grid md:grid-cols-[1.05fr_1fr]">
+              <div className="bg-[#0d0f13] px-8 py-10 md:px-10 md:py-12 text-white">
+                <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">
+                  {t.signUpTitle}
+                </h2>
+
+                <div className="mt-8 flex flex-col gap-3">
+                  <button
+                    type="button"
+                    className="flex items-center justify-center gap-3 rounded-full bg-white text-slate-900 px-6 py-3 text-sm font-semibold shadow-sm transition hover:shadow-md"
+                  >
+                    <span className="text-base">G</span>
+                    {t.signUpGoogle}
+                  </button>
+                  <button
+                    type="button"
+                    className="flex items-center justify-center gap-3 rounded-full bg-white text-slate-900 px-6 py-3 text-sm font-semibold shadow-sm transition hover:shadow-md"
+                  >
+                    {t.signUpApple}
+                  </button>
+                  <button
+                    type="button"
+                    className="flex items-center justify-center gap-3 rounded-full bg-white text-slate-900 px-6 py-3 text-sm font-semibold shadow-sm transition hover:shadow-md"
+                  >
+                    {t.signUpSSO}
+                  </button>
+                </div>
+
+                <div className="mt-6 flex items-center gap-3 text-xs uppercase tracking-widest text-slate-500">
+                  <span className="h-px flex-1 bg-white/10" />
+                  {t.signUpOr}
+                  <span className="h-px flex-1 bg-white/10" />
+                </div>
+
+                <div className="mt-6 flex flex-col gap-3">
+                  <div className="flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300">
+                    <span className="text-base">@</span>
+                    <span className="text-slate-400">{t.signUpEmailPlaceholder}</span>
+                  </div>
+                  <button
+                    type="button"
+                    className="rounded-full bg-emerald-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-emerald-500"
+                  >
+                    {t.signUpEmailButton}
+                  </button>
+                </div>
+
+                <p className="mt-6 text-xs text-slate-500">
+                  {t.signUpTerms}
+                </p>
+              </div>
+
+              <div className="relative hidden md:block">
+                <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950" />
+                <div className="absolute inset-0 opacity-70 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.15),transparent_45%),radial-gradient(circle_at_70%_80%,rgba(16,185,129,0.25),transparent_50%)]" />
+                <div className="absolute inset-0">
+                  <div className="absolute bottom-10 left-10 right-10 rounded-3xl border border-white/10 bg-white/5 p-6 text-white">
+                    <div className="text-sm uppercase tracking-widest text-emerald-300">{t.appTitle}</div>
+                    <div className="mt-2 text-2xl font-semibold">{t.signUpPanelTitle}</div>
+                    <div className="mt-2 text-sm text-slate-300">
+                      {t.signUpPanelSubtitle}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
