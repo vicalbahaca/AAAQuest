@@ -209,9 +209,6 @@ const DetectedScreenAccordion: React.FC<{
 };
 
 export const CheckerMode: React.FC<CheckerModeProps> = ({ language, theme }) => {
-  // Constants
-  const MAX_ATTEMPTS = 3;
-
   // View State
   const [viewState, setViewState] = useState<'UPLOAD' | 'ANALYZING' | 'RESULT'>('UPLOAD');
   const [image, setImage] = useState<string | null>(null); // base64
@@ -225,14 +222,6 @@ export const CheckerMode: React.FC<CheckerModeProps> = ({ language, theme }) => 
   // Interaction State
   const [selectedSectionIndex, setSelectedSectionIndex] = useState<number | null>(null);
   const [hoveredSectionIndex, setHoveredSectionIndex] = useState<number | null>(null);
-
-  // Persistence State for Attempts
-  const [attempts, setAttempts] = useState(() => {
-    const saved = localStorage.getItem('aaaquest_checker_attempts');
-    return saved ? parseInt(saved, 10) : MAX_ATTEMPTS;
-  });
-
-  const isLocked = attempts <= 0;
 
   // Reset scroll on viewState change
   useEffect(() => {
@@ -298,10 +287,8 @@ export const CheckerMode: React.FC<CheckerModeProps> = ({ language, theme }) => 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!isLocked) {
-        setIsDragging(true);
-        if (dragError) setDragError(null);
-    }
+    setIsDragging(true);
+    if (dragError) setDragError(null);
   };
 
   const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
@@ -315,8 +302,6 @@ export const CheckerMode: React.FC<CheckerModeProps> = ({ language, theme }) => 
     e.stopPropagation();
     setIsDragging(false);
     setDragError(null);
-    
-    if (isLocked) return;
 
     const file = e.dataTransfer.files?.[0];
     if (file) {
@@ -326,11 +311,6 @@ export const CheckerMode: React.FC<CheckerModeProps> = ({ language, theme }) => 
 
   const handleAnalyze = async () => {
     if (!image) return;
-    
-    // Check Attempts Limit
-    if (isLocked) {
-        return;
-    }
 
     setViewState('ANALYZING');
     setResult(null);
@@ -341,11 +321,6 @@ export const CheckerMode: React.FC<CheckerModeProps> = ({ language, theme }) => 
       const analysis = await analyzeImage(image, language, userContext);
       setResult(analysis);
       setViewState('RESULT');
-      
-      // Decrement and Save Attempts on Successful Analysis
-      const newAttempts = attempts - 1;
-      setAttempts(newAttempts);
-      localStorage.setItem('aaaquest_checker_attempts', newAttempts.toString());
 
     } catch (e) {
       console.error(e);
@@ -781,13 +756,6 @@ export const CheckerMode: React.FC<CheckerModeProps> = ({ language, theme }) => 
 
                 {/* 4. CTA (Mobile: Order 4) */}
                 <div className="order-4 space-y-2 mt-4">
-                       {/* Attempts Indicator */}
-                       <div className="text-center mb-1">
-                          <span className={`text-xs font-bold uppercase tracking-wider ${textSub}`}>
-                             {attempts} {t.attemptsRemaining}
-                          </span>
-                       </div>
-
                        <button
                           onClick={handleAnalyze}
                           disabled

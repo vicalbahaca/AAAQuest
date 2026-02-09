@@ -120,10 +120,7 @@ const LearningPillAccordion: React.FC<{
 };
 
 export const StudyMode: React.FC<StudyModeProps> = ({ setFocusMode, language, theme, setMode }) => {
-  const [userProgress, setUserProgress] = useState<UserProgress>(() => {
-    const saved = localStorage.getItem('aaaquest_progress');
-    return saved ? JSON.parse(saved) : { maxLevel: 1, history: [], cachedLessons: {} };
-  });
+  const [userProgress, setUserProgress] = useState<UserProgress>({ maxLevel: 1, history: [], cachedLessons: {} });
 
   const [view, setView] = useState<'SELECTOR' | 'LESSON'>('SELECTOR');
   const [currentLevel, setCurrentLevel] = useState(1);
@@ -150,8 +147,6 @@ export const StudyMode: React.FC<StudyModeProps> = ({ setFocusMode, language, th
   const textSub = isDark ? 'text-slate-400' : 'text-slate-500';
   const cardBg = isDark ? 'bg-slate-800/50 border-slate-700' : 'bg-white border-slate-200 shadow-sm';
   const glassPanel = isDark ? 'glass-panel' : 'bg-white/60 backdrop-blur-xl border border-slate-200/60 shadow-xl';
-
-  useEffect(() => { localStorage.setItem('aaaquest_progress', JSON.stringify(userProgress)); }, [userProgress]);
 
   // Automatic scroll on view or step change
   useEffect(() => {
