@@ -9,7 +9,7 @@ import { CertificateMode } from './components/CertificateMode';
 import { SignIn } from './components/SignIn';
 import { AuthModal } from './components/AuthModal';
 import { NeuralCore } from './components/NeuralCore';
-import { ScanEye, Globe, ChevronDown, ArrowRight } from 'lucide-react';
+import { ScanEye, Globe, ChevronDown, ArrowRight, UserPlus, LogIn } from 'lucide-react';
 import { Loader } from './components/Loader';
 import { Reveal } from './components/Reveal';
 
@@ -292,17 +292,18 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
                 <button
                   type="button"
                   onClick={() => onOpenAuth('signup')}
-                  className={`flex items-center gap-2 px-6 py-2 rounded-full transition-all text-sm font-bold border active:scale-95 ${theme === 'dark' ? 'bg-emerald-500 border-emerald-400/40 text-black hover:bg-emerald-400' : 'bg-emerald-600 border-emerald-600/40 text-white hover:bg-emerald-700'}`}
+                  className={`flex items-center gap-2 px-6 py-2 rounded-full transition-all text-sm font-bold border active:scale-95 ${theme === 'dark' ? 'bg-emerald-500 border-emerald-400/40 text-white hover:bg-emerald-400' : 'bg-emerald-600 border-emerald-600/40 text-white hover:bg-emerald-700'}`}
                   aria-label={t.signUpNav}
                 >
+                  <UserPlus className="w-4 h-4" />
                   {t.signUpNav}
                 </button>
                 <button
                   onClick={() => setMode(AppMode.CHECKER)}
                   className={`flex items-center gap-2 px-6 py-2 rounded-full transition-all text-sm font-bold border active:scale-95 ${theme === 'dark' ? 'bg-white text-slate-900 border-white/40 hover:bg-slate-100' : 'bg-white text-slate-900 border-slate-200 hover:border-slate-300'}`}
                 >
+                  <LogIn className="w-4 h-4" />
                   {t.launchApp}
-                  <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
             </Reveal>
