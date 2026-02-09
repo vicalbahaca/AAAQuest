@@ -708,7 +708,7 @@ export const StudyMode: React.FC<StudyModeProps> = ({ setFocusMode, language, th
                             </div>
                             <h2 className={`text-3xl font-black ${textMain}`}>{t.levelComplete}</h2>
                             <p className={`${textSub} text-lg`}>{t.score}: {testScore}/{lesson.test.length}</p>
-                            <button onClick={finishLevel} className="px-8 py-3 bg-[#038759] text-white rounded-xl font-bold shadow-lg hover:bg-[#026e49] transition-colors">{t.continue}</button>
+                            <button onClick={finishLevel} className="px-8 py-3 bg-[#038759] text-white rounded-xl font-normal shadow-lg hover:bg-[#026e49] transition-colors">{t.continue}</button>
                         </div>
                     </div>
                 )}

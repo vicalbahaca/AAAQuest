@@ -166,7 +166,7 @@ export const SignIn: React.FC<SignInProps> = ({ setMode, language, theme }) => {
                 type="button"
                 onClick={handleSignIn}
                 disabled={isSubmitting || !email || !password}
-                className={`flex-1 rounded-full px-6 py-3 text-sm font-bold transition-all active:scale-95 disabled:opacity-60 ${buttonClasses}`}
+                className={`flex-1 rounded-full px-6 py-3 text-sm font-normal transition-all active:scale-95 disabled:opacity-60 ${buttonClasses}`}
               >
                 {t.signInButton}
               </button>
@@ -174,7 +174,7 @@ export const SignIn: React.FC<SignInProps> = ({ setMode, language, theme }) => {
                 type="button"
                 onClick={handleSignUp}
                 disabled={isSubmitting || !email || !password}
-                className={`flex-1 rounded-full px-6 py-3 text-sm font-bold border transition-all active:scale-95 disabled:opacity-60 ${isDark ? 'border-white/10 text-white hover:border-white/30' : 'border-slate-200 text-slate-700 hover:border-slate-300'}`}
+                className={`flex-1 rounded-full px-6 py-3 text-sm font-normal border transition-all active:scale-95 disabled:opacity-60 ${isDark ? 'border-white/10 text-white hover:border-white/30' : 'border-slate-200 text-slate-700 hover:border-slate-300'}`}
               >
                 {t.signUpButton}
               </button>
@@ -199,14 +199,14 @@ export const SignIn: React.FC<SignInProps> = ({ setMode, language, theme }) => {
                 type="button"
                 onClick={handleSignOut}
                 disabled={isSubmitting || !signedInEmail}
-                className={`flex-1 rounded-full px-6 py-3 text-sm font-bold border transition-all active:scale-95 disabled:opacity-60 ${isDark ? 'border-white/10 text-white hover:border-white/30' : 'border-slate-200 text-slate-700 hover:border-slate-300'}`}
+                className={`flex-1 rounded-full px-6 py-3 text-sm font-normal border transition-all active:scale-95 disabled:opacity-60 ${isDark ? 'border-white/10 text-white hover:border-white/30' : 'border-slate-200 text-slate-700 hover:border-slate-300'}`}
               >
                 {t.signOutButton}
               </button>
               <button
                 type="button"
                 onClick={() => setMode(AppMode.HOME)}
-                className={`flex-1 rounded-full px-6 py-3 text-sm font-bold transition-all active:scale-95 ${buttonClasses}`}
+                className={`flex-1 rounded-full px-6 py-3 text-sm font-normal transition-all active:scale-95 ${buttonClasses}`}
               >
                 {t.signInBack}
               </button>

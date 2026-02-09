@@ -159,7 +159,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
                     type="button"
                     onClick={handleGoogle}
                     disabled={isSubmitting}
-                    className="flex items-center justify-center gap-3 rounded-full bg-white text-slate-900 px-6 py-3 text-sm font-semibold shadow-sm transition hover:shadow-md disabled:opacity-60"
+                    className="flex items-center justify-center gap-3 rounded-full bg-white text-slate-900 px-6 py-3 text-sm font-normal shadow-sm transition hover:shadow-md disabled:opacity-60"
                   >
                     <span className="text-base">G</span>
                     {t.signUpGoogle}
@@ -185,7 +185,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
                     type="button"
                     onClick={handleEmailContinue}
                     disabled={isSubmitting || !email.trim()}
-                    className={`rounded-full px-6 py-3 text-sm font-semibold transition hover:opacity-95 disabled:opacity-60 ${buttonClasses}`}
+                    className={`rounded-full px-6 py-3 text-sm font-normal transition hover:opacity-95 disabled:opacity-60 ${buttonClasses}`}
                   >
                     {primaryButtonLabel}
                   </button>
@@ -216,7 +216,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
                     type="button"
                     onClick={handlePasswordContinue}
                     disabled={isSubmitting || !password.trim()}
-                    className={`rounded-full px-6 py-3 text-sm font-semibold transition hover:opacity-95 disabled:opacity-60 ${buttonClasses}`}
+                    className={`rounded-full px-6 py-3 text-sm font-normal transition hover:opacity-95 disabled:opacity-60 ${buttonClasses}`}
                   >
                     {primaryButtonLabel}
                   </button>
