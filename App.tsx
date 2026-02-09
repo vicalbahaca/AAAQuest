@@ -19,7 +19,7 @@ const App: React.FC = () => {
   const [mode, setMode] = useState<AppMode>(AppMode.HOME);
   const [focusMode, setFocusMode] = useState(false);
   const [language, setLanguage] = useState<Language>('es');
-  const theme: Theme = 'light'; // Light mode only
+  const theme: Theme = 'dark'; // Default to dark mode
   const [isLoadingLanguage, setIsLoadingLanguage] = useState(false);
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
