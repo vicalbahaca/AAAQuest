@@ -274,7 +274,7 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
               <div className="flex flex-col items-center gap-4">
                 <div className="relative inline-block">
                 <h1 className={`text-5xl md:text-7xl font-black tracking-tight drop-shadow-xl ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
-                  {t.appTitle}
+                  Document accessibility of designs in minutes
                 </h1>
                 </div>
               </div>
@@ -282,7 +282,7 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
 
             <Reveal delay={200}>
               <p className={`text-base md:text-lg font-light leading-relaxed max-w-2xl mx-auto ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>
-                {t.homeSubtitle}
+                Detect accessibility issues using WCAG criteria and generate development-ready documentation.
               </p>
             </Reveal>
 
