@@ -282,7 +282,7 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
 
             <Reveal delay={200}>
               <p className={`text-base md:text-lg font-light leading-relaxed max-w-2xl mx-auto ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>
-                Detect accessibility issues using WCAG criteria and generate development-ready documentation.
+                Detect accessibility issues using WCAG criteria and generate development-ready documentation with AI.
               </p>
             </Reveal>
 
