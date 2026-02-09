@@ -7,7 +7,7 @@ import { CheckerMode } from './components/CheckerMode';
 import { InfoMode } from './components/InfoMode';
 import { CertificateMode } from './components/CertificateMode';
 import { NeuralCore } from './components/NeuralCore';
-import { BookOpen, ScanEye, Globe, ChevronDown, Sun, Moon, ArrowRight, Coffee } from 'lucide-react';
+import { ScanEye, Globe, ChevronDown, ArrowRight } from 'lucide-react';
 import { Loader } from './components/Loader';
 import { Reveal } from './components/Reveal';
 
@@ -15,7 +15,7 @@ const App: React.FC = () => {
   const [mode, setMode] = useState<AppMode>(AppMode.HOME);
   const [focusMode, setFocusMode] = useState(false);
   const [language, setLanguage] = useState<Language>('es');
-  const [theme, setTheme] = useState<Theme>('light'); // Default to Light Mode
+  const theme: Theme = 'light'; // Light mode only
   const [isLoadingLanguage, setIsLoadingLanguage] = useState(false);
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
 
@@ -35,10 +35,6 @@ const App: React.FC = () => {
       setLanguage(lang);
       setIsLoadingLanguage(false);
     }, 1500); // Simulate network/reload delay
-  };
-
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
   };
 
   const getLangLabel = (lang: Language) => {
@@ -132,20 +128,17 @@ const App: React.FC = () => {
           </button>
           
           <nav className="flex items-center gap-2" aria-label="Main Navigation">
-            {/* Support Button */}
+            {/* Pricing Button */}
             <a
-              href="https://buymeacoffee.com/victorsaiz"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/pricing"
               className={`flex items-center justify-center gap-2 px-4 h-10 border rounded-full transition-all active:scale-95 text-xs font-bold text-white ${
                 theme === 'dark' 
                 ? 'bg-emerald-600 hover:bg-emerald-500 border-emerald-500/50' 
                 : 'bg-emerald-600 hover:bg-emerald-700 border-emerald-600/20 shadow-sm'
               }`}
-              aria-label={t.supportBtn}
+              aria-label={t.pricingTitle}
             >
-              <Coffee className="w-3.5 h-3.5 shrink-0" />
-              <span className="hidden sm:inline pt-0.5 leading-none">{t.supportBtn}</span>
+              <span className="pt-0.5 leading-none">{t.pricingTitle}</span>
             </a>
 
             {/* Language Dropdown */}
@@ -190,14 +183,6 @@ const App: React.FC = () => {
               )}
             </div>
 
-            {/* Theme Toggle Button */}
-            <button
-                onClick={toggleTheme}
-                className={`flex items-center justify-center w-10 h-10 border rounded-full transition-all active:scale-90 ${navButtonClasses}`}
-                aria-label={theme === 'dark' ? "Switch to Light Mode" : "Switch to Dark Mode"}
-            >
-                {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-            </button>
           </nav>
       </header>
 
@@ -252,9 +237,6 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme}> = ({
                 <h1 className={`text-5xl md:text-7xl font-black tracking-tight drop-shadow-xl ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
                   {t.appTitle}
                 </h1>
-                <span className="absolute -top-3 -right-6 md:-right-8 px-1.5 py-0.5 rounded-md bg-emerald-500 text-white text-[10px] md:text-xs font-bold -rotate-12 shadow-sm shadow-emerald-500/20 pointer-events-none select-none border border-emerald-400/50">
-                    DEMO
-                </span>
               </div>
             </Reveal>
 
@@ -275,23 +257,7 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme}> = ({
             </Reveal>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl" role="list">
-            <Reveal delay={400} className="h-full">
-              <Card 
-                title={t.studyMode}
-                desc={t.studyModeDesc}
-                // Study Mode: BLUE
-                icon={<BookOpen className={`w-8 h-8 ${theme === 'dark' ? 'text-blue-400' : 'text-white'}`} aria-hidden="true" />}
-                onClick={() => setMode(AppMode.STUDY)}
-                theme={theme}
-                darkColor="from-blue-500/20 to-blue-900/20"
-                lightColor="bg-gradient-to-br from-white to-blue-50 border-slate-200"
-                lightIconBg="bg-gradient-to-br from-blue-500 to-indigo-600"
-                ariaLabel={`${t.studyMode}: ${t.studyModeDesc}`}
-                badge={t.locked}
-                disabled
-              />
-            </Reveal>
+          <div className="grid grid-cols-1 gap-6 w-full max-w-3xl" role="list">
             <Reveal delay={400} className="h-full">
               <Card 
                 title={t.checkerMode}
