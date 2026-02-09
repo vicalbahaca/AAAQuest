@@ -266,7 +266,7 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
 
       {/* Main Foreground Container */}
       <div className="relative z-10 w-full max-w-6xl px-4">
-        <div className="flex flex-col items-center text-center">
+        <div className="flex flex-col items-center text-center mt-6 md:mt-10">
           
           <div className="space-y-8 mb-16 max-w-3xl flex flex-col items-center">
             
