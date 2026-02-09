@@ -7,7 +7,7 @@ import { CheckerMode } from './components/CheckerMode';
 import { InfoMode } from './components/InfoMode';
 import { CertificateMode } from './components/CertificateMode';
 import { NeuralCore } from './components/NeuralCore';
-import { BookOpen, ScanEye, Globe, ChevronDown, Sun, Moon, ArrowRight, Coffee, Award } from 'lucide-react';
+import { BookOpen, ScanEye, Globe, ChevronDown, Sun, Moon, ArrowRight, Award } from 'lucide-react';
 import { Loader } from './components/Loader';
 import { Reveal } from './components/Reveal';
 
@@ -132,11 +132,9 @@ const App: React.FC = () => {
           </button>
           
           <nav className="flex items-center gap-2" aria-label="Main Navigation">
-            {/* Support Button */}
+            {/* Pricing Button */}
             <a
-              href="https://buymeacoffee.com/victorsaiz"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="#pricing"
               className={`flex items-center justify-center gap-2 px-4 h-10 border rounded-full transition-all active:scale-95 text-xs font-bold text-white ${
                 theme === 'dark' 
                 ? 'bg-emerald-600 hover:bg-emerald-500 border-emerald-500/50' 
@@ -144,7 +142,7 @@ const App: React.FC = () => {
               }`}
               aria-label={t.supportBtn}
             >
-              <Coffee className="w-3.5 h-3.5 shrink-0" />
+              <Award className="w-3.5 h-3.5 shrink-0" />
               <span className="hidden sm:inline pt-0.5 leading-none">{t.supportBtn}</span>
             </a>
 
@@ -305,6 +303,119 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme}> = ({
               />
             </Reveal>
           </div>
+
+          <section id="pricing" className="w-full mt-20">
+            <Reveal delay={600}>
+              <div className="text-center mb-10">
+                <h2 className={`text-3xl md:text-4xl font-black tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+                  {t.pricingTitle}
+                </h2>
+                <p className={`mt-3 text-sm md:text-base ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>
+                  {t.pricingSubtitle}
+                </p>
+              </div>
+            </Reveal>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[
+                {
+                  name: t.pricingStarterName,
+                  desc: t.pricingStarterDesc,
+                  tokens: 50,
+                  perToken: 0.33,
+                  total: 16.5,
+                  cta: t.pricingStarterCta
+                },
+                {
+                  name: t.pricingProName,
+                  desc: t.pricingProDesc,
+                  tokens: 200,
+                  perToken: 0.21,
+                  total: 42,
+                  cta: t.pricingProCta,
+                  highlight: true
+                },
+                {
+                  name: t.pricingEnterpriseName,
+                  desc: t.pricingEnterpriseDesc,
+                  tokens: null,
+                  perToken: null,
+                  total: null,
+                  cta: t.pricingEnterpriseCta,
+                  isContact: true
+                }
+              ].map((plan, idx) => {
+                const isDark = theme === 'dark';
+                const cardBase = isDark
+                  ? 'bg-gradient-to-br from-slate-900/80 to-slate-800/60 border-white/10'
+                  : 'bg-white border-slate-200 shadow-sm';
+                const ring = plan.highlight
+                  ? (isDark ? 'ring-2 ring-emerald-500/60' : 'ring-2 ring-emerald-500/40')
+                  : '';
+
+                return (
+                  <Reveal key={plan.name} delay={700 + idx * 100} className="h-full">
+                    <div className={`h-full rounded-2xl border p-6 flex flex-col ${cardBase} ${ring}`}>
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <h3 className={`text-lg font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                            {plan.name}
+                          </h3>
+                          <p className={`text-sm mt-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                            {plan.desc}
+                          </p>
+                        </div>
+                        {plan.highlight && (
+                          <span className={`text-[10px] uppercase tracking-widest font-black px-2 py-1 rounded border ${
+                            isDark ? 'bg-emerald-500/20 text-emerald-200 border-emerald-500/40' : 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                          }`}>
+                            {t.pricingPopular}
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="mt-6">
+                        {plan.isContact ? (
+                          <div className={`text-2xl font-black ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                            {t.pricingContactOnly}
+                          </div>
+                        ) : (
+                          <>
+                            <div className={`text-3xl font-black ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                              €{plan.total?.toFixed(2)}
+                              <span className={`text-sm font-semibold ml-2 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                                {t.pricingPerMonth}
+                              </span>
+                            </div>
+                            <div className={`mt-2 text-sm ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+                              {plan.tokens} {t.pricingTokensPerMonth}
+                            </div>
+                            <div className={`text-xs mt-1 ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>
+                              €{plan.perToken?.toFixed(2)} {t.pricingPerToken}
+                            </div>
+                          </>
+                        )}
+                      </div>
+
+                      <button
+                        className={`mt-6 w-full py-2 rounded-full text-sm font-bold border transition-all active:scale-95 ${
+                          isDark
+                            ? 'bg-emerald-600 hover:bg-emerald-500 border-emerald-500/50 text-white'
+                            : 'bg-emerald-600 hover:bg-emerald-700 border-emerald-600/20 text-white shadow-sm'
+                        }`}
+                      >
+                        {plan.cta}
+                      </button>
+                    </div>
+                  </Reveal>
+                );
+              })}
+            </div>
+
+            <p className={`mt-6 text-xs text-center ${theme === 'dark' ? 'text-slate-500' : 'text-slate-500'}`}>
+              {t.pricingFootnote}
+            </p>
+          </section>
         </div>
       </div>
     </div>
