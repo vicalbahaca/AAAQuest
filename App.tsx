@@ -18,12 +18,12 @@ const figmaLogo = new URL('./files/figma-logo.svg', import.meta.url).href;
 const unsplashGreenLines = new URL('./files/unsplash-green-lines.jpg', import.meta.url).href;
 const unsplashGreenWaves = new URL('./files/unsplash-green-waves.jpg', import.meta.url).href;
 const unsplashGreenFlow = new URL('./files/unsplash-green-flow.jpg', import.meta.url).href;
-const unsplashOrangePattern = new URL('./files/unsplash-orange-pattern.jpg', import.meta.url).href;
+const pluginAnalyzerImage = new URL('./files/Analizador.png', import.meta.url).href;
 const unsplashPurpleLines = new URL('./files/unsplash-purple-lines.jpg', import.meta.url).href;
 const unsplashLeaves = new URL('./files/unsplash-leaves.jpg', import.meta.url).href;
 const unsplashBlueLight = new URL('./files/unsplash-blue-light.jpg', import.meta.url).href;
 const workflowImage = unsplashGreenFlow;
-const pluginImage = unsplashOrangePattern;
+const pluginImage = pluginAnalyzerImage;
 const showcaseImages = [
   unsplashPurpleLines,
   unsplashGreenLines,
