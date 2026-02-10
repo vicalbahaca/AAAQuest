@@ -732,7 +732,7 @@ export const CheckerMode: React.FC<CheckerModeProps> = ({ language, theme }) => 
                 <div className="order-4 space-y-2 mt-4">
                        <button
                           onClick={handleAnalyze}
-                          disabled
+                          disabled={!image}
                           className="w-full py-4 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl font-normal text-lg transition-all flex items-center justify-center gap-3 border border-transparent active:scale-95 bg-[#038759] hover:bg-[#026e49]"
                         >
                             <ScanEye className="w-6 h-6" aria-hidden="true" /> {t.analyzeBtn}
