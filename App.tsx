@@ -9,7 +9,7 @@ import { CertificateMode } from './components/CertificateMode';
 import { SignIn } from './components/SignIn';
 import { AuthModal } from './components/AuthModal';
 import { NeuralCore } from './components/NeuralCore';
-import { ScanEye, Globe, ChevronDown, UserPlus, LogIn, Sparkles, FileText, Layers, Plug, ShieldCheck, ArrowUpRight, Check, Zap } from 'lucide-react';
+import { ScanEye, Globe, ChevronDown, UserPlus, LogIn, Sparkles, FileText, Layers, Plug, ShieldCheck, ArrowUpRight, Check } from 'lucide-react';
 import { Loader } from './components/Loader';
 import { Reveal } from './components/Reveal';
 
@@ -258,11 +258,11 @@ const App: React.FC = () => {
 };
 
 const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, language: Language, onOpenAuth: (entry: 'signup' | 'signin') => void}> = ({ setMode, t, theme, language, onOpenAuth }) => {
-  const starterPrice = 12;
-  const starterOriginal = 14.99;
-  const discountFactor = starterPrice / starterOriginal;
-  const proPrice = 36;
-  const proOriginal = Number((proPrice / discountFactor).toFixed(2));
+  const discountRate = 0.15;
+  const starterOriginal = 15;
+  const proOriginal = 40;
+  const starterPrice = Number((starterOriginal * (1 - discountRate)).toFixed(2));
+  const proPrice = Number((proOriginal * (1 - discountRate)).toFixed(2));
 
   const formatCurrency = (value: number) =>
     value.toLocaleString(language === 'es' ? 'es-ES' : 'en-US', {
@@ -290,7 +290,6 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
       cta: t.pricingStarterCta,
       includesLabel: t.pricingStarterIncludes,
       features: t.pricingStarterFeatures,
-      offer: t.pricingStarterOffer,
       highlight: false
     },
     {
@@ -303,7 +302,6 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
       cta: t.pricingProCta,
       includesLabel: t.pricingProIncludes,
       features: t.pricingProFeatures,
-      offer: t.pricingProOffer,
       highlight: true
     },
     {
@@ -316,7 +314,6 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
       ctaHref: 'mailto:victorsaizalfageme@gmail.com',
       includesLabel: t.pricingEnterpriseIncludes,
       features: t.pricingEnterpriseFeatures,
-      offer: [],
       highlight: false
     }
   ];
@@ -595,9 +592,6 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
                         <span className={`text-base font-normal ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>{t.pricingPerMonth}</span>
                       )}
                     </div>
-                    <div className={`mt-2 text-xs uppercase tracking-widest ${theme === 'dark' ? 'text-slate-500' : 'text-slate-400'}`}>
-                      {t.pricingBilledAnnually}
-                    </div>
                   </div>
 
                   {plan.ctaHref ? (
@@ -632,19 +626,6 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
                     </ul>
                   </div>
 
-                  {plan.offer && plan.offer.length > 0 && (
-                    <div className={`mt-8 pt-6 border-t ${theme === 'dark' ? 'border-white/10' : 'border-slate-200'}`}>
-                      <div className={`text-xs uppercase tracking-widest ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>{t.pricingLimitedOffer}</div>
-                      <ul className="mt-4 space-y-3">
-                        {plan.offer.map((item: string) => (
-                          <li key={item} className={`flex items-start gap-3 text-sm ${theme === 'dark' ? 'text-slate-300' : 'text-slate-600'}`}>
-                            <Zap className="w-4 h-4 text-[#67e2b1]" />
-                            <span>{item}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
                 </div>
               </Reveal>
             ))}
