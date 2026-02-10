@@ -39,7 +39,6 @@ const App: React.FC = () => {
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [authEntry, setAuthEntry] = useState<'signup' | 'signin'>('signup');
-  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
 
   // Scroll to top whenever mode changes
   useEffect(() => {
@@ -264,6 +263,7 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
   const proOriginal = 40;
   const starterPrice = Number((starterOriginal * (1 - discountRate)).toFixed(2));
   const proPrice = Number((proOriginal * (1 - discountRate)).toFixed(2));
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
 
   const formatCurrency = (value: number) =>
     value.toLocaleString(language === 'es' ? 'es-ES' : 'en-US', {
