@@ -515,12 +515,11 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
                     playsInline
                     controls
                     preload="metadata"
+                    onLoadedMetadata={(event) => {
+                      event.currentTarget.playbackRate = 1.5;
+                    }}
                     aria-label={t.pluginTitle}
                   />
-                  <div className="absolute bottom-4 left-4 flex items-center gap-2 rounded-full bg-black/60 border border-white/10 px-3 py-2">
-                    <img src={figmaLogo} alt="Figma" className="w-6 h-6" />
-                    <span className="text-xs text-white">Plugin</span>
-                  </div>
                 </div>
               </Reveal>
             </div>
