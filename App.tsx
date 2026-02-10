@@ -400,12 +400,12 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
             </div>
           </Reveal>
 
-          <div className="grid md:grid-cols-2 gap-6 mt-12">
+          <div className="grid md:grid-cols-2 gap-6 mt-12 items-stretch">
             {featureCards.map((feature: any, index: number) => {
               const Icon = feature.icon;
               return (
                 <Reveal key={feature.title} delay={index * 100}>
-                  <div className={`group rounded-3xl border p-6 transition-all tilt-hover ${theme === 'dark' ? 'border-white/10 bg-slate-900/60' : 'border-slate-200 bg-white shadow-xl shadow-slate-200/40'}`}>
+                  <div className={`group rounded-3xl border p-6 transition-all tilt-hover h-full ${theme === 'dark' ? 'border-white/10 bg-slate-900/60' : 'border-slate-200 bg-white shadow-xl shadow-slate-200/40'}`}>
                     <div className="relative h-40 rounded-2xl overflow-hidden border border-white/10 bg-black">
                       <img
                         src={feature.image}
