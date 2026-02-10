@@ -568,7 +568,7 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
                   <div className="flex items-start justify-between gap-4">
                     <div>
                       <h3 className={`text-2xl font-semibold ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{plan.name}</h3>
-                      <p className={`mt-2 text-sm ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>{plan.desc}</p>
+                      <p className={`mt-2 text-sm min-h-[48px] ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>{plan.desc}</p>
                     </div>
                   </div>
 
