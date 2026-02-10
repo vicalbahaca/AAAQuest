@@ -529,17 +529,17 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
               <p className={`mt-4 text-base md:text-lg ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>{t.deepFeaturesSubtitle}</p>
             </div>
           </Reveal>
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-6">
+          <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-6">
             {deepFeatureCards.map((item: any, index: number) => (
               <Reveal key={item.title} delay={index * 120}>
-                <div className={`rounded-3xl border p-6 h-full ${theme === 'dark' ? 'border-white/10 bg-slate-900/60' : 'border-slate-200 bg-white shadow-xl shadow-slate-200/40'} ${index < 3 ? 'xl:col-span-2' : 'xl:col-span-3'}`}>
+                <div className={`rounded-3xl border p-6 h-full ${theme === 'dark' ? 'border-white/10 bg-slate-900/60' : 'border-slate-200 bg-white shadow-xl shadow-slate-200/40'}`}>
                   <h3 className={`text-lg font-semibold ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{item.title}</h3>
                   <p className={`mt-3 text-sm leading-relaxed ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>{item.desc}</p>
                   <div className={`mt-6 rounded-2xl border p-4 ${theme === 'dark' ? 'border-white/10 bg-slate-950/40' : 'border-slate-200 bg-slate-50'}`}>
                     <img
                       src={item.image}
                       alt={item.title}
-                      className="w-full h-44 object-contain"
+                      className="w-full h-56 object-contain"
                       loading="lazy"
                     />
                   </div>
