@@ -3,6 +3,8 @@ import { ArrowLeft, X } from 'lucide-react';
 import { Language, Theme, TRANSLATIONS } from '../types';
 import { supabase } from '../services/supabaseClient';
 
+const analyzerImage = new URL('../files/Analizador.png', import.meta.url).href;
+
 type AuthEntry = 'signup' | 'signin';
 type AuthStep = 'email' | 'password';
 
@@ -243,6 +245,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
                 <div className="mt-2 text-sm text-slate-300">
                   {t.signUpPanelSubtitle}
                 </div>
+                <img
+                  src={analyzerImage}
+                  alt="Analizador de accesibilidad"
+                  className="mt-4 w-full rounded-2xl border border-white/10 object-cover"
+                  loading="lazy"
+                />
               </div>
             </div>
           </div>
