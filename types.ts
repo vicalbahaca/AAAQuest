@@ -249,7 +249,7 @@ export const TRANSLATIONS = {
     pricingPerMonth: '/ mes',
     pricingBilledAnnually: 'Facturado anualmente',
     pricingLimitedOffer: 'Oferta limitada',
-    pricingFootnote: 'Soporte por email incluido. El cupo mensual no se acumula y se reinicia cada mes. Si se acaban los análisis mensuales no se cobra automáticamente el siguiente plan, únicamente no podrás realizar más pantallas. Siempre puedes pasar a un plan superior.',
+    pricingFootnote: 'Todos los planes incluyen soporte por email. El cupo mensual no se acumula y se reinicia cada mes. Si se acaban los análisis mensuales no se cobra automáticamente el siguiente plan, únicamente no podrás realizar más pantallas. Siempre puedes pasar a un plan superior.',
     faqTitle: 'Preguntas frecuentes',
     faqTagComingSoon: 'Próximamente',
     faqItems: [
