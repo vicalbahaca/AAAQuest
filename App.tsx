@@ -9,7 +9,7 @@ import { CertificateMode } from './components/CertificateMode';
 import { SignIn } from './components/SignIn';
 import { AuthModal } from './components/AuthModal';
 import { NeuralCore } from './components/NeuralCore';
-import { ScanEye, Globe, ChevronDown, UserPlus, LogIn, Sparkles, FileText, Layers, Plug, ShieldCheck, ArrowUpRight, Check } from 'lucide-react';
+import { ScanEye, Globe, ChevronDown, UserPlus, LogIn, Sparkles, FileText, Layers, ShieldCheck, ArrowUpRight, Check } from 'lucide-react';
 import { Loader } from './components/Loader';
 import { Reveal } from './components/Reveal';
 
@@ -477,8 +477,8 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
               <Reveal>
                 <div>
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-2xl bg-[#038759] flex items-center justify-center text-white">
-                      <Plug className="w-6 h-6" />
+                    <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center border border-white/10">
+                      <img src={figmaLogo} alt="Figma" className="w-7 h-7" />
                     </div>
                     <h2 className={`text-3xl md:text-4xl font-black ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{t.pluginTitle}</h2>
                   </div>
