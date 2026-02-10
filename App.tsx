@@ -270,7 +270,7 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
       maximumFractionDigits: 2
     });
 
-  const formatEuro = (value: number) => `EUR ${formatCurrency(value)}`;
+  const formatEuro = (value: number) => `${formatCurrency(value)} EUR`;
 
   const featureCards = [
     { icon: Sparkles, image: unsplashBlueLight, ...t.features[0] },
