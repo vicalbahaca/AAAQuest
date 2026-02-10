@@ -296,7 +296,7 @@ export const TRANSLATIONS = {
     ],
     contactCtaTitle: '¿Todavía tienes dudas?',
     contactCtaSubtitle: 'Escríbenos y te ayudamos a elegir el plan ideal para tu equipo.',
-    contactCtaButton: 'Contactar ventas',
+    contactCtaButton: 'Contactar',
     studyMode: 'Modo estudio',
     studyModeDesc: 'Aprende sobre accesibilidad digital de forma fácil y práctica en diferentes niveles',
     testMode: 'Hora del examen',
