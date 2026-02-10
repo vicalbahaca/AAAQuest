@@ -433,37 +433,28 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
         </section>
 
         <section className="w-full mt-24">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <Reveal>
-              <div>
-                <h2 className={`text-3xl md:text-4xl font-black ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{t.workflowTitle}</h2>
-                <p className={`mt-4 text-base md:text-lg ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>{t.workflowSubtitle}</p>
-                <div className="mt-8 space-y-4">
-                  {t.workflowSteps.map((step: any, index: number) => (
-                    <div key={step.title} className={`flex items-start gap-4 rounded-2xl border p-4 ${theme === 'dark' ? 'border-white/10 bg-slate-900/50' : 'border-slate-200 bg-white shadow-md shadow-slate-200/40'}`}>
-                      <div className="w-10 h-10 rounded-full bg-[#038759] text-white flex items-center justify-center text-sm font-normal">
-                        {index + 1}
-                      </div>
-                      <div>
-                        <h3 className={`text-base font-semibold ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{step.title}</h3>
-                        <p className={`text-sm ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>{step.desc}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </Reveal>
+          <Reveal>
+            <div className="text-center max-w-3xl mx-auto">
+              <h2 className={`text-3xl md:text-4xl font-black ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{t.workflowTitle}</h2>
+              <p className={`mt-4 text-base md:text-lg ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>{t.workflowSubtitle}</p>
+            </div>
+          </Reveal>
 
-            <Reveal delay={150}>
-              <div className={`relative rounded-[2rem] border overflow-hidden ${theme === 'dark' ? 'border-white/10 bg-slate-900/70' : 'border-slate-200 bg-white shadow-xl shadow-slate-200/50'}`}>
-                <img
-                  src={workflowImage}
-                  alt={t.workflowTitle}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-              </div>
-            </Reveal>
+          <div className="relative mt-12">
+            <div className={`hidden lg:block absolute top-1/2 left-0 right-0 h-px ${theme === 'dark' ? 'bg-white/10' : 'bg-slate-200'}`} />
+            <div className="grid lg:grid-cols-3 gap-6">
+              {t.workflowSteps.map((step: any, index: number) => (
+                <Reveal key={step.title} delay={index * 120}>
+                  <div className={`relative rounded-3xl border p-8 text-center ${theme === 'dark' ? 'border-white/10 bg-slate-900/60' : 'border-slate-200 bg-white shadow-xl shadow-slate-200/40'}`}>
+                    <div className="mx-auto w-14 h-14 rounded-full bg-[#038759] text-white flex items-center justify-center text-lg font-semibold shadow-lg shadow-emerald-500/20">
+                      {index + 1}
+                    </div>
+                    <h3 className={`mt-6 text-lg font-semibold ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{step.title}</h3>
+                    <p className={`mt-3 text-sm ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>{step.desc}</p>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
           </div>
         </section>
 
