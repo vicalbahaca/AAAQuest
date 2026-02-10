@@ -294,6 +294,9 @@ export const TRANSLATIONS = {
         comingSoon: false
       }
     ],
+    contactCtaTitle: '¿Todavía tienes dudas?',
+    contactCtaSubtitle: 'Escríbenos y te ayudamos a elegir el plan ideal para tu equipo.',
+    contactCtaButton: 'Contactar ventas',
     studyMode: 'Modo estudio',
     studyModeDesc: 'Aprende sobre accesibilidad digital de forma fácil y práctica en diferentes niveles',
     testMode: 'Hora del examen',
@@ -635,6 +638,9 @@ export const TRANSLATIONS = {
         comingSoon: false
       }
     ],
+    contactCtaTitle: 'Still have questions?',
+    contactCtaSubtitle: 'Reach out and we will help you pick the right plan.',
+    contactCtaButton: 'Contact sales',
     studyMode: 'Study Mode',
     studyModeDesc: 'Learn about digital accessibility easily and practically across different levels.',
     testMode: 'Exam Time',
