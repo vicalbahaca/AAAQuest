@@ -386,9 +386,6 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
               playsInline
               controls
               preload="metadata"
-              onLoadedMetadata={(event) => {
-                event.currentTarget.playbackRate = 1.5;
-              }}
               aria-label="Video demo del detector de accesibilidad"
             />
           </div>
