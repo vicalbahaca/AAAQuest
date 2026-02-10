@@ -14,6 +14,16 @@ import { Loader } from './components/Loader';
 import { Reveal } from './components/Reveal';
 
 const homeVideoSrc = new URL('./files/VideoHome.mp4', import.meta.url).href;
+const illustrationAudit = new URL('./files/illustration-audit.svg', import.meta.url).href;
+const illustrationDocs = new URL('./files/illustration-docs.svg', import.meta.url).href;
+const illustrationFigma = new URL('./files/illustration-figma.svg', import.meta.url).href;
+const illustrationMulti = new URL('./files/illustration-multiplatform.svg', import.meta.url).href;
+const illustrationWorkflow = new URL('./files/illustration-workflow.svg', import.meta.url).href;
+const showcaseImages = [
+  new URL('./files/illustration-showcase-1.svg', import.meta.url).href,
+  new URL('./files/illustration-showcase-2.svg', import.meta.url).href,
+  new URL('./files/illustration-showcase-3.svg', import.meta.url).href,
+];
 
 const App: React.FC = () => {
   const [mode, setMode] = useState<AppMode>(AppMode.HOME);
@@ -256,10 +266,10 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
     });
 
   const featureCards = [
-    { icon: Sparkles, ...t.features[0] },
-    { icon: FileText, ...t.features[1] },
-    { icon: Layers, ...t.features[2] },
-    { icon: ShieldCheck, ...t.features[3] }
+    { icon: Sparkles, image: illustrationAudit, ...t.features[0] },
+    { icon: FileText, image: illustrationDocs, ...t.features[1] },
+    { icon: Layers, image: illustrationFigma, ...t.features[2] },
+    { icon: ShieldCheck, image: illustrationMulti, ...t.features[3] }
   ];
 
   return (
@@ -358,13 +368,16 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
               return (
                 <Reveal key={feature.title} delay={index * 100}>
                   <div className={`group rounded-3xl border p-6 transition-all tilt-hover ${theme === 'dark' ? 'border-white/10 bg-slate-900/60' : 'border-slate-200 bg-white shadow-xl shadow-slate-200/40'}`}>
-                    <div className="relative h-36 rounded-2xl overflow-hidden border border-white/5 bg-gradient-to-br from-slate-900 via-slate-950 to-black">
-                      <div className="absolute -top-8 -right-6 w-32 h-32 rounded-full bg-[#038759]/30 blur-2xl animate-float-slow" />
-                      <div className="absolute bottom-4 left-4 w-24 h-10 rounded-xl bg-white/10" />
-                      <div className="absolute top-5 left-5 w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center">
+                    <div className="relative h-40 rounded-2xl overflow-hidden border border-white/10 bg-black">
+                      <img
+                        src={feature.image}
+                        alt={feature.title}
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                      <div className="absolute top-4 left-4 w-12 h-12 rounded-2xl bg-black/50 border border-white/10 flex items-center justify-center">
                         <Icon className="w-5 h-5 text-[#9ff0cf]" />
                       </div>
-                      <div className="absolute bottom-4 right-4 w-10 h-10 rounded-full bg-white/5 animate-float-fast" />
                     </div>
                     <h3 className={`mt-6 text-xl font-semibold ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{feature.title}</h3>
                     <p className={`mt-3 text-sm leading-relaxed ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>{feature.desc}</p>
@@ -398,22 +411,13 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
             </Reveal>
 
             <Reveal delay={150}>
-              <div className={`relative rounded-[2rem] border p-8 overflow-hidden ${theme === 'dark' ? 'border-white/10 bg-slate-900/70' : 'border-slate-200 bg-white shadow-xl shadow-slate-200/50'}`}>
-                <div className="absolute -top-10 -left-6 w-40 h-40 rounded-full bg-[#038759]/20 blur-3xl" />
-                <div className="space-y-4 relative">
-                  <div className="h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between px-4">
-                    <div className="w-24 h-2 rounded-full bg-white/20" />
-                    <div className="w-12 h-2 rounded-full bg-white/20" />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="h-24 rounded-2xl bg-white/5 border border-white/10 animate-float-slow" />
-                    <div className="h-24 rounded-2xl bg-white/5 border border-white/10 animate-float-fast" />
-                    <div className="col-span-2 h-24 rounded-2xl bg-white/5 border border-white/10" />
-                  </div>
-                  <div className="h-10 rounded-2xl bg-[#038759] text-white text-sm flex items-center justify-center">
-                    {t.pricingContactOnly}
-                  </div>
-                </div>
+              <div className={`relative rounded-[2rem] border overflow-hidden ${theme === 'dark' ? 'border-white/10 bg-slate-900/70' : 'border-slate-200 bg-white shadow-xl shadow-slate-200/50'}`}>
+                <img
+                  src={illustrationWorkflow}
+                  alt={t.workflowTitle}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
               </div>
             </Reveal>
           </div>
@@ -457,16 +461,13 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
               </Reveal>
 
               <Reveal delay={150}>
-                <div className="relative h-64 md:h-80 rounded-[2rem] border border-white/10 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 overflow-hidden">
-                  <div className="absolute inset-0">
-                    <div className="absolute top-6 left-6 w-24 h-10 rounded-full bg-white/10" />
-                    <div className="absolute top-6 right-6 w-16 h-10 rounded-full bg-white/10" />
-                    <div className="absolute bottom-6 left-6 w-36 h-16 rounded-2xl bg-white/10" />
-                    <div className="absolute bottom-6 right-6 w-24 h-24 rounded-3xl bg-[#038759]/30 animate-float" />
-                  </div>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-40 h-40 rounded-[2.5rem] border border-white/10 bg-white/5 backdrop-blur-xl animate-float-slow" />
-                  </div>
+                <div className="relative h-64 md:h-80 rounded-[2rem] border border-white/10 overflow-hidden bg-black">
+                  <img
+                    src={illustrationFigma}
+                    alt={t.pluginTitle}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
                 </div>
               </Reveal>
             </div>
@@ -481,15 +482,15 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
             </div>
           </Reveal>
           <div className="grid md:grid-cols-3 gap-6 mt-10">
-            {[0, 1, 2].map((item) => (
-              <Reveal key={item} delay={item * 120}>
-                <div className={`rounded-3xl border p-6 relative overflow-hidden ${theme === 'dark' ? 'border-white/10 bg-slate-900/60' : 'border-slate-200 bg-white shadow-lg shadow-slate-200/40'}`}>
-                  <div className="absolute -top-8 right-8 w-32 h-32 rounded-full bg-[#038759]/20 blur-3xl" />
-                  <div className="relative space-y-4">
-                    <div className="h-10 rounded-2xl bg-white/5 border border-white/10" />
-                    <div className="h-24 rounded-2xl bg-white/5 border border-white/10 animate-float-fast" />
-                    <div className="h-14 rounded-2xl bg-white/5 border border-white/10" />
-                  </div>
+            {showcaseImages.map((src, index) => (
+              <Reveal key={src} delay={index * 120}>
+                <div className={`rounded-3xl border overflow-hidden ${theme === 'dark' ? 'border-white/10 bg-slate-900/60' : 'border-slate-200 bg-white shadow-lg shadow-slate-200/40'}`}>
+                  <img
+                    src={src}
+                    alt={`${t.showcaseTitle} ${index + 1}`}
+                    className="w-full h-64 object-cover"
+                    loading="lazy"
+                  />
                 </div>
               </Reveal>
             ))}
