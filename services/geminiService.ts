@@ -355,7 +355,14 @@ export const analyzeImage = async (
   userContext?: string
 ): Promise<CheckerResult> => {
   const langName = getLanguageName(language);
-  const prompt = `Analyze UI for WCAG 2.1 AA (${langName}). ${userContext ? `Context: ${userContext}` : ''}. Output valid JSON compatible with CheckerResult type.`;
+  const prompt = `Analyze UI for WCAG 2.1 AA (${langName}). ${userContext ? `Context: ${userContext}` : ''}. Output valid JSON compatible with CheckerResult type.
+
+CRITICAL VISUAL DETECTION RULES:
+- Treat icon-only controls as interactive buttons or links when they appear in common UI positions or affordances.
+- Explicitly detect: back arrow (often top-left), close "X" (often top-right), kebab/menu, search, share, edit, settings, filter, and chevron navigation.
+- If an icon looks tappable (inside a circle, pill, or with hover/pressed states), assume it is a control and note required accessible name (e.g., "Back", "Close").
+- Flag missing labels for icon-only buttons and insufficient touch target size.
+- Consider top app bars/headers: leading icon = Back, trailing icon = Close or overflow, unless context contradicts.`;
 
   const response = await ai.models.generateContent({
     model: modelName,
