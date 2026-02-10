@@ -593,7 +593,7 @@ export const TRANSLATIONS = {
     pricingPerMonth: '/ month',
     pricingBilledAnnually: 'Billed annually',
     pricingLimitedOffer: 'Limited offer',
-    pricingFootnote: 'Plans include email support.',
+    pricingFootnote: 'Email support included. Monthly quotas reset and do not roll over. If you run out of monthly analyses, we will not auto-bill the next plan; you simply cannot analyze more screens. You can always upgrade to a higher plan.',
     faqTitle: 'FAQ',
     faqTagComingSoon: 'Coming soon',
     faqItems: [
