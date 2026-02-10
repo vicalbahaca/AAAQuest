@@ -235,7 +235,7 @@ export const TRANSLATIONS = {
     pricingEnterpriseName: 'Enterprise',
     pricingEnterpriseDesc: 'Seguridad, soporte y escalado a medida.',
     pricingEnterpriseBadge: 'Volumen a medida',
-    pricingEnterprisePrice: 'A medida',
+    pricingEnterprisePrice: 'Personalizado',
     pricingEnterpriseFeatures: [
       'SLA y soporte dedicado',
       'Flujos personalizados',
