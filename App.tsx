@@ -9,7 +9,7 @@ import { CertificateMode } from './components/CertificateMode';
 import { SignIn } from './components/SignIn';
 import { AuthModal } from './components/AuthModal';
 import { NeuralCore } from './components/NeuralCore';
-import { ScanEye, Globe, ChevronDown, ArrowRight, UserPlus, LogIn, Sparkles, FileText, Layers, Plug, ShieldCheck, ArrowUpRight } from 'lucide-react';
+import { ScanEye, Globe, ChevronDown, UserPlus, LogIn, Sparkles, FileText, Layers, Plug, ShieldCheck, ArrowUpRight, Check, Zap } from 'lucide-react';
 import { Loader } from './components/Loader';
 import { Reveal } from './components/Reveal';
 
@@ -164,11 +164,11 @@ const App: React.FC = () => {
           <nav className="flex items-center gap-2" aria-label="Main Navigation">
             {/* Pricing Button */}
             <a
-              href="/pricing"
+              href="#pricing"
               className={`flex items-center justify-center gap-2 px-4 h-10 border rounded-full transition-all active:scale-95 text-xs font-normal ${navButtonClasses}`}
-              aria-label={t.pricingTitle}
+              aria-label={t.pricingNav}
             >
-              <span className="pt-0.5 leading-none">{t.pricingTitle}</span>
+              <span className="pt-0.5 leading-none">{t.pricingNav}</span>
             </a>
             <button
               type="button"
@@ -270,11 +270,55 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
       maximumFractionDigits: 2
     });
 
+  const formatEuro = (value: number) => `EUR ${formatCurrency(value)}`;
+
   const featureCards = [
     { icon: Sparkles, image: unsplashBlueLight, ...t.features[0] },
     { icon: FileText, image: unsplashLeaves, ...t.features[1] },
     { icon: Layers, image: unsplashGreenLines, ...t.features[2] },
     { icon: ShieldCheck, image: unsplashGreenWaves, ...t.features[3] }
+  ];
+
+  const pricingPlans = [
+    {
+      id: 'starter',
+      name: t.pricingStarterName,
+      desc: t.pricingStarterDesc,
+      badge: t.pricingStarterBadge,
+      price: starterPrice,
+      original: starterOriginal,
+      cta: t.pricingStarterCta,
+      includesLabel: t.pricingStarterIncludes,
+      features: t.pricingStarterFeatures,
+      offer: t.pricingStarterOffer,
+      highlight: false
+    },
+    {
+      id: 'pro',
+      name: t.pricingProName,
+      desc: t.pricingProDesc,
+      badge: t.pricingProBadge,
+      price: proPrice,
+      original: proOriginal,
+      cta: t.pricingProCta,
+      includesLabel: t.pricingProIncludes,
+      features: t.pricingProFeatures,
+      offer: t.pricingProOffer,
+      highlight: true
+    },
+    {
+      id: 'enterprise',
+      name: t.pricingEnterpriseName,
+      desc: t.pricingEnterpriseDesc,
+      badge: t.pricingEnterpriseBadge,
+      priceLabel: t.pricingEnterprisePrice,
+      cta: t.pricingEnterpriseCta,
+      ctaHref: 'mailto:victorsaizalfageme@gmail.com',
+      includesLabel: t.pricingEnterpriseIncludes,
+      features: t.pricingEnterpriseFeatures,
+      offer: [],
+      highlight: false
+    }
   ];
 
   return (
@@ -506,7 +550,7 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
           </div>
         </section>
 
-        <section className="w-full mt-24">
+        <section id="pricing" className="w-full mt-24 scroll-mt-32">
           <Reveal>
             <div className="text-center max-w-3xl mx-auto">
               <h2 className={`text-3xl md:text-4xl font-black ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{t.pricingTitle}</h2>
@@ -515,44 +559,98 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
           </Reveal>
 
           <div className="grid lg:grid-cols-3 gap-6 mt-12">
-            <Reveal>
-              <div className={`rounded-3xl border p-8 h-full ${theme === 'dark' ? 'border-white/10 bg-slate-900/60' : 'border-slate-200 bg-white shadow-xl shadow-slate-200/40'}`}>
-                <div className="text-sm uppercase tracking-widest text-slate-400">{t.pricingStarterName}</div>
-                <div className={`mt-3 text-4xl font-black ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>12€<span className="text-base font-normal">{t.pricingPerMonth}</span></div>
-                <div className="mt-2 text-sm text-slate-500">
-                  {t.pricingBefore} <span className="line-through">{formatCurrency(starterOriginal)}€</span>
-                </div>
-                <div className="mt-6 text-sm text-slate-400">{t.pricingStarterDesc}</div>
-                <div className="mt-6 text-sm text-slate-300">{`25 ${t.pricingScreensPerMonth}`}</div>
-              </div>
-            </Reveal>
-
-            <Reveal delay={100}>
-              <div className={`rounded-3xl border p-8 h-full relative ${theme === 'dark' ? 'border-[#038759] bg-slate-900/80' : 'border-[#038759] bg-white shadow-xl shadow-slate-200/40'}`}>
-                <div className="absolute -top-4 right-6 px-3 py-1 rounded-full bg-[#038759] text-white text-xs">{t.pricingPopular}</div>
-                <div className="text-sm uppercase tracking-widest text-slate-400">{t.pricingProName}</div>
-                <div className={`mt-3 text-4xl font-black ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>36€<span className="text-base font-normal">{t.pricingPerMonth}</span></div>
-                <div className="mt-2 text-sm text-slate-500">
-                  {t.pricingBefore} <span className="line-through">{formatCurrency(proOriginal)}€</span>
-                </div>
-                <div className="mt-6 text-sm text-slate-400">{t.pricingProDesc}</div>
-                <div className="mt-6 text-sm text-slate-300">{`100 ${t.pricingScreensPerMonth}`}</div>
-              </div>
-            </Reveal>
-
-            <Reveal delay={200}>
-              <div className={`rounded-3xl border p-8 h-full ${theme === 'dark' ? 'border-white/10 bg-slate-900/60' : 'border-slate-200 bg-white shadow-xl shadow-slate-200/40'}`}>
-                <div className="text-sm uppercase tracking-widest text-slate-400">{t.pricingEnterpriseName}</div>
-                <div className={`mt-3 text-4xl font-black ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Custom</div>
-                <div className="mt-6 text-sm text-slate-400">{t.pricingEnterpriseDesc}</div>
-                <a
-                  href="mailto:victorsaizalfageme@gmail.com"
-                  className="mt-6 inline-flex items-center gap-2 text-sm font-normal text-[#038759]"
+            {pricingPlans.map((plan: any, index: number) => (
+              <Reveal key={plan.id} delay={index * 120}>
+                <div
+                  className={`rounded-3xl border p-8 h-full flex flex-col ${
+                    theme === 'dark'
+                      ? 'border-white/10 bg-gradient-to-b from-slate-900/90 to-slate-950/90 shadow-2xl shadow-black/40'
+                      : 'border-slate-200 bg-white shadow-xl shadow-slate-200/40'
+                  } ${plan.highlight ? 'ring-1 ring-[#038759]/70' : ''}`}
                 >
-                  {t.pricingEnterpriseCta} <ArrowUpRight className="w-4 h-4" />
-                </a>
-              </div>
-            </Reveal>
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <h3 className={`text-2xl font-semibold ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{plan.name}</h3>
+                      <p className={`mt-2 text-sm ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>{plan.desc}</p>
+                    </div>
+                    {plan.highlight && (
+                      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[#038759] text-white">{t.pricingPopular}</span>
+                    )}
+                  </div>
+
+                  <div className="mt-6">
+                    <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-widest border ${
+                      theme === 'dark' ? 'bg-slate-800/80 border-white/10 text-slate-200' : 'bg-slate-100 border-slate-200 text-slate-600'
+                    }`}>
+                      {plan.badge}
+                    </span>
+                  </div>
+
+                  <div className="mt-6">
+                    {plan.original && (
+                      <div className="text-sm text-slate-500">
+                        {t.pricingBefore} <span className="line-through">{formatEuro(plan.original)}</span>
+                      </div>
+                    )}
+                    <div className={`mt-2 text-3xl font-black ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+                      {plan.price ? formatEuro(plan.price) : plan.priceLabel}
+                      {plan.price && (
+                        <span className={`text-base font-normal ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>{t.pricingPerMonth}</span>
+                      )}
+                    </div>
+                    <div className={`mt-2 text-xs uppercase tracking-widest ${theme === 'dark' ? 'text-slate-500' : 'text-slate-400'}`}>
+                      {t.pricingBilledAnnually}
+                    </div>
+                  </div>
+
+                  {plan.ctaHref ? (
+                    <a
+                      href={plan.ctaHref}
+                      className={`mt-6 w-full rounded-full text-center py-2 text-sm font-normal transition ${
+                        theme === 'dark' ? 'bg-white text-slate-900 hover:bg-slate-200' : 'bg-slate-900 text-white hover:bg-slate-800'
+                      }`}
+                    >
+                      {plan.cta}
+                    </a>
+                  ) : (
+                    <button
+                      type="button"
+                      className={`mt-6 w-full rounded-full py-2 text-sm font-normal transition ${
+                        theme === 'dark' ? 'bg-white text-slate-900 hover:bg-slate-200' : 'bg-slate-900 text-white hover:bg-slate-800'
+                      }`}
+                    >
+                      {plan.cta}
+                    </button>
+                  )}
+
+                  <div className="mt-8">
+                    <div className={`text-sm font-semibold ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{plan.includesLabel}</div>
+                    <ul className="mt-4 space-y-3">
+                      {plan.features.map((feature: string) => (
+                        <li key={feature} className={`flex items-start gap-3 text-sm ${theme === 'dark' ? 'text-slate-300' : 'text-slate-600'}`}>
+                          <Check className="w-4 h-4 text-[#67e2b1]" />
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {plan.offer && plan.offer.length > 0 && (
+                    <div className={`mt-8 pt-6 border-t ${theme === 'dark' ? 'border-white/10' : 'border-slate-200'}`}>
+                      <div className={`text-xs uppercase tracking-widest ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>{t.pricingLimitedOffer}</div>
+                      <ul className="mt-4 space-y-3">
+                        {plan.offer.map((item: string) => (
+                          <li key={item} className={`flex items-start gap-3 text-sm ${theme === 'dark' ? 'text-slate-300' : 'text-slate-600'}`}>
+                            <Zap className="w-4 h-4 text-[#67e2b1]" />
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </Reveal>
+            ))}
           </div>
 
           <p className={`mt-6 text-center text-xs ${theme === 'dark' ? 'text-slate-500' : 'text-slate-400'}`}>{t.pricingFootnote}</p>
