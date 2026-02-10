@@ -236,21 +236,23 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
           </div>
 
           <div className="relative hidden md:block">
-            <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950" />
+            <div className="absolute inset-0 p-6">
+              <img
+                src={analyzerImage}
+                alt="Analizador de accesibilidad"
+                className="mt-4 w-full rounded-2xl border border-white/10 object-cover"
+                loading="lazy"
+              />
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-br from-slate-900/80 via-slate-800/70 to-slate-950/80" />
             <div className="absolute inset-0 opacity-70 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.15),transparent_45%),radial-gradient(circle_at_70%_80%,rgba(16,185,129,0.25),transparent_50%)]" />
-            <div className="absolute inset-0">
+            <div className="absolute inset-0 p-6">
               <div className="absolute bottom-10 left-10 right-10 rounded-3xl border border-white/10 bg-white/5 p-6 text-white">
                 <div className="text-sm uppercase tracking-widest text-emerald-300">{t.appTitle}</div>
                 <div className="mt-2 text-2xl font-semibold">{t.signUpPanelTitle}</div>
                 <div className="mt-2 text-sm text-slate-300">
                   {t.signUpPanelSubtitle}
                 </div>
-                <img
-                  src={analyzerImage}
-                  alt="Analizador de accesibilidad"
-                  className="mt-4 w-full rounded-2xl border border-white/10 object-cover"
-                  loading="lazy"
-                />
               </div>
             </div>
           </div>
