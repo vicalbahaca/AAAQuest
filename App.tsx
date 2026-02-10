@@ -9,7 +9,7 @@ import { CertificateMode } from './components/CertificateMode';
 import { SignIn } from './components/SignIn';
 import { AuthModal } from './components/AuthModal';
 import { NeuralCore } from './components/NeuralCore';
-import { ScanEye, Globe, ChevronDown, UserPlus, LogIn, Clock, FileText, Layers, RefreshCcw, ArrowUpRight, Check } from 'lucide-react';
+import { ScanEye, Globe, ChevronDown, UserPlus, LogIn, Clock, FileText, Layers, RefreshCcw, Check } from 'lucide-react';
 import { Loader } from './components/Loader';
 import { Reveal } from './components/Reveal';
 
@@ -480,13 +480,6 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
                     ))}
                   </ul>
                   <div className="mt-6 flex flex-wrap items-center gap-4">
-                    <a
-                      href="#"
-                      onClick={(event) => event.preventDefault()}
-                      className="inline-flex items-center gap-2 text-sm font-normal text-[#038759] border-b border-transparent hover:border-[#038759] transition"
-                    >
-                      {t.pluginCta} <ArrowUpRight className="w-4 h-4" />
-                    </a>
                     <span className={`text-xs uppercase tracking-widest ${theme === 'dark' ? 'text-slate-500' : 'text-slate-400'}`}>{t.pluginNote}</span>
                   </div>
                 </div>
