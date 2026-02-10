@@ -176,7 +176,7 @@ const App: React.FC = () => {
               className="flex items-center justify-center px-4 h-10 border rounded-full transition-all active:scale-95 text-xs font-normal text-white border-[#038759] bg-[#038759] hover:bg-[#026e49]"
               aria-label={t.signUpNav}
             >
-              <span className="pt-0.5 leading-none">{t.signUpForFree}</span>
+              <span className="pt-0.5 leading-none">{t.signUpNav}</span>
             </button>
 
             {/* Language Dropdown */}
@@ -362,7 +362,7 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
                   aria-label={t.signUpNav}
                 >
                   <UserPlus className="w-4 h-4" />
-                  {t.signUpNav}
+                  {t.signUpForFree}
                 </button>
                 <button
                   onClick={() => setMode(AppMode.CHECKER)}
