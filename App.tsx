@@ -14,15 +14,20 @@ import { Loader } from './components/Loader';
 import { Reveal } from './components/Reveal';
 
 const homeVideoSrc = new URL('./files/VideoHome.mp4', import.meta.url).href;
-const illustrationAudit = new URL('./files/illustration-audit.svg', import.meta.url).href;
-const illustrationDocs = new URL('./files/illustration-docs.svg', import.meta.url).href;
-const illustrationFigma = new URL('./files/illustration-figma.svg', import.meta.url).href;
-const illustrationMulti = new URL('./files/illustration-multiplatform.svg', import.meta.url).href;
-const illustrationWorkflow = new URL('./files/illustration-workflow.svg', import.meta.url).href;
+const figmaLogo = new URL('./files/figma-logo.svg', import.meta.url).href;
+const unsplashGreenLines = new URL('./files/unsplash-green-lines.jpg', import.meta.url).href;
+const unsplashGreenWaves = new URL('./files/unsplash-green-waves.jpg', import.meta.url).href;
+const unsplashGreenFlow = new URL('./files/unsplash-green-flow.jpg', import.meta.url).href;
+const unsplashOrangePattern = new URL('./files/unsplash-orange-pattern.jpg', import.meta.url).href;
+const unsplashPurpleLines = new URL('./files/unsplash-purple-lines.jpg', import.meta.url).href;
+const unsplashLeaves = new URL('./files/unsplash-leaves.jpg', import.meta.url).href;
+const unsplashBlueLight = new URL('./files/unsplash-blue-light.jpg', import.meta.url).href;
+const workflowImage = unsplashGreenFlow;
+const pluginImage = unsplashOrangePattern;
 const showcaseImages = [
-  new URL('./files/illustration-showcase-1.svg', import.meta.url).href,
-  new URL('./files/illustration-showcase-2.svg', import.meta.url).href,
-  new URL('./files/illustration-showcase-3.svg', import.meta.url).href,
+  unsplashPurpleLines,
+  unsplashGreenLines,
+  unsplashGreenWaves,
 ];
 
 const App: React.FC = () => {
@@ -266,10 +271,10 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
     });
 
   const featureCards = [
-    { icon: Sparkles, image: illustrationAudit, ...t.features[0] },
-    { icon: FileText, image: illustrationDocs, ...t.features[1] },
-    { icon: Layers, image: illustrationFigma, ...t.features[2] },
-    { icon: ShieldCheck, image: illustrationMulti, ...t.features[3] }
+    { icon: Sparkles, image: unsplashBlueLight, ...t.features[0] },
+    { icon: FileText, image: unsplashLeaves, ...t.features[1] },
+    { icon: Layers, image: unsplashGreenLines, ...t.features[2] },
+    { icon: ShieldCheck, image: unsplashGreenWaves, ...t.features[3] }
   ];
 
   return (
@@ -413,7 +418,7 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
             <Reveal delay={150}>
               <div className={`relative rounded-[2rem] border overflow-hidden ${theme === 'dark' ? 'border-white/10 bg-slate-900/70' : 'border-slate-200 bg-white shadow-xl shadow-slate-200/50'}`}>
                 <img
-                  src={illustrationWorkflow}
+                  src={workflowImage}
                   alt={t.workflowTitle}
                   className="w-full h-full object-cover"
                   loading="lazy"
@@ -463,11 +468,15 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
               <Reveal delay={150}>
                 <div className="relative h-64 md:h-80 rounded-[2rem] border border-white/10 overflow-hidden bg-black">
                   <img
-                    src={illustrationFigma}
+                    src={pluginImage}
                     alt={t.pluginTitle}
                     className="w-full h-full object-cover"
                     loading="lazy"
                   />
+                  <div className="absolute bottom-4 left-4 flex items-center gap-2 rounded-full bg-black/60 border border-white/10 px-3 py-2">
+                    <img src={figmaLogo} alt="Figma" className="w-6 h-6" />
+                    <span className="text-xs text-white">Plugin</span>
+                  </div>
                 </div>
               </Reveal>
             </div>
