@@ -441,19 +441,29 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
           </Reveal>
 
           <div className="relative mt-12">
-            <div className={`hidden lg:block absolute top-1/2 left-0 right-0 h-px ${theme === 'dark' ? 'bg-white/10' : 'bg-slate-200'}`} />
             <div className="grid lg:grid-cols-3 gap-6">
-              {t.workflowSteps.map((step: any, index: number) => (
-                <Reveal key={step.title} delay={index * 120}>
-                  <div className="relative p-8 text-center">
-                    <div className="mx-auto w-14 h-14 rounded-full bg-[#038759] text-white flex items-center justify-center text-lg font-semibold shadow-lg shadow-emerald-500/20">
-                      {index + 1}
+              {t.workflowSteps.map((step: any, index: number) => {
+                const isLast = index === t.workflowSteps.length - 1;
+                return (
+                  <Reveal key={step.title} delay={index * 120}>
+                    <div className="relative p-8 text-center">
+                      <div className="mx-auto w-14 h-14 rounded-full bg-[#038759] text-white flex items-center justify-center text-lg font-semibold shadow-lg shadow-emerald-500/20">
+                        {index + 1}
+                      </div>
+                      {!isLast && (
+                        <div className="hidden lg:flex items-center justify-center absolute top-7 right-[-28px] w-14 text-[#038759]">
+                          <svg viewBox="0 0 48 12" className="w-12 h-3" aria-hidden="true">
+                            <path d="M2 6h38" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                            <path d="M36 2l8 4-8 4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </div>
+                      )}
+                      <h3 className={`mt-6 text-lg font-semibold ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{step.title}</h3>
+                      <p className={`mt-3 text-sm ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>{step.desc}</p>
                     </div>
-                    <h3 className={`mt-6 text-lg font-semibold ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{step.title}</h3>
-                    <p className={`mt-3 text-sm ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>{step.desc}</p>
-                  </div>
-                </Reveal>
-              ))}
+                  </Reveal>
+                );
+              })}
             </div>
           </div>
         </section>
