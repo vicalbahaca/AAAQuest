@@ -195,6 +195,30 @@ export const TRANSLATIONS = {
     ],
     pluginCta: 'Abrir plugin de Figma',
     pluginNote: 'Disponible próximamente',
+    deepFeaturesTitle: 'Assets inteligentes para accesibilidad',
+    deepFeaturesSubtitle: 'Recursos y flujos diseñados para documentar, validar y escalar accesibilidad en producto.',
+    deepFeatures: [
+      {
+        title: 'Cualquier formato de entrada',
+        desc: 'Analiza diseños, capturas, PDFs o archivos de producto sin cambiar tu flujo de trabajo.'
+      },
+      {
+        title: 'Conectado a tu suite',
+        desc: 'Centraliza criterios WCAG, comentarios y entregables entre diseño, PM y desarrollo.'
+      },
+      {
+        title: 'Diseñado para escalar',
+        desc: 'Procesa múltiples pantallas con consistencia, métricas y control de calidad.'
+      },
+      {
+        title: 'Validación integrada',
+        desc: 'Detecta errores críticos y deja trazabilidad clara para futuras iteraciones.'
+      },
+      {
+        title: 'Flujos visuales',
+        desc: 'Conecta análisis, decisiones y exportación en un mismo recorrido.'
+      }
+    ],
     showcaseTitle: 'Ilustraciones y ejemplos de salida',
     showcaseSubtitle: 'Visualiza cómo se ve la documentación generada por IA.',
     pricingNav: 'Precios',
@@ -522,6 +546,30 @@ export const TRANSLATIONS = {
     ],
     pluginCta: 'Open Figma plugin',
     pluginNote: 'Coming soon',
+    deepFeaturesTitle: 'Accessibility assets that scale',
+    deepFeaturesSubtitle: 'Resources and workflows to document, validate, and scale accessibility across product teams.',
+    deepFeatures: [
+      {
+        title: 'Any input format',
+        desc: 'Analyze designs, screenshots, PDFs, or product files without changing your workflow.'
+      },
+      {
+        title: 'Connected to your suite',
+        desc: 'Unify WCAG criteria, comments, and deliverables across design, PM, and engineering.'
+      },
+      {
+        title: 'Designed to scale',
+        desc: 'Process multiple screens with consistency, metrics, and quality control.'
+      },
+      {
+        title: 'Built-in validation',
+        desc: 'Detect critical issues and keep clear traceability for future iterations.'
+      },
+      {
+        title: 'Visual workflows',
+        desc: 'Connect analysis, decisions, and exports in a single flow.'
+      }
+    ],
     showcaseTitle: 'Illustrations and output previews',
     showcaseSubtitle: 'See how AI-generated documentation looks.',
     pricingNav: 'Pricing',
