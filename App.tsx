@@ -9,7 +9,7 @@ import { CertificateMode } from './components/CertificateMode';
 import { SignIn } from './components/SignIn';
 import { AuthModal } from './components/AuthModal';
 import { NeuralCore } from './components/NeuralCore';
-import { ScanEye, Globe, ChevronDown, UserPlus, LogIn, Sparkles, FileText, Layers, ShieldCheck, ArrowUpRight, Check } from 'lucide-react';
+import { ScanEye, Globe, ChevronDown, UserPlus, LogIn, Clock, FileText, Layers, RefreshCcw, ArrowUpRight, Check } from 'lucide-react';
 import { Loader } from './components/Loader';
 import { Reveal } from './components/Reveal';
 
@@ -274,10 +274,10 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
   const formatEuro = (value: number) => `${formatCurrency(value)} EUR`;
 
   const featureCards = [
-    { icon: Sparkles, image: unsplashBlueLight, ...t.features[0] },
+    { icon: Clock, image: unsplashBlueLight, ...t.features[0] },
     { icon: FileText, image: unsplashLeaves, ...t.features[1] },
     { icon: Layers, image: unsplashGreenLines, ...t.features[2] },
-    { icon: ShieldCheck, image: unsplashGreenWaves, ...t.features[3] }
+    { icon: RefreshCcw, image: unsplashGreenWaves, ...t.features[3] }
   ];
 
   const pricingPlans = [

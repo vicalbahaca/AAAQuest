@@ -163,20 +163,20 @@ export const TRANSLATIONS = {
     featuresSubtitle: 'Convierte capturas o diseños en entregables claros para producto, diseño y desarrollo.',
     features: [
       {
-        title: 'Auditoría WCAG en segundos',
-        desc: 'Detección automática de errores críticos y recomendaciones accionables.'
+        title: 'Auditoría de accesibilidad en segundos',
+        desc: 'Detección automática de errores críticos del diseño y documentación según criterios de la WCAG.'
       },
       {
         title: 'Documentación lista para desarrollo',
-        desc: 'Entregables funcionales, técnicos y de lectores de pantalla en un clic.'
-      },
-      {
-        title: 'Flujo colaborativo con Figma',
-        desc: 'Genera documentación directamente desde tu archivo de diseño.'
+        desc: 'Entregas funcionales de forma no técnica para la adopción en los entregables habituales de los equipos de diseño.'
       },
       {
         title: 'Multi-plataforma',
-        desc: 'Web, iOS y Android con los mismos criterios y lenguaje común.'
+        desc: 'Detección de cualquier tipo de plataforma, web, nativo móvil, PDFs...'
+      },
+      {
+        title: 'Unificación de contenido',
+        desc: 'Genera documentación de forma unificada para todos los proyectos a lo largo del tiempo.'
       }
     ],
     workflowTitle: 'De diseño a documentación en 3 pasos',
@@ -490,20 +490,20 @@ export const TRANSLATIONS = {
     featuresSubtitle: 'Turn screenshots or designs into clear deliverables for product, design, and engineering.',
     features: [
       {
-        title: 'WCAG audit in seconds',
-        desc: 'Automatic detection of critical issues with actionable guidance.'
+        title: 'Accessibility audit in seconds',
+        desc: 'Automatic detection of critical design issues with WCAG-aligned documentation.'
       },
       {
-        title: 'Development-ready docs',
-        desc: 'Functional, technical, and screen-reader specs in one click.'
+        title: 'Development-ready documentation',
+        desc: 'Non-technical deliverables tailored to the standard outputs design teams already use.'
       },
       {
-        title: 'Figma-native workflow',
-        desc: 'Generate documentation straight from your design file.'
+        title: 'Multi-platform',
+        desc: 'Detection for any platform: web, native mobile, PDFs...'
       },
       {
-        title: 'Multi-platform coverage',
-        desc: 'Web, iOS, and Android aligned on the same criteria.'
+        title: 'Unified documentation',
+        desc: 'Generate consistent documentation across all projects over time.'
       }
     ],
     workflowTitle: 'From design to documentation in 3 steps',
