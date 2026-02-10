@@ -19,16 +19,10 @@ const unsplashGreenLines = new URL('./files/unsplash-green-lines.jpg', import.me
 const unsplashGreenWaves = new URL('./files/unsplash-green-waves.jpg', import.meta.url).href;
 const unsplashGreenFlow = new URL('./files/unsplash-green-flow.jpg', import.meta.url).href;
 const pluginFigmaVideo = new URL('./files/pluginFigma.mp4', import.meta.url).href;
-const unsplashPurpleLines = new URL('./files/unsplash-purple-lines.jpg', import.meta.url).href;
 const unsplashLeaves = new URL('./files/unsplash-leaves.jpg', import.meta.url).href;
 const unsplashBlueLight = new URL('./files/unsplash-blue-light.jpg', import.meta.url).href;
 const workflowImage = unsplashGreenFlow;
 const pluginImage = pluginFigmaVideo;
-const showcaseImages = [
-  unsplashPurpleLines,
-  unsplashGreenLines,
-  unsplashGreenWaves,
-];
 
 const App: React.FC = () => {
   const [mode, setMode] = useState<AppMode>(AppMode.HOME);
@@ -504,29 +498,6 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
                 </div>
               </Reveal>
             </div>
-          </div>
-        </section>
-
-        <section className="w-full mt-32">
-          <Reveal>
-            <div className="text-center max-w-3xl mx-auto">
-              <h2 className={`text-3xl md:text-4xl font-black ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{t.showcaseTitle}</h2>
-              <p className={`mt-4 text-base md:text-lg ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>{t.showcaseSubtitle}</p>
-            </div>
-          </Reveal>
-          <div className="grid md:grid-cols-3 gap-6 mt-10">
-            {showcaseImages.map((src, index) => (
-              <Reveal key={src} delay={index * 120}>
-                <div className={`rounded-3xl border overflow-hidden ${theme === 'dark' ? 'border-white/10 bg-slate-900/60' : 'border-slate-200 bg-white shadow-lg shadow-slate-200/40'}`}>
-                  <img
-                    src={src}
-                    alt={`${t.showcaseTitle} ${index + 1}`}
-                    className="w-full h-64 object-cover"
-                    loading="lazy"
-                  />
-                </div>
-              </Reveal>
-            ))}
           </div>
         </section>
 
