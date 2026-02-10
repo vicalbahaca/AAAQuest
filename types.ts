@@ -249,7 +249,7 @@ export const TRANSLATIONS = {
     pricingPerMonth: '/ mes',
     pricingBilledAnnually: 'Facturado anualmente',
     pricingLimitedOffer: 'Oferta limitada',
-    pricingFootnote: 'Los planes incluyen soporte por email.',
+    pricingFootnote: 'Los planes incluyen soporte por email. Las pantallas disponibles no se acumulan mes a mes.',
     faqTitle: 'Preguntas frecuentes',
     faqItems: [
       {
