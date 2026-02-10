@@ -184,7 +184,7 @@ export const TRANSLATIONS = {
     workflowSteps: [
       { title: 'Sube una pantalla', desc: 'Captura, maqueta o frame de Figma.' },
       { title: 'IA analiza con WCAG', desc: 'Errores, contexto y severidad en segundos.' },
-      { title: 'Comparte y exporta', desc: 'PDF, checklist o notas para el equipo.' }
+      { title: 'Comparte y exporta', desc: 'Pantalla documentada y analizada disponible para compartir vía PDF.' }
     ],
     pluginTitle: 'Plugin de Figma',
     pluginSubtitle: 'Documenta accesibilidad sin salir de Figma. Sincroniza frames y exporta la documentación.',
