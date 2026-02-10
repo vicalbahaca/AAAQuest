@@ -445,7 +445,7 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
             <div className="grid lg:grid-cols-3 gap-6">
               {t.workflowSteps.map((step: any, index: number) => (
                 <Reveal key={step.title} delay={index * 120}>
-                  <div className={`relative rounded-3xl border p-8 text-center ${theme === 'dark' ? 'border-white/10 bg-slate-900/60' : 'border-slate-200 bg-white shadow-xl shadow-slate-200/40'}`}>
+                  <div className="relative p-8 text-center">
                     <div className="mx-auto w-14 h-14 rounded-full bg-[#038759] text-white flex items-center justify-center text-lg font-semibold shadow-lg shadow-emerald-500/20">
                       {index + 1}
                     </div>
