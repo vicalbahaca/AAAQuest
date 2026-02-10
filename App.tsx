@@ -632,7 +632,9 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
             ))}
           </div>
 
-          <p className={`mt-6 text-center text-xs ${theme === 'dark' ? 'text-slate-500' : 'text-slate-400'}`}>{t.pricingFootnote}</p>
+          <p className={`mt-6 text-center text-xs ${theme === 'dark' ? 'text-slate-500' : 'text-slate-400'}`}>
+            {t.pricingFootnote || 'Todos los planes incluyen soporte por email. El cupo mensual no se acumula y se reinicia cada mes. Si se acaban los análisis mensuales no se cobra automáticamente el siguiente plan, únicamente no podrás realizar más pantallas. Siempre puedes pasar a un plan superior.'}
+          </p>
         </section>
 
         <section className="w-full mt-24">
