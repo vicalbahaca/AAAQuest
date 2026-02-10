@@ -391,7 +391,7 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
           </div>
         </div>
 
-        <section className="w-full mt-20">
+        <section className="w-full mt-28">
           <Reveal>
             <div className="text-center max-w-3xl mx-auto">
               <span className={`px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider border ${theme === 'dark' ? 'bg-emerald-500/10 border-emerald-400/30 text-emerald-300' : 'bg-emerald-100 border-emerald-200 text-emerald-700'}`}>
@@ -432,7 +432,7 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
           </div>
         </section>
 
-        <section className="w-full mt-24">
+        <section className="w-full mt-32">
           <Reveal>
             <div className="text-center max-w-3xl mx-auto">
               <h2 className={`text-3xl md:text-4xl font-black ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{t.workflowTitle}</h2>
@@ -457,7 +457,7 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
           </div>
         </section>
 
-        <section className="w-full mt-24">
+        <section className="w-full mt-32">
           <div className={`rounded-[2.5rem] border p-8 md:p-12 relative overflow-hidden ${theme === 'dark' ? 'border-white/10 bg-slate-900/70' : 'border-slate-200 bg-white shadow-xl shadow-slate-200/40'}`}>
             <div className="absolute inset-0 pointer-events-none">
               <div className="absolute -top-10 right-10 w-40 h-40 rounded-full bg-[#038759]/20 blur-3xl" />
@@ -514,7 +514,7 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
           </div>
         </section>
 
-        <section className="w-full mt-24">
+        <section className="w-full mt-32">
           <Reveal>
             <div className="text-center max-w-3xl mx-auto">
               <h2 className={`text-3xl md:text-4xl font-black ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{t.showcaseTitle}</h2>
@@ -537,7 +537,7 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
           </div>
         </section>
 
-        <section id="pricing" className="w-full mt-24 scroll-mt-32">
+        <section id="pricing" className="w-full mt-32 scroll-mt-32">
           <Reveal>
             <div className="text-center max-w-3xl mx-auto">
               <h2 className={`text-3xl md:text-4xl font-black ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{t.pricingTitle}</h2>
@@ -624,7 +624,7 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
           <p className={`mt-6 text-center text-[10px] px-12 ${theme === 'dark' ? 'text-slate-500' : 'text-slate-400'}`}>{t.pricingFootnote}</p>
         </section>
 
-        <section className="w-full mt-24">
+        <section className="w-full mt-32">
           <Reveal>
             <div className="text-center max-w-3xl mx-auto">
               <h2 className={`text-3xl md:text-4xl font-black ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{t.faqTitle}</h2>
@@ -662,7 +662,7 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
           </div>
         </section>
 
-        <section className="w-full mt-16 mb-16">
+        <section className="w-full mt-24 mb-16">
           <Reveal>
             <div className={`rounded-[2rem] border px-6 py-10 md:px-10 md:py-12 text-center ${theme === 'dark' ? 'border-white/10 bg-slate-900/60' : 'border-slate-200 bg-white shadow-xl shadow-slate-200/40'}`}>
               <h3 className={`text-2xl md:text-3xl font-semibold ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{t.contactCtaTitle}</h3>
