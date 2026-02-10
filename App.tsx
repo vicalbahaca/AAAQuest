@@ -39,6 +39,7 @@ const App: React.FC = () => {
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [authEntry, setAuthEntry] = useState<'signup' | 'signin'>('signup');
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
 
   // Scroll to top whenever mode changes
   useEffect(() => {
@@ -641,14 +642,34 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
             </div>
           </Reveal>
           <div className="mt-10 space-y-4">
-            {t.faqItems.map((item: any, index: number) => (
-              <Reveal key={item.q} delay={index * 120}>
-                <div className={`rounded-2xl border p-6 ${theme === 'dark' ? 'border-white/10 bg-slate-900/60' : 'border-slate-200 bg-white shadow-md shadow-slate-200/40'}`}>
-                  <h3 className={`text-base font-semibold ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{item.q}</h3>
-                  <p className={`mt-2 text-sm ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>{item.a}</p>
-                </div>
-              </Reveal>
-            ))}
+            {t.faqItems.map((item: any, index: number) => {
+              const isOpen = openFaqIndex === index;
+              return (
+                <Reveal key={item.q} delay={index * 120}>
+                  <button
+                    type="button"
+                    onClick={() => setOpenFaqIndex(isOpen ? null : index)}
+                    className={`w-full rounded-2xl border px-6 py-5 text-left transition ${theme === 'dark' ? 'border-white/10 bg-slate-900/60 hover:border-white/20' : 'border-slate-200 bg-white hover:border-slate-300 shadow-md shadow-slate-200/40'}`}
+                    aria-expanded={isOpen}
+                  >
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="flex items-center gap-3">
+                        <h3 className={`text-base font-semibold ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{item.q}</h3>
+                        {item.comingSoon && (
+                          <span className="px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-widest bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                            {t.faqTagComingSoon}
+                          </span>
+                        )}
+                      </div>
+                      <ChevronDown className={`w-4 h-4 transition ${isOpen ? 'rotate-180' : ''} ${theme === 'dark' ? 'text-slate-300' : 'text-slate-500'}`} />
+                    </div>
+                    {isOpen && (
+                      <p className={`mt-3 text-sm ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>{item.a}</p>
+                    )}
+                  </button>
+                </Reveal>
+              );
+            })}
           </div>
         </section>
       </div>

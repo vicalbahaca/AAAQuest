@@ -251,18 +251,47 @@ export const TRANSLATIONS = {
     pricingLimitedOffer: 'Oferta limitada',
     pricingFootnote: 'Los planes incluyen soporte por email. Las pantallas disponibles no se acumulan mes a mes.',
     faqTitle: 'Preguntas frecuentes',
+    faqTagComingSoon: 'Próximamente',
     faqItems: [
       {
-        q: '¿Qué formatos puedo subir?',
-        a: 'PNG, JPG o capturas de pantalla de productos digitales.'
+        q: '¿Qué diferencia hay entre planes?',
+        a: 'La cantidad de pantallas incluidas y las capacidades de colaboración.',
+        comingSoon: false
       },
       {
-        q: '¿Qué criterios cubre?',
-        a: 'WCAG 2.1 y mejores prácticas para web y mobile.'
+        q: '¿Cómo funciona el cálculo de pantallas?',
+        a: 'Cada pantalla analizada consume una unidad del plan.',
+        comingSoon: false
       },
       {
-        q: '¿Puedo usarlo con Figma?',
-        a: 'Sí, el plugin te permite documentar directamente desde tus archivos.'
+        q: '¿Las pantallas se acumulan mes a mes?',
+        a: 'No, el cupo se reinicia cada mes.',
+        comingSoon: false
+      },
+      {
+        q: '¿El plugin de Figma permite trabajo colaborativo?',
+        a: 'Estamos preparando flujos avanzados para equipos.',
+        comingSoon: true
+      },
+      {
+        q: '¿Qué incluye el plugin de Figma?',
+        a: 'Generación de documentación y anotaciones WCAG desde el diseño.',
+        comingSoon: true
+      },
+      {
+        q: '¿Cómo funciona la facturación?',
+        a: 'Pago mensual con actualización inmediata del plan.',
+        comingSoon: false
+      },
+      {
+        q: '¿Qué soporte está disponible?',
+        a: 'Soporte por email para todos los planes.',
+        comingSoon: false
+      },
+      {
+        q: '¿Incluye licencia comercial?',
+        a: 'Sí, puedes usar la documentación en proyectos comerciales.',
+        comingSoon: false
       }
     ],
     studyMode: 'Modo estudio',
@@ -563,18 +592,47 @@ export const TRANSLATIONS = {
     pricingLimitedOffer: 'Limited offer',
     pricingFootnote: 'Plans include email support.',
     faqTitle: 'FAQ',
+    faqTagComingSoon: 'Coming soon',
     faqItems: [
       {
-        q: 'What formats can I upload?',
-        a: 'PNG, JPG, or product screenshots.'
+        q: 'What is the difference between plans?',
+        a: 'Mainly the screen volume and collaboration features.',
+        comingSoon: false
       },
       {
-        q: 'Which criteria are covered?',
-        a: 'WCAG 2.1 plus best practices for web and mobile.'
+        q: 'How are screens computed?',
+        a: 'Each analyzed screen consumes one plan unit.',
+        comingSoon: false
       },
       {
-        q: 'Can I use it in Figma?',
-        a: 'Yes, the plugin lets you document directly from your files.'
+        q: 'Do screens roll over month to month?',
+        a: 'No, the quota resets every month.',
+        comingSoon: false
+      },
+      {
+        q: 'Can the Figma plugin support team workflows?',
+        a: 'We are preparing advanced team collaboration flows.',
+        comingSoon: true
+      },
+      {
+        q: 'What does the Figma plugin include?',
+        a: 'WCAG annotations and documentation directly from the design.',
+        comingSoon: true
+      },
+      {
+        q: 'How does billing work?',
+        a: 'Monthly billing with instant plan updates.',
+        comingSoon: false
+      },
+      {
+        q: 'What support is available?',
+        a: 'Email support for all plans.',
+        comingSoon: false
+      },
+      {
+        q: 'Do plans include a commercial license?',
+        a: 'Yes, you can use the documentation commercially.',
+        comingSoon: false
       }
     ],
     studyMode: 'Study Mode',
