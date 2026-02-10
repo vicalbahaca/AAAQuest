@@ -573,9 +573,6 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
                       <h3 className={`text-2xl font-semibold ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{plan.name}</h3>
                       <p className={`mt-2 text-sm ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>{plan.desc}</p>
                     </div>
-                    {plan.highlight && (
-                      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[#038759] text-white">{t.pricingPopular}</span>
-                    )}
                   </div>
 
                   <div className="mt-6">
