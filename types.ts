@@ -156,7 +156,7 @@ export interface TestQuestion {
 export const TRANSLATIONS = {
   es: {
     appTitle: 'AAAQuest',
-    homeTitle: 'Documenta accesibilidad de diseños en minutos',
+    homeTitle: 'Documenta accesibilidad en segundos',
     homeSubtitle: 'Detecta errores de accesibilidad según los criterios WCAG y genera documentación lista para desarrollo con IA.',
     homeEyebrow: 'IA para accesibilidad de producto',
     featuresTitle: 'Todo lo que necesitas para documentar accesibilidad',
@@ -468,7 +468,7 @@ export const TRANSLATIONS = {
   },
   en: {
     appTitle: 'AAAQuest',
-    homeTitle: 'Document accessibility of designs in minutes',
+    homeTitle: 'Document accessibility in seconds',
     homeSubtitle: 'Detect accessibility issues using WCAG criteria and generate development-ready documentation with AI.',
     homeEyebrow: 'AI for product accessibility',
     featuresTitle: 'Everything you need to document accessibility',
