@@ -255,42 +255,42 @@ export const TRANSLATIONS = {
     faqItems: [
       {
         q: '¿Qué diferencia hay entre planes?',
-        a: 'La cantidad de pantallas incluidas y las capacidades de colaboración.',
+        a: 'La principal diferencia es el volumen de pantallas incluidas cada mes y las opciones de colaboración. Starter es ideal para validaciones rápidas, Pro para equipos que documentan cada sprint, y Enterprise para necesidades avanzadas y soporte dedicado.',
         comingSoon: false
       },
       {
         q: '¿Cómo funciona el cálculo de pantallas?',
-        a: 'Cada pantalla analizada consume una unidad del plan.',
+        a: 'Cada vez que analizas una pantalla, se descuenta una unidad del plan. Si vuelves a analizar la misma pantalla tras cambios importantes, contará como una nueva unidad.',
         comingSoon: false
       },
       {
         q: '¿Las pantallas se acumulan mes a mes?',
-        a: 'No, el cupo se reinicia cada mes.',
+        a: 'No. El cupo se reinicia al inicio de cada periodo mensual y no se acumula, para que siempre tengas un flujo estable de análisis.',
         comingSoon: false
       },
       {
         q: '¿El plugin de Figma permite trabajo colaborativo?',
-        a: 'Estamos preparando flujos avanzados para equipos.',
+        a: 'Estamos preparando flujos avanzados para equipos con historial de versiones, comentarios y seguimiento de decisiones de accesibilidad.',
         comingSoon: true
       },
       {
         q: '¿Qué incluye el plugin de Figma?',
-        a: 'Generación de documentación y anotaciones WCAG desde el diseño.',
+        a: 'Incluye generación de documentación y anotaciones WCAG desde el diseño, exportación de reportes y sincronización de frames con tu repositorio de accesibilidad.',
         comingSoon: true
       },
       {
         q: '¿Cómo funciona la facturación?',
-        a: 'Pago mensual con actualización inmediata del plan.',
+        a: 'La facturación es mensual y puedes cambiar de plan en cualquier momento. Las mejoras se aplican de inmediato y las reducciones se activan en el siguiente periodo.',
         comingSoon: false
       },
       {
         q: '¿Qué soporte está disponible?',
-        a: 'Soporte por email para todos los planes.',
+        a: 'Todos los planes incluyen soporte por email. Enterprise suma soporte dedicado y tiempos de respuesta acordados.',
         comingSoon: false
       },
       {
         q: '¿Incluye licencia comercial?',
-        a: 'Sí, puedes usar la documentación en proyectos comerciales.',
+        a: 'Sí, puedes usar la documentación generada en proyectos comerciales sin costes adicionales.',
         comingSoon: false
       }
     ],
@@ -599,42 +599,42 @@ export const TRANSLATIONS = {
     faqItems: [
       {
         q: 'What is the difference between plans?',
-        a: 'Mainly the screen volume and collaboration features.',
+        a: 'The key difference is monthly screen volume and collaboration depth. Starter fits quick validations, Pro supports sprint-level teamwork, and Enterprise adds advanced workflows and dedicated support.',
         comingSoon: false
       },
       {
         q: 'How are screens computed?',
-        a: 'Each analyzed screen consumes one plan unit.',
+        a: 'Each time you analyze a screen it consumes one unit. Re-analyzing after meaningful design changes counts as a new unit.',
         comingSoon: false
       },
       {
         q: 'Do screens roll over month to month?',
-        a: 'No, the quota resets every month.',
+        a: 'No. The quota resets at the start of each monthly period to keep a steady analysis flow.',
         comingSoon: false
       },
       {
         q: 'Can the Figma plugin support team workflows?',
-        a: 'We are preparing advanced team collaboration flows.',
+        a: 'We are preparing advanced team flows with version history, comments, and accessibility decision tracking.',
         comingSoon: true
       },
       {
         q: 'What does the Figma plugin include?',
-        a: 'WCAG annotations and documentation directly from the design.',
+        a: 'It includes WCAG annotations and documentation directly from design files, plus report export and frame syncing.',
         comingSoon: true
       },
       {
         q: 'How does billing work?',
-        a: 'Monthly billing with instant plan updates.',
+        a: 'Monthly billing with the ability to upgrade anytime. Downgrades take effect on the next cycle.',
         comingSoon: false
       },
       {
         q: 'What support is available?',
-        a: 'Email support for all plans.',
+        a: 'Email support is included for all plans, with dedicated support and SLAs for Enterprise.',
         comingSoon: false
       },
       {
         q: 'Do plans include a commercial license?',
-        a: 'Yes, you can use the documentation commercially.',
+        a: 'Yes, you can use generated documentation commercially with no extra fees.',
         comingSoon: false
       }
     ],

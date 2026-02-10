@@ -653,15 +653,15 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
                     aria-expanded={isOpen}
                   >
                     <div className="flex items-center justify-between gap-4">
+                      <h3 className={`text-base font-semibold ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{item.q}</h3>
                       <div className="flex items-center gap-3">
-                        <h3 className={`text-base font-semibold ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{item.q}</h3>
                         {item.comingSoon && (
                           <span className="px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-widest bg-amber-500/20 text-amber-300 border border-amber-500/40">
                             {t.faqTagComingSoon}
                           </span>
                         )}
+                        <ChevronDown className={`w-4 h-4 transition ${isOpen ? 'rotate-180' : ''} ${theme === 'dark' ? 'text-slate-300' : 'text-slate-500'}`} />
                       </div>
-                      <ChevronDown className={`w-4 h-4 transition ${isOpen ? 'rotate-180' : ''} ${theme === 'dark' ? 'text-slate-300' : 'text-slate-500'}`} />
                     </div>
                     {isOpen && (
                       <p className={`mt-3 text-sm ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>{item.a}</p>
