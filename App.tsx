@@ -17,11 +17,6 @@ const homeVideoSrc = new URL('./files/VideoHome.mp4', import.meta.url).href;
 const figmaLogo = new URL('./files/figma-logo.svg', import.meta.url).href;
 const unsplashGreenFlow = new URL('./files/unsplash-green-flow.jpg', import.meta.url).href;
 const pluginFigmaVideo = new URL('./files/pluginFigma.mp4', import.meta.url).href;
-const accessAssetFormats = new URL('./files/access-asset-formats.svg', import.meta.url).href;
-const accessAssetSuite = new URL('./files/access-asset-suite.svg', import.meta.url).href;
-const accessAssetScale = new URL('./files/access-asset-scale.svg', import.meta.url).href;
-const accessAssetValidation = new URL('./files/access-asset-validation.svg', import.meta.url).href;
-const accessAssetWorkflows = new URL('./files/access-asset-workflows.svg', import.meta.url).href;
 const workflowImage = unsplashGreenFlow;
 const pluginImage = pluginFigmaVideo;
 
@@ -275,34 +270,6 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
     { icon: RefreshCcw, ...t.features[3] }
   ];
 
-  const deepFeatureCards = [
-    {
-      title: t.deepFeatures[0].title,
-      desc: t.deepFeatures[0].desc,
-      image: accessAssetFormats
-    },
-    {
-      title: t.deepFeatures[1].title,
-      desc: t.deepFeatures[1].desc,
-      image: accessAssetSuite
-    },
-    {
-      title: t.deepFeatures[2].title,
-      desc: t.deepFeatures[2].desc,
-      image: accessAssetScale
-    },
-    {
-      title: t.deepFeatures[3].title,
-      desc: t.deepFeatures[3].desc,
-      image: accessAssetValidation
-    },
-    {
-      title: t.deepFeatures[4].title,
-      desc: t.deepFeatures[4].desc,
-      image: accessAssetWorkflows
-    }
-  ];
-
   const pricingPlans = [
     {
       id: 'starter',
@@ -519,33 +486,6 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
                 </div>
               </Reveal>
             </div>
-          </div>
-        </section>
-
-        <section className="w-full mt-32">
-          <Reveal>
-            <div className="text-center max-w-3xl mx-auto">
-              <h2 className={`text-3xl md:text-4xl font-black ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{t.deepFeaturesTitle}</h2>
-              <p className={`mt-4 text-base md:text-lg ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>{t.deepFeaturesSubtitle}</p>
-            </div>
-          </Reveal>
-          <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {deepFeatureCards.map((item: any, index: number) => (
-              <Reveal key={item.title} delay={index * 120}>
-                <div className={`rounded-3xl border p-6 h-full ${theme === 'dark' ? 'border-white/10 bg-slate-900/60' : 'border-slate-200 bg-white shadow-xl shadow-slate-200/40'}`}>
-                  <h3 className={`text-lg font-semibold ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{item.title}</h3>
-                  <p className={`mt-3 text-sm leading-relaxed ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>{item.desc}</p>
-                  <div className={`mt-6 rounded-2xl border p-4 ${theme === 'dark' ? 'border-white/10 bg-slate-950/40' : 'border-slate-200 bg-slate-50'}`}>
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="w-full h-56 object-contain"
-                      loading="lazy"
-                    />
-                  </div>
-                </div>
-              </Reveal>
-            ))}
           </div>
         </section>
 
