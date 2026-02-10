@@ -15,12 +15,8 @@ import { Reveal } from './components/Reveal';
 
 const homeVideoSrc = new URL('./files/VideoHome.mp4', import.meta.url).href;
 const figmaLogo = new URL('./files/figma-logo.svg', import.meta.url).href;
-const unsplashGreenLines = new URL('./files/unsplash-green-lines.jpg', import.meta.url).href;
-const unsplashGreenWaves = new URL('./files/unsplash-green-waves.jpg', import.meta.url).href;
 const unsplashGreenFlow = new URL('./files/unsplash-green-flow.jpg', import.meta.url).href;
 const pluginFigmaVideo = new URL('./files/pluginFigma.mp4', import.meta.url).href;
-const unsplashLeaves = new URL('./files/unsplash-leaves.jpg', import.meta.url).href;
-const unsplashBlueLight = new URL('./files/unsplash-blue-light.jpg', import.meta.url).href;
 const workflowImage = unsplashGreenFlow;
 const pluginImage = pluginFigmaVideo;
 
@@ -268,10 +264,10 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
   const formatEuro = (value: number) => `${formatCurrency(value)} EUR`;
 
   const featureCards = [
-    { icon: Clock, image: unsplashBlueLight, ...t.features[0] },
-    { icon: FileText, image: unsplashLeaves, ...t.features[1] },
-    { icon: Layers, image: unsplashGreenLines, ...t.features[2] },
-    { icon: RefreshCcw, image: unsplashGreenWaves, ...t.features[3] }
+    { icon: Clock, ...t.features[0] },
+    { icon: FileText, ...t.features[1] },
+    { icon: Layers, ...t.features[2] },
+    { icon: RefreshCcw, ...t.features[3] }
   ];
 
   const pricingPlans = [
@@ -400,24 +396,16 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
             </div>
           </Reveal>
 
-          <div className="grid md:grid-cols-2 gap-6 mt-12 items-stretch">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12 items-stretch">
             {featureCards.map((feature: any, index: number) => {
               const Icon = feature.icon;
               return (
                 <Reveal key={feature.title} delay={index * 100}>
                   <div className={`group rounded-3xl border p-6 transition-all tilt-hover h-full ${theme === 'dark' ? 'border-white/10 bg-slate-900/60' : 'border-slate-200 bg-white shadow-xl shadow-slate-200/40'}`}>
-                    <div className="relative h-40 rounded-2xl overflow-hidden border border-white/10 bg-black">
-                      <img
-                        src={feature.image}
-                        alt={feature.title}
-                        className="w-full h-full object-cover"
-                        loading="lazy"
-                      />
-                      <div className="absolute top-4 left-4 w-12 h-12 rounded-2xl bg-black/50 border border-white/10 flex items-center justify-center">
-                        <Icon className="w-5 h-5 text-[#9ff0cf]" />
-                      </div>
+                    <div className="w-12 h-12 rounded-2xl bg-black/50 border border-white/10 flex items-center justify-center">
+                      <Icon className="w-5 h-5 text-[#9ff0cf]" />
                     </div>
-                    <h3 className={`mt-6 text-xl font-semibold ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{feature.title}</h3>
+                    <h3 className={`mt-6 text-lg font-semibold ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{feature.title}</h3>
                     <p className={`mt-3 text-sm leading-relaxed ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>{feature.desc}</p>
                   </div>
                 </Reveal>
