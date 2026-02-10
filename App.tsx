@@ -9,7 +9,7 @@ import { CertificateMode } from './components/CertificateMode';
 import { SignIn } from './components/SignIn';
 import { AuthModal } from './components/AuthModal';
 import { NeuralCore } from './components/NeuralCore';
-import { ScanEye, Globe, ChevronDown, UserPlus, LogIn, Clock, FileText, Layers, RefreshCcw, Check } from 'lucide-react';
+import { ScanEye, Globe, ChevronDown, UserPlus, LogIn, Clock, FileText, Layers, RefreshCcw } from 'lucide-react';
 import { Loader } from './components/Loader';
 import { Reveal } from './components/Reveal';
 
@@ -501,7 +501,7 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
             {pricingPlans.map((plan: any, index: number) => (
               <Reveal key={plan.id} delay={index * 120}>
                 <div
-                  className={`rounded-3xl border p-8 h-full flex flex-col ${
+                  className={`rounded-3xl border p-10 h-full flex flex-col ${
                     theme === 'dark'
                       ? 'border-white/10 bg-gradient-to-b from-slate-900/90 to-slate-950/90 shadow-2xl shadow-black/40'
                       : 'border-slate-200 bg-white shadow-xl shadow-slate-200/40'
@@ -536,36 +536,26 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
                     </div>
                   </div>
 
-                  {plan.ctaHref ? (
-                    <a
-                      href={plan.ctaHref}
-                      className={`mt-6 w-full rounded-full text-center py-2 text-sm font-normal transition ${
-                        theme === 'dark' ? 'bg-white text-slate-900 hover:bg-slate-200' : 'bg-slate-900 text-white hover:bg-slate-800'
-                      }`}
-                    >
-                      {plan.cta}
-                    </a>
-                  ) : (
-                    <button
-                      type="button"
-                      className={`mt-6 w-full rounded-full py-2 text-sm font-normal transition ${
-                        theme === 'dark' ? 'bg-white text-slate-900 hover:bg-slate-200' : 'bg-slate-900 text-white hover:bg-slate-800'
-                      }`}
-                    >
-                      {plan.cta}
-                    </button>
-                  )}
-
-                  <div className="mt-8">
-                    <div className={`text-sm font-semibold ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{plan.includesLabel}</div>
-                    <ul className="mt-4 space-y-3">
-                      {plan.features.map((feature: string) => (
-                        <li key={feature} className={`flex items-start gap-3 text-sm ${theme === 'dark' ? 'text-slate-300' : 'text-slate-600'}`}>
-                          <Check className="w-4 h-4 text-[#67e2b1]" />
-                          <span>{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
+                  <div className="mt-auto pt-8">
+                    {plan.ctaHref ? (
+                      <a
+                        href={plan.ctaHref}
+                        className={`w-full rounded-full text-center py-2 text-sm font-normal transition inline-flex items-center justify-center ${
+                          theme === 'dark' ? 'bg-white text-slate-900 hover:bg-slate-200' : 'bg-slate-900 text-white hover:bg-slate-800'
+                        }`}
+                      >
+                        {plan.cta}
+                      </a>
+                    ) : (
+                      <button
+                        type="button"
+                        className={`w-full rounded-full py-2 text-sm font-normal transition ${
+                          theme === 'dark' ? 'bg-white text-slate-900 hover:bg-slate-200' : 'bg-slate-900 text-white hover:bg-slate-800'
+                        }`}
+                      >
+                        {plan.cta}
+                      </button>
+                    )}
                   </div>
 
                 </div>
