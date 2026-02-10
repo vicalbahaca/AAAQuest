@@ -467,7 +467,7 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
               <Reveal>
                 <div>
                   <div className="flex items-center gap-3">
-                    <img src={figmaLogo} alt="Figma" className="w-10 h-10" />
+                    <img src={figmaLogo} alt="Figma" className="w-[60px] h-[60px]" />
                     <h2 className={`text-3xl md:text-4xl font-black ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{t.pluginTitle}</h2>
                   </div>
                   <p className={`mt-4 text-base md:text-lg ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>{t.pluginSubtitle}</p>
