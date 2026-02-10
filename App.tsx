@@ -632,7 +632,7 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
             ))}
           </div>
 
-          <p className={`mt-6 text-center text-xs ${theme === 'dark' ? 'text-slate-500' : 'text-slate-400'}`}>{t.pricingFootnote}</p>
+          <p className={`mt-6 text-center text-[10px] px-12 ${theme === 'dark' ? 'text-slate-500' : 'text-slate-400'}`}>{t.pricingFootnote}</p>
         </section>
 
         <section className="w-full mt-24">
