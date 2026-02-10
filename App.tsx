@@ -18,12 +18,12 @@ const figmaLogo = new URL('./files/figma-logo.svg', import.meta.url).href;
 const unsplashGreenLines = new URL('./files/unsplash-green-lines.jpg', import.meta.url).href;
 const unsplashGreenWaves = new URL('./files/unsplash-green-waves.jpg', import.meta.url).href;
 const unsplashGreenFlow = new URL('./files/unsplash-green-flow.jpg', import.meta.url).href;
-const pluginAnalyzerImage = new URL('./files/Analizador.png', import.meta.url).href;
+const pluginFigmaVideo = new URL('./files/pluginFigma.mp4', import.meta.url).href;
 const unsplashPurpleLines = new URL('./files/unsplash-purple-lines.jpg', import.meta.url).href;
 const unsplashLeaves = new URL('./files/unsplash-leaves.jpg', import.meta.url).href;
 const unsplashBlueLight = new URL('./files/unsplash-blue-light.jpg', import.meta.url).href;
 const workflowImage = unsplashGreenFlow;
-const pluginImage = pluginAnalyzerImage;
+const pluginImage = pluginFigmaVideo;
 const showcaseImages = [
   unsplashPurpleLines,
   unsplashGreenLines,
@@ -509,11 +509,16 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
 
               <Reveal delay={150}>
                 <div className="relative h-64 md:h-80 rounded-[2rem] border border-white/10 overflow-hidden bg-black">
-                  <img
-                    src={pluginImage}
-                    alt={t.pluginTitle}
+                  <video
                     className="w-full h-full object-cover"
-                    loading="lazy"
+                    src={pluginImage}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    controls
+                    preload="metadata"
+                    aria-label={t.pluginTitle}
                   />
                   <div className="absolute bottom-4 left-4 flex items-center gap-2 rounded-full bg-black/60 border border-white/10 px-3 py-2">
                     <img src={figmaLogo} alt="Figma" className="w-6 h-6" />
