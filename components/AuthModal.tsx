@@ -230,8 +230,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
             )}
 
             {step === 'password' && (
-              <>
-                <div className="mt-8 flex flex-col gap-4">
+              <div className="flex-1 flex items-center">
+                <div className="w-full flex flex-col gap-4">
                   <div className="flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300">
                     <span className="text-base">@</span>
                     <span className="text-slate-200 font-medium truncate">{email}</span>
@@ -263,7 +263,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
                     {primaryButtonLabel}
                   </button>
                 </div>
-              </>
+              </div>
             )}
 
             {(statusMessage || errorMessage) && (
