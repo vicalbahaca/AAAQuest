@@ -163,7 +163,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
         </button>
 
         <div className="grid md:grid-cols-[1.05fr_1fr] h-full">
-          <div className={`px-8 py-10 md:px-10 md:py-12 h-full flex flex-col ${isDark ? 'bg-black text-white' : 'bg-slate-50 text-slate-900'}`}>
+          <div className={`px-8 py-10 md:px-10 md:py-12 h-full flex flex-col justify-between ${isDark ? 'bg-black text-white' : 'bg-slate-50 text-slate-900'}`}>
             <div className="flex items-center gap-3">
               {step === 'password' && (
                 <button
