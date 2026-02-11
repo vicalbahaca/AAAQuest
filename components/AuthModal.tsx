@@ -71,6 +71,27 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
 
     const emailValue = email.trim();
     const passwordValue = password.trim();
+    const signInResult = await supabase.auth.signInWithPassword({
+      email: emailValue,
+      password: passwordValue,
+    });
+
+    if (!signInResult.error && signInResult.data?.session) {
+      try {
+        await upsertUser(signInResult.data.session.user);
+      } catch (error) {
+        console.warn('Failed to upsert profile', error);
+      }
+      const displayName = signInResult.data.session.user.user_metadata?.full_name
+        || signInResult.data.session.user.user_metadata?.name
+        || emailValue.split('@')[0]
+        || 'usuario';
+      sessionStorage.setItem('welcomeToast', displayName);
+      setIsSubmitting(false);
+      onClose();
+      return;
+    }
+
     const { data: existingUser, error: lookupError } = await supabase
       .from('users')
       .select('id, full_name, email')
@@ -82,24 +103,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
     }
 
     if (existingUser?.id) {
-      const signInResult = await supabase.auth.signInWithPassword({
-        email: emailValue,
-        password: passwordValue,
-      });
-
-      if (!signInResult.error && signInResult.data?.session) {
-        try {
-          await upsertUser(signInResult.data.session.user);
-        } catch (error) {
-          console.warn('Failed to upsert profile', error);
-        }
-        const displayName = existingUser.full_name || emailValue.split('@')[0] || 'usuario';
-        sessionStorage.setItem('welcomeToast', displayName);
-        setIsSubmitting(false);
-        onClose();
-        return;
-      }
-
       setErrorMessage(t.authInvalidCredentials);
       setIsSubmitting(false);
       return;
