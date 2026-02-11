@@ -220,11 +220,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
                   >
                     {primaryButtonLabel}
                   </button>
+                  <p className="mt-2 text-xs text-slate-500">
+                    {t.signUpTerms}
+                  </p>
                 </div>
-
-                <p className="mt-2 text-xs text-slate-500">
-                  {t.signUpTerms}
-                </p>
               </>
             )}
 
