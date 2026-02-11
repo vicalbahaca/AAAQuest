@@ -384,9 +384,6 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
         <section className="w-full mt-28">
           <Reveal>
             <div className="text-center max-w-3xl mx-auto">
-              <span className={`px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider border ${theme === 'dark' ? 'bg-emerald-500/10 border-emerald-400/30 text-emerald-300' : 'bg-emerald-100 border-emerald-200 text-emerald-700'}`}>
-                {t.homeEyebrow}
-              </span>
               <h2 className={`mt-6 text-3xl md:text-4xl font-black ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
                 {t.featuresTitle}
               </h2>
