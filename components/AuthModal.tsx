@@ -151,7 +151,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
       <div
         role="dialog"
         aria-modal="true"
-        className={`relative w-full max-w-5xl overflow-hidden rounded-[2rem] border shadow-2xl min-h-[520px] ${isDark ? 'bg-slate-950 border-white/10' : 'bg-slate-950 border-white/10'}`}
+        className={`relative w-full max-w-5xl overflow-hidden rounded-[2rem] border shadow-2xl min-h-[520px] ${isDark ? 'bg-transparent border-white/10' : 'bg-transparent border-white/10'}`}
       >
         <button
           type="button"
@@ -162,8 +162,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
           <X className="w-4 h-4" />
         </button>
 
-        <div className="grid md:grid-cols-[1.05fr_1fr]">
-          <div className="bg-[#0d0f13] px-8 py-10 md:px-10 md:py-12 text-white">
+        <div className="grid md:grid-cols-[1.05fr_1fr] h-full">
+          <div className="px-8 py-10 md:px-10 md:py-12 text-white h-full flex flex-col">
             <div className="flex items-center gap-3">
               {step === 'password' && (
                 <button
