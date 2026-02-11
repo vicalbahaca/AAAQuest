@@ -133,7 +133,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
       <div
         role="dialog"
         aria-modal="true"
-        className={`relative w-full max-w-5xl overflow-hidden rounded-[2rem] border shadow-2xl ${isDark ? 'bg-slate-950 border-white/10' : 'bg-slate-950 border-white/10'}`}
+        className={`relative w-full max-w-5xl overflow-hidden rounded-[2rem] border shadow-2xl min-h-[520px] ${isDark ? 'bg-slate-950 border-white/10' : 'bg-slate-950 border-white/10'}`}
       >
         <button
           type="button"
