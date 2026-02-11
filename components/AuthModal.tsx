@@ -222,7 +222,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
                   </button>
                 </div>
 
-                <p className="mt-6 text-xs text-slate-500">
+                <p className="mt-2 text-xs text-slate-500">
                   {t.signUpTerms}
                 </p>
               </>
