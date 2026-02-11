@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { AppMode, Language, TRANSLATIONS, Theme } from './types';
 import { StudyMode } from './components/StudyMode';
 import { TestMode } from './components/TestMode';
@@ -9,9 +9,10 @@ import { CertificateMode } from './components/CertificateMode';
 import { SignIn } from './components/SignIn';
 import { AuthModal } from './components/AuthModal';
 import { NeuralCore } from './components/NeuralCore';
-import { ScanEye, Globe, ChevronDown, UserPlus, LogIn, Clock, FileText, Layers, RefreshCcw } from 'lucide-react';
+import { ScanEye, Globe, ChevronDown, UserPlus, LogIn, Clock, FileText, Layers, RefreshCcw, X } from 'lucide-react';
 import { Loader } from './components/Loader';
 import { Reveal } from './components/Reveal';
+import { supabase } from './services/supabaseClient';
 
 const homeVideoSrc = new URL('./files/AAADemo.mp4', import.meta.url).href;
 const figmaLogo = new URL('./files/figma-logo.svg', import.meta.url).href;
@@ -29,6 +30,8 @@ const App: React.FC = () => {
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [authEntry, setAuthEntry] = useState<'signup' | 'signin'>('signup');
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const toastTimerRef = useRef<number | null>(null);
 
   // Scroll to top whenever mode changes
   useEffect(() => {
@@ -44,12 +47,62 @@ const App: React.FC = () => {
     };
   }, [isAuthOpen]);
 
-  const openAuth = (entry: 'signup' | 'signin') => {
+  const t = TRANSLATIONS[language];
+
+  const showToast = (message: string) => {
+    setToastMessage(message);
+    if (toastTimerRef.current) window.clearTimeout(toastTimerRef.current);
+    toastTimerRef.current = window.setTimeout(() => {
+      setToastMessage(null);
+      toastTimerRef.current = null;
+    }, 4000);
+  };
+
+  const openAuth = async (entry: 'signup' | 'signin') => {
+    const { data } = await supabase.auth.getSession();
+    if (data.session?.user) {
+      showToast(t.alreadyRegisteredToast);
+      return;
+    }
     setAuthEntry(entry);
     setIsAuthOpen(true);
   };
 
-  const t = TRANSLATIONS[language];
+  useEffect(() => {
+    const upsertProfile = async (user: any) => {
+      if (!user?.id) return;
+      try {
+        await supabase.from('profiles').upsert(
+          {
+            id: user.id,
+            email: user.email ?? '',
+            full_name: user.user_metadata?.full_name ?? user.user_metadata?.name ?? '',
+            avatar_url: user.user_metadata?.avatar_url ?? user.user_metadata?.picture ?? '',
+            updated_at: new Date().toISOString()
+          },
+          { onConflict: 'id' }
+        );
+      } catch (error) {
+        console.warn('Failed to upsert profile', error);
+      }
+    };
+
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session?.user) {
+        upsertProfile(data.session.user);
+      }
+    });
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        upsertProfile(session.user);
+      }
+    });
+
+    return () => {
+      listener?.subscription?.unsubscribe();
+    };
+  }, []);
 
   const changeLanguage = (lang: Language) => {
     setIsLangMenuOpen(false);
@@ -213,6 +266,22 @@ const App: React.FC = () => {
 
           </nav>
       </header>
+
+      {toastMessage && (
+        <div className="fixed top-24 right-6 z-[60]">
+          <div className={`flex items-center gap-3 rounded-2xl border px-4 py-3 shadow-xl ${theme === 'dark' ? 'bg-slate-900 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'}`}>
+            <span className="text-sm">{toastMessage}</span>
+            <button
+              type="button"
+              onClick={() => setToastMessage(null)}
+              className={`w-7 h-7 rounded-full flex items-center justify-center ${theme === 'dark' ? 'bg-white/10 hover:bg-white/20' : 'bg-slate-100 hover:bg-slate-200'}`}
+              aria-label="Close notification"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Main Content - Added top padding for header and bottom padding for fixed footer */}
       <main className="flex-grow container mx-auto px-4 pt-32 pb-24 relative z-10" id="main-content">
