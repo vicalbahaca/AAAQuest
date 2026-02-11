@@ -9,3 +9,22 @@ if (!supabaseUrl || !supabaseAnonKey) {
 }
 
 export const supabase = createClient(supabaseUrl ?? '', supabaseAnonKey ?? '');
+
+export const upsertProfile = async (user: {
+  id: string;
+  email?: string | null;
+  user_metadata?: Record<string, any>;
+}) => {
+  if (!user?.id) return;
+  const metadata = user.user_metadata ?? {};
+  await supabase.from('profiles').upsert(
+    {
+      id: user.id,
+      email: user.email ?? '',
+      full_name: metadata.full_name ?? metadata.name ?? '',
+      avatar_url: metadata.avatar_url ?? metadata.picture ?? '',
+      updated_at: new Date().toISOString()
+    },
+    { onConflict: 'id' }
+  );
+};

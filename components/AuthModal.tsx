@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowLeft, X } from 'lucide-react';
 import { Language, Theme, TRANSLATIONS } from '../types';
-import { supabase } from '../services/supabaseClient';
+import { supabase, upsertProfile } from '../services/supabaseClient';
 
 const registerImage = new URL('../files/Registrar.png', import.meta.url).href;
 
@@ -79,6 +79,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
     });
 
     if (!signInResult.error && signInResult.data?.session) {
+      try {
+        await upsertProfile(signInResult.data.session.user);
+      } catch (error) {
+        console.warn('Failed to upsert profile', error);
+      }
       setIsSubmitting(false);
       onClose();
       return;
@@ -92,6 +97,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
     if (signUpResult.error) {
       setErrorMessage(t.authGenericError);
     } else if (signUpResult.data?.session) {
+      try {
+        await upsertProfile(signUpResult.data.session.user);
+      } catch (error) {
+        console.warn('Failed to upsert profile', error);
+      }
       onClose();
       return;
     } else {

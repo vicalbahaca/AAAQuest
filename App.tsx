@@ -12,7 +12,7 @@ import { NeuralCore } from './components/NeuralCore';
 import { ScanEye, Globe, ChevronDown, UserPlus, LogIn, Clock, FileText, Layers, RefreshCcw, X } from 'lucide-react';
 import { Loader } from './components/Loader';
 import { Reveal } from './components/Reveal';
-import { supabase } from './services/supabaseClient';
+import { supabase, upsertProfile } from './services/supabaseClient';
 
 const homeVideoSrc = new URL('./files/AAADemo.mp4', import.meta.url).href;
 const figmaLogo = new URL('./files/figma-logo.svg', import.meta.url).href;
@@ -69,33 +69,19 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
-    const upsertProfile = async (user: any) => {
-      if (!user?.id) return;
-      try {
-        await supabase.from('profiles').upsert(
-          {
-            id: user.id,
-            email: user.email ?? '',
-            full_name: user.user_metadata?.full_name ?? user.user_metadata?.name ?? '',
-            avatar_url: user.user_metadata?.avatar_url ?? user.user_metadata?.picture ?? '',
-            updated_at: new Date().toISOString()
-          },
-          { onConflict: 'id' }
-        );
-      } catch (error) {
-        console.warn('Failed to upsert profile', error);
-      }
-    };
-
     supabase.auth.getSession().then(({ data }) => {
       if (data.session?.user) {
-        upsertProfile(data.session.user);
+        upsertProfile(data.session.user).catch((error) => {
+          console.warn('Failed to upsert profile', error);
+        });
       }
     });
 
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session?.user) {
-        upsertProfile(session.user);
+        upsertProfile(session.user).catch((error) => {
+          console.warn('Failed to upsert profile', error);
+        });
       }
     });
 
