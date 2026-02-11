@@ -12,7 +12,7 @@ import { NeuralCore } from './components/NeuralCore';
 import { ScanEye, Globe, ChevronDown, UserPlus, LogIn, Clock, FileText, Layers, RefreshCcw, X } from 'lucide-react';
 import { Loader } from './components/Loader';
 import { Reveal } from './components/Reveal';
-import { supabase, upsertProfile } from './services/supabaseClient';
+import { supabase, upsertUser } from './services/supabaseClient';
 
 const homeVideoSrc = new URL('./files/AAADemo.mp4', import.meta.url).href;
 const figmaLogo = new URL('./files/figma-logo.svg', import.meta.url).href;
@@ -71,16 +71,16 @@ const App: React.FC = () => {
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       if (data.session?.user) {
-        upsertProfile(data.session.user).catch((error) => {
-          console.warn('Failed to upsert profile', error);
+        upsertUser(data.session.user).catch((error) => {
+          console.warn('Failed to upsert user', error);
         });
       }
     });
 
     const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
       if (session?.user) {
-        upsertProfile(session.user).catch((error) => {
-          console.warn('Failed to upsert profile', error);
+        upsertUser(session.user).catch((error) => {
+          console.warn('Failed to upsert user', error);
         });
         if (event === 'SIGNED_IN') {
           showToast(t.signupSuccessToast);
