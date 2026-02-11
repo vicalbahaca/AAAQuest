@@ -155,6 +155,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
       const message = signUpResult.error.message?.toLowerCase() || '';
       if (message.includes('already') || message.includes('registered') || message.includes('exists')) {
         setErrorMessage(t.authEmailExists);
+      } else if (message.includes('password') || message.includes('length') || message.includes('characters')) {
+        setErrorMessage(t.authPasswordRequirements);
       } else {
         setErrorMessage(t.authGenericError);
       }
