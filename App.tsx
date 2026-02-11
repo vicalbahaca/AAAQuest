@@ -16,9 +16,9 @@ import { Reveal } from './components/Reveal';
 const homeVideoSrc = new URL('./files/AAADemo.mp4', import.meta.url).href;
 const figmaLogo = new URL('./files/figma-logo.svg', import.meta.url).href;
 const unsplashGreenFlow = new URL('./files/unsplash-green-flow.jpg', import.meta.url).href;
-const pluginFigmaVideo = new URL('./files/pluginFigma.mp4', import.meta.url).href;
+const pluginFigmaAsset = new URL('./files/PluginFigma.png', import.meta.url).href;
 const workflowImage = unsplashGreenFlow;
-const pluginImage = pluginFigmaVideo;
+const pluginImage = pluginFigmaAsset;
 
 const App: React.FC = () => {
   const [mode, setMode] = useState<AppMode>(AppMode.HOME);
@@ -469,19 +469,11 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
 
               <Reveal delay={150}>
                 <div className="relative h-64 md:h-80 rounded-[2rem] border border-white/10 overflow-hidden bg-black">
-                  <video
-                    className="w-full h-full object-cover"
+                  <img
                     src={pluginImage}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    controls
-                    preload="metadata"
-                    onLoadedMetadata={(event) => {
-                      event.currentTarget.playbackRate = 1.5;
-                    }}
-                    aria-label={t.pluginTitle}
+                    alt={t.pluginTitle}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
                   />
                 </div>
               </Reveal>
