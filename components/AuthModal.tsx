@@ -16,7 +16,6 @@ interface AuthModalProps {
   theme: Theme;
 }
 
-const isGoogleEmail = (value: string) => /@(gmail\.com|googlemail\.com)$/i.test(value.trim());
 
 export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, language, theme }) => {
   const t = TRANSLATIONS[language];
@@ -62,10 +61,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
   const handleEmailContinue = async () => {
     resetMessages();
     if (!email.trim()) return;
-    if (isGoogleEmail(email)) {
-      await handleGoogle();
-      return;
-    }
     setStep('password');
   };
 
@@ -105,8 +100,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
       }
       onClose();
       return;
-    } else {
-      setStatusMessage(t.authCheckInbox);
     }
 
     setIsSubmitting(false);
