@@ -172,7 +172,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
     });
 
     if (signUpResult.error) {
-      setErrorMessage(t.authGenericError);
+      const message = signUpResult.error.message?.toLowerCase() || '';
+      if (message.includes('already') || message.includes('registered') || message.includes('exists')) {
+        setErrorMessage(t.authEmailExists);
+      } else {
+        setErrorMessage(t.authGenericError);
+      }
       setIsSubmitting(false);
       return;
     }
@@ -189,6 +194,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
       return;
     }
 
+    sessionStorage.setItem('signupToast', '1');
+    window.location.reload();
     setIsSubmitting(false);
   };
 
