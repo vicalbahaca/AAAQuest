@@ -32,6 +32,9 @@ const App: React.FC = () => {
   const [authEntry, setAuthEntry] = useState<'signup' | 'signin'>('signup');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const toastTimerRef = useRef<number | null>(null);
+  const [authUser, setAuthUser] = useState<any | null>(null);
+  const [authName, setAuthName] = useState<string>('');
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
   // Scroll to top whenever mode changes
   useEffect(() => {
@@ -106,6 +109,11 @@ const App: React.FC = () => {
         console.warn('Failed to upsert user', error);
       });
 
+      setAuthUser(user);
+      const resolvedName =
+        name || user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || '';
+      setAuthName(resolvedName);
+
       if (shouldToast) {
         if (existed) {
           const displayName = name || user.user_metadata?.full_name || user.user_metadata?.name || 'usuario';
@@ -121,6 +129,9 @@ const App: React.FC = () => {
         const shouldToast = sessionStorage.getItem('oauthPending') === '1';
         if (shouldToast) sessionStorage.removeItem('oauthPending');
         handleAuthUser(data.session.user, shouldToast);
+      } else {
+        setAuthUser(null);
+        setAuthName('');
       }
     });
 
@@ -129,6 +140,9 @@ const App: React.FC = () => {
         const shouldToast = event === 'SIGNED_IN' || sessionStorage.getItem('oauthPending') === '1';
         if (sessionStorage.getItem('oauthPending') === '1') sessionStorage.removeItem('oauthPending');
         handleAuthUser(session.user, shouldToast);
+      } else {
+        setAuthUser(null);
+        setAuthName('');
       }
     });
 
@@ -268,14 +282,16 @@ const App: React.FC = () => {
             >
               <span className="pt-0.5 leading-none">{t.pricingNav}</span>
             </a>
-            <button
-              type="button"
-              onClick={() => openAuth('signup')}
-              className="flex items-center justify-center px-4 h-10 border rounded-full transition-all active:scale-95 text-xs font-normal text-white border-[#038759] bg-[#038759] hover:bg-[#026e49]"
-              aria-label={t.signUpNav}
-            >
-              <span className="pt-0.5 leading-none">{t.signUpNav}</span>
-            </button>
+            {!authUser && (
+              <button
+                type="button"
+                onClick={() => openAuth('signup')}
+                className="flex items-center justify-center px-4 h-10 border rounded-full transition-all active:scale-95 text-xs font-normal text-white border-[#038759] bg-[#038759] hover:bg-[#026e49]"
+                aria-label={t.signUpNav}
+              >
+                <span className="pt-0.5 leading-none">{t.signUpNav}</span>
+              </button>
+            )}
 
             {/* Language Dropdown */}
             <div className="relative">
@@ -318,6 +334,43 @@ const App: React.FC = () => {
                 </>
               )}
             </div>
+
+            {authUser && (
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                  className="flex items-center justify-center w-10 h-10 rounded-full border border-white/10 bg-gradient-to-tr from-emerald-500 to-teal-500 text-white shadow-lg active:scale-95"
+                  aria-haspopup="true"
+                  aria-expanded={isUserMenuOpen}
+                  aria-label="User menu"
+                >
+                  <span className="text-xs font-semibold uppercase">{(authName || authUser.email || 'U').slice(0, 1)}</span>
+                </button>
+                {isUserMenuOpen && (
+                  <>
+                    <div className="fixed inset-0 z-40" onClick={() => setIsUserMenuOpen(false)} aria-hidden="true" />
+                    <div className={`absolute right-0 mt-3 w-48 border rounded-2xl shadow-xl overflow-hidden z-50 ${theme === 'dark' ? 'bg-slate-900 border-slate-700' : 'bg-white border-slate-200 shadow-slate-200/50'}`}>
+                      <div className={`px-4 py-3 text-sm ${theme === 'dark' ? 'text-slate-200' : 'text-slate-700'}`}>
+                        {authName || authUser.email}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          setIsUserMenuOpen(false);
+                          await supabase.auth.signOut();
+                          setAuthUser(null);
+                          setAuthName('');
+                        }}
+                        className={`w-full text-left px-4 py-3 text-sm transition-colors ${theme === 'dark' ? 'text-slate-300 hover:bg-slate-800' : 'text-slate-700 hover:bg-slate-50'}`}
+                      >
+                        {t.signOutButton}
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
 
           </nav>
       </header>
