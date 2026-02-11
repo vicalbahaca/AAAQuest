@@ -48,7 +48,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
   const handleGoogle = async () => {
     resetMessages();
     setIsSubmitting(true);
-    const redirectTo = `${window.location.origin}${import.meta.env.BASE_URL}`;
+    const redirectTo = `${window.location.origin}${import.meta.env.BASE_URL}#pricing`;
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: { redirectTo },

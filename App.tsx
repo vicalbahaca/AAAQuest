@@ -77,11 +77,14 @@ const App: React.FC = () => {
       }
     });
 
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
       if (session?.user) {
         upsertProfile(session.user).catch((error) => {
           console.warn('Failed to upsert profile', error);
         });
+        if (event === 'SIGNED_IN') {
+          showToast(t.signupSuccessToast);
+        }
       }
     });
 
