@@ -89,9 +89,10 @@ const App: React.FC = () => {
     });
 
     const params = new URLSearchParams(window.location.search);
-    if (params.get('signup') === '1') {
+    if (params.get('signup') === '1' || sessionStorage.getItem('signupToast') === '1') {
       showToast(t.signupSuccessToast);
       params.delete('signup');
+      sessionStorage.removeItem('signupToast');
       const query = params.toString();
       const cleanHash = window.location.hash
         .replace(/access_token=[^&]+&?/i, '')

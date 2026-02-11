@@ -80,6 +80,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
       } catch (error) {
         console.warn('Failed to upsert profile', error);
       }
+      sessionStorage.setItem('signupToast', '1');
+      window.location.reload();
       setIsSubmitting(false);
       onClose();
       return;
@@ -98,6 +100,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
       } catch (error) {
         console.warn('Failed to upsert profile', error);
       }
+      sessionStorage.setItem('signupToast', '1');
+      window.location.reload();
       onClose();
       return;
     }
