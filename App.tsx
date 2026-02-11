@@ -468,11 +468,11 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
               </Reveal>
 
               <Reveal delay={150}>
-                <div className="relative h-64 md:h-80 rounded-[2rem] border border-white/10 overflow-hidden bg-black">
+                <div className="relative h-64 md:h-80 rounded-[2rem] overflow-hidden">
                   <img
                     src={pluginImage}
                     alt={t.pluginTitle}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain"
                     loading="lazy"
                   />
                 </div>
