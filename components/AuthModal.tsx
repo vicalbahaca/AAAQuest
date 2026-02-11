@@ -66,27 +66,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
   const handleEmailContinue = async () => {
     resetMessages();
     if (!email.trim()) return;
-    setIsSubmitting(true);
-    const emailValue = email.trim();
-    const { data, error } = await supabase
-      .from('users')
-      .select('id')
-      .eq('email', emailValue)
-      .maybeSingle();
-
-    if (error) {
-      console.warn('User lookup failed', error);
-      setErrorMessage(t.authGenericError);
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (data?.id) {
-      setStep('password');
-    } else {
-      setErrorMessage(t.authEmailNotFound);
-    }
-    setIsSubmitting(false);
+    setStep('password');
   };
 
   const handlePasswordContinue = async () => {
