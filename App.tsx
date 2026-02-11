@@ -440,7 +440,7 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
         </section>
 
         <section className="w-full mt-32">
-          <div className={`rounded-[2.5rem] border p-8 md:p-12 relative overflow-hidden ${theme === 'dark' ? 'border-white/10 bg-slate-900/70' : 'border-slate-200 bg-white shadow-xl shadow-slate-200/40'}`}>
+          <div className={`rounded-[2.5rem] border px-8 md:px-12 relative overflow-hidden ${theme === 'dark' ? 'border-white/10 bg-slate-900/70' : 'border-slate-200 bg-white shadow-xl shadow-slate-200/40'}`}>
             <div className="absolute inset-0 pointer-events-none">
               <div className="absolute -top-10 right-10 w-40 h-40 rounded-full bg-[#038759]/20 blur-3xl" />
               <div className="absolute bottom-0 left-10 w-56 h-56 rounded-full bg-white/5 blur-3xl" />
