@@ -88,6 +88,11 @@ const App: React.FC = () => {
       }
     });
 
+    if (window.location.hash.includes('access_token=')) {
+      showToast(t.signupSuccessToast);
+      history.replaceState(null, '', window.location.pathname + window.location.search + window.location.hash.replace(/access_token=[^&]+&?/i, '').replace(/refresh_token=[^&]+&?/i, '').replace(/provider_token=[^&]+&?/i, '').replace(/expires_in=[^&]+&?/i, '').replace(/token_type=[^&]+&?/i, '').replace(/&$/, ''));
+    }
+
     return () => {
       listener?.subscription?.unsubscribe();
     };
