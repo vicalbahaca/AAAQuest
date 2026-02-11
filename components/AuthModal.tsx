@@ -78,21 +78,22 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
       password: passwordValue,
     });
 
-    if (!signInResult.error && signInResult.data?.session) {
-      try {
-        await upsertUser(signInResult.data.session.user);
-      } catch (error) {
-        console.warn('Failed to upsert profile', error);
+      if (!signInResult.error && signInResult.data?.session) {
+        try {
+          await upsertUser(signInResult.data.session.user);
+        } catch (error) {
+          console.warn('Failed to upsert profile', error);
+        }
+        const displayName = signInResult.data.session.user.user_metadata?.full_name
+          || signInResult.data.session.user.user_metadata?.name
+          || emailValue.split('@')[0]
+          || 'usuario';
+        sessionStorage.setItem('welcomeToast', displayName);
+        window.location.reload();
+        setIsSubmitting(false);
+        onClose();
+        return;
       }
-      const displayName = signInResult.data.session.user.user_metadata?.full_name
-        || signInResult.data.session.user.user_metadata?.name
-        || emailValue.split('@')[0]
-        || 'usuario';
-      sessionStorage.setItem('welcomeToast', displayName);
-      setIsSubmitting(false);
-      onClose();
-      return;
-    }
 
     const { data: existingUser, error: lookupError } = await supabase
       .from('users')
