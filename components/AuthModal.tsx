@@ -49,6 +49,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
   const handleGoogle = async () => {
     resetMessages();
     setIsSubmitting(true);
+    sessionStorage.setItem('oauthPending', '1');
     const redirectTo = `${window.location.origin}${import.meta.env.BASE_URL}#pricing`;
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',

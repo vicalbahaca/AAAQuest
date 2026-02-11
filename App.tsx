@@ -69,44 +69,50 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
+    const handleAuthUser = async (user: any, shouldToast: boolean) => {
+      let existed = false;
+      let name = '';
+      try {
+        const { data } = await supabase
+          .from('users')
+          .select('id, full_name, email')
+          .eq('id', user.id)
+          .maybeSingle();
+        if (data?.id) {
+          existed = true;
+          name = data.full_name || data.email?.split('@')[0] || '';
+        }
+      } catch (error) {
+        console.warn('User lookup failed', error);
+      }
+
+      upsertUser(user).catch((error: any) => {
+        console.warn('Failed to upsert user', error);
+      });
+
+      if (shouldToast) {
+        if (existed) {
+          const displayName = name || user.user_metadata?.full_name || user.user_metadata?.name || 'usuario';
+          showToast(`${t.welcomeToastPrefix}${displayName}${t.welcomeToastSuffix}`);
+        } else {
+          showToast(t.signupSuccessToast);
+        }
+      }
+    };
+
     supabase.auth.getSession().then(({ data }) => {
       if (data.session?.user) {
-        upsertUser(data.session.user).catch((error) => {
-          console.warn('Failed to upsert user', error);
-        });
+        const shouldToast = sessionStorage.getItem('oauthPending') === '1';
+        if (shouldToast) sessionStorage.removeItem('oauthPending');
+        handleAuthUser(data.session.user, shouldToast);
       }
     });
 
     const { data: listener } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (session?.user) {
-        let existed = false;
-        let name = '';
-        try {
-          const { data } = await supabase
-            .from('users')
-            .select('id, full_name, email')
-            .eq('id', session.user.id)
-            .maybeSingle();
-          if (data?.id) {
-            existed = true;
-            name = data.full_name || data.email?.split('@')[0] || '';
-          }
-        } catch (error) {
-          console.warn('User lookup failed', error);
-        }
-
-        upsertUser(session.user).catch((error) => {
-          console.warn('Failed to upsert user', error);
-        });
-
-        if (event === 'SIGNED_IN') {
-          if (existed) {
-            const displayName = name || session.user.user_metadata?.full_name || session.user.user_metadata?.name || 'usuario';
-            showToast(`${t.welcomeToastPrefix}${displayName}${t.welcomeToastSuffix}`);
-          } else {
-            showToast(t.signupSuccessToast);
-          }
-        }
+        const shouldToast = event === 'SIGNED_IN' || sessionStorage.getItem('oauthPending') === '1';
+        if (sessionStorage.getItem('oauthPending') === '1') sessionStorage.removeItem('oauthPending');
+        handleAuthUser(session.user, shouldToast);
       }
     });
 
