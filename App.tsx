@@ -468,7 +468,7 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
               </Reveal>
 
               <Reveal delay={150}>
-                <div className="relative w-[500px] h-[500px] max-w-full rounded-[2rem] overflow-hidden mx-auto">
+                <div className="relative w-[420px] h-[420px] max-w-full rounded-[2rem] overflow-hidden mx-auto">
                   <img
                     src={pluginImage}
                     alt={t.pluginTitle}
