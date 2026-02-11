@@ -6,7 +6,7 @@ import { supabase, upsertUser } from '../services/supabaseClient';
 const registerImage = new URL('../files/Registrar.png', import.meta.url).href;
 
 type AuthEntry = 'signup' | 'signin';
-type AuthStep = 'email' | 'password';
+type AuthStep = 'email' | 'password' | 'signup';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -23,6 +23,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
   const [step, setStep] = useState<AuthStep>('email');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
@@ -33,6 +34,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
     setStep('email');
     setEmail('');
     setPassword('');
+    setFullName('');
     setShowPassword(false);
     setStatusMessage(null);
     setErrorMessage(null);
@@ -64,7 +66,27 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
   const handleEmailContinue = async () => {
     resetMessages();
     if (!email.trim()) return;
-    setStep('password');
+    setIsSubmitting(true);
+    const emailValue = email.trim();
+    const { data, error } = await supabase
+      .from('users')
+      .select('id')
+      .eq('email', emailValue)
+      .maybeSingle();
+
+    if (error) {
+      console.warn('User lookup failed', error);
+      setErrorMessage(t.authGenericError);
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (data?.id) {
+      setStep('password');
+    } else {
+      setErrorMessage(t.authEmailNotFound);
+    }
+    setIsSubmitting(false);
   };
 
   const handlePasswordContinue = async () => {
@@ -134,13 +156,49 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
     setIsSubmitting(false);
   };
 
+  const handleCreateAccount = async () => {
+    resetMessages();
+    if (!fullName.trim() || !email.trim() || !password.trim()) return;
+    setIsSubmitting(true);
+
+    const emailValue = email.trim();
+    const passwordValue = password.trim();
+    const signUpResult = await supabase.auth.signUp({
+      email: emailValue,
+      password: passwordValue,
+      options: {
+        data: { full_name: fullName.trim() }
+      }
+    });
+
+    if (signUpResult.error) {
+      setErrorMessage(t.authGenericError);
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (signUpResult.data?.session) {
+      try {
+        await upsertUser(signUpResult.data.session.user);
+      } catch (error) {
+        console.warn('Failed to upsert profile', error);
+      }
+      sessionStorage.setItem('signupToast', '1');
+      window.location.reload();
+      onClose();
+      return;
+    }
+
+    setIsSubmitting(false);
+  };
+
   const title = step === 'email'
     ? (entry === 'signup' ? t.signUpTitle : t.signInTitle)
-    : t.signInTitle;
+    : (step === 'signup' ? t.signUpCreateTitle : t.signInTitle);
 
   const primaryButtonLabel = step === 'email'
     ? t.authContinue
-    : t.signInButton;
+    : (step === 'signup' ? t.signUpButton : t.signInButton);
 
   const inputClasses = isDark
     ? 'bg-slate-900 border-slate-700 text-white placeholder:text-slate-500'
@@ -224,6 +282,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
                   >
                     {primaryButtonLabel}
                   </button>
+                  <button
+                    type="button"
+                    onClick={() => setStep('signup')}
+                    className={`rounded-full px-6 py-3 text-sm font-normal transition border ${isDark ? 'border-white/10 text-white hover:bg-white/10' : 'border-slate-200 text-slate-900 hover:bg-slate-100'}`}
+                  >
+                    {t.signUpButton}
+                  </button>
                   <p className="mt-2 text-xs text-slate-500">
                     {t.signUpTerms}
                   </p>
@@ -234,10 +299,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
             {step === 'password' && (
               <div className="flex-1 flex items-center">
                 <div className="w-full flex flex-col gap-4">
-                  <div className="flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300">
-                    <span className="text-base">@</span>
-                    <span className="text-slate-200 font-medium truncate">{email}</span>
-                  </div>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
+                    placeholder={t.signUpEmailPlaceholder}
+                    className={`w-full rounded-full border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500/40 ${inputClasses}`}
+                    autoComplete="email"
+                  />
                   <div className="relative">
                     <input
                       type={showPassword ? 'text' : 'password'}
@@ -263,6 +332,55 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
                     className={`rounded-full px-6 py-3 text-sm font-normal transition hover:opacity-95 disabled:opacity-60 ${buttonClasses}`}
                   >
                     {primaryButtonLabel}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {step === 'signup' && (
+              <div className="flex-1 flex items-center">
+                <div className="w-full flex flex-col gap-4">
+                  <input
+                    type="text"
+                    value={fullName}
+                    onChange={(event) => setFullName(event.target.value)}
+                    placeholder={t.signUpNamePlaceholder}
+                    className={`w-full rounded-full border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500/40 ${inputClasses}`}
+                    autoComplete="name"
+                  />
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
+                    placeholder={t.signUpEmailPlaceholder}
+                    className={`w-full rounded-full border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500/40 ${inputClasses}`}
+                    autoComplete="email"
+                  />
+                  <div className="relative">
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      value={password}
+                      onChange={(event) => setPassword(event.target.value)}
+                      placeholder={t.signInPasswordLabel}
+                      className={`w-full rounded-full border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500/40 pr-12 ${inputClasses}`}
+                      autoComplete="new-password"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword((prev) => !prev)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-white"
+                      aria-label={showPassword ? t.hidePassword : t.showPassword}
+                    >
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleCreateAccount}
+                    disabled={isSubmitting || !fullName.trim() || !email.trim() || !password.trim()}
+                    className={`rounded-full px-6 py-3 text-sm font-normal transition hover:opacity-95 disabled:opacity-60 ${buttonClasses}`}
+                  >
+                    {t.signUpButton}
                   </button>
                 </div>
               </div>
