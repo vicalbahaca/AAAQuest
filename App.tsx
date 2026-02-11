@@ -89,6 +89,12 @@ const App: React.FC = () => {
     });
 
     const params = new URLSearchParams(window.location.search);
+    const welcomeName = sessionStorage.getItem('welcomeToast');
+    if (welcomeName) {
+      showToast(`${t.welcomeToastPrefix}${welcomeName}`);
+      sessionStorage.removeItem('welcomeToast');
+    }
+
     if (params.get('signup') === '1' || sessionStorage.getItem('signupToast') === '1') {
       showToast(t.signupSuccessToast);
       params.delete('signup');

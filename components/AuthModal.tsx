@@ -69,27 +69,45 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
     if (!email.trim() || !password.trim()) return;
     setIsSubmitting(true);
 
-    const signInResult = await supabase.auth.signInWithPassword({
-      email: email.trim(),
-      password,
-    });
+    const emailValue = email.trim();
+    const passwordValue = password.trim();
+    const { data: existingUser, error: lookupError } = await supabase
+      .from('users')
+      .select('id, full_name, email')
+      .eq('email', emailValue)
+      .maybeSingle();
 
-    if (!signInResult.error && signInResult.data?.session) {
-      try {
-        await upsertUser(signInResult.data.session.user);
-      } catch (error) {
-        console.warn('Failed to upsert profile', error);
+    if (lookupError) {
+      console.warn('User lookup failed', lookupError);
+    }
+
+    if (existingUser?.id) {
+      const signInResult = await supabase.auth.signInWithPassword({
+        email: emailValue,
+        password: passwordValue,
+      });
+
+      if (!signInResult.error && signInResult.data?.session) {
+        try {
+          await upsertUser(signInResult.data.session.user);
+        } catch (error) {
+          console.warn('Failed to upsert profile', error);
+        }
+        const displayName = existingUser.full_name || emailValue.split('@')[0] || 'usuario';
+        sessionStorage.setItem('welcomeToast', displayName);
+        setIsSubmitting(false);
+        onClose();
+        return;
       }
-      sessionStorage.setItem('signupToast', '1');
-      window.location.reload();
+
+      setErrorMessage(t.authInvalidCredentials);
       setIsSubmitting(false);
-      onClose();
       return;
     }
 
     const signUpResult = await supabase.auth.signUp({
-      email: email.trim(),
-      password,
+      email: emailValue,
+      password: passwordValue,
     });
 
     if (signUpResult.error) {
@@ -111,11 +129,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
 
   const title = step === 'email'
     ? (entry === 'signup' ? t.signUpTitle : t.signInTitle)
-    : (entry === 'signup' ? t.signUpPasswordTitle : t.signInPasswordTitle);
+    : t.signInTitle;
 
   const primaryButtonLabel = step === 'email'
     ? t.authContinue
-    : (entry === 'signup' ? t.signUpButton : t.signInButton);
+    : t.signInButton;
 
   const inputClasses = isDark
     ? 'bg-slate-900 border-slate-700 text-white placeholder:text-slate-500'
