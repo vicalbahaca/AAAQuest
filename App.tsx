@@ -13,7 +13,7 @@ import { ScanEye, Globe, ChevronDown, UserPlus, LogIn, Clock, FileText, Layers, 
 import { Loader } from './components/Loader';
 import { Reveal } from './components/Reveal';
 
-const homeVideoSrc = new URL('./files/VideoHome.mp4', import.meta.url).href;
+const homeVideoSrc = new URL('./files/AAADemo.mp4', import.meta.url).href;
 const figmaLogo = new URL('./files/figma-logo.svg', import.meta.url).href;
 const unsplashGreenFlow = new URL('./files/unsplash-green-flow.jpg', import.meta.url).href;
 const pluginFigmaVideo = new URL('./files/pluginFigma.mp4', import.meta.url).href;
