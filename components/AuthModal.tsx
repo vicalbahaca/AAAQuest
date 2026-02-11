@@ -261,11 +261,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
             )}
           </div>
 
-          <div className="relative hidden md:block">
+          <div className="relative hidden md:flex items-center justify-center">
             <img
               src={registerImage}
               alt="Registro"
-              className="absolute inset-0 w-full h-full object-cover"
+              className="w-full h-full object-contain"
               loading="lazy"
             />
           </div>
