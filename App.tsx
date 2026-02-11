@@ -77,13 +77,35 @@ const App: React.FC = () => {
       }
     });
 
-    const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: listener } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (session?.user) {
+        let existed = false;
+        let name = '';
+        try {
+          const { data } = await supabase
+            .from('users')
+            .select('id, full_name, email')
+            .eq('id', session.user.id)
+            .maybeSingle();
+          if (data?.id) {
+            existed = true;
+            name = data.full_name || data.email?.split('@')[0] || '';
+          }
+        } catch (error) {
+          console.warn('User lookup failed', error);
+        }
+
         upsertUser(session.user).catch((error) => {
           console.warn('Failed to upsert user', error);
         });
+
         if (event === 'SIGNED_IN') {
-          showToast(t.signupSuccessToast);
+          if (existed) {
+            const displayName = name || session.user.user_metadata?.full_name || session.user.user_metadata?.name || 'usuario';
+            showToast(`${t.welcomeToastPrefix}${displayName}${t.welcomeToastSuffix}`);
+          } else {
+            showToast(t.signupSuccessToast);
+          }
         }
       }
     });
