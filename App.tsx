@@ -88,9 +88,19 @@ const App: React.FC = () => {
       }
     });
 
-    if (window.location.hash.includes('access_token=')) {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('signup') === '1') {
       showToast(t.signupSuccessToast);
-      history.replaceState(null, '', window.location.pathname + window.location.search + window.location.hash.replace(/access_token=[^&]+&?/i, '').replace(/refresh_token=[^&]+&?/i, '').replace(/provider_token=[^&]+&?/i, '').replace(/expires_in=[^&]+&?/i, '').replace(/token_type=[^&]+&?/i, '').replace(/&$/, ''));
+      params.delete('signup');
+      const query = params.toString();
+      const cleanHash = window.location.hash
+        .replace(/access_token=[^&]+&?/i, '')
+        .replace(/refresh_token=[^&]+&?/i, '')
+        .replace(/provider_token=[^&]+&?/i, '')
+        .replace(/expires_in=[^&]+&?/i, '')
+        .replace(/token_type=[^&]+&?/i, '')
+        .replace(/&$/, '');
+      history.replaceState(null, '', window.location.pathname + (query ? `?${query}` : '') + cleanHash);
     }
 
     return () => {
