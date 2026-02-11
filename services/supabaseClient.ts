@@ -8,7 +8,14 @@ if (!supabaseUrl || !supabaseAnonKey) {
   console.warn('Supabase env vars missing: VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY');
 }
 
-export const supabase = createClient(supabaseUrl ?? '', supabaseAnonKey ?? '');
+export const supabase = createClient(supabaseUrl ?? '', supabaseAnonKey ?? '', {
+  auth: {
+    flowType: 'pkce',
+    detectSessionInUrl: true,
+    persistSession: true,
+    autoRefreshToken: true
+  }
+});
 
 export const upsertUser = async (user: {
   id: string;

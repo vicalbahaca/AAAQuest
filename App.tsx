@@ -69,6 +69,22 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
+    const exchangeCode = async () => {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('code')) {
+        try {
+          await supabase.auth.exchangeCodeForSession(window.location.href);
+          params.delete('code');
+          const query = params.toString();
+          history.replaceState(null, '', window.location.pathname + (query ? `?${query}` : '') + window.location.hash);
+        } catch (error) {
+          console.warn('Failed to exchange auth code', error);
+        }
+      }
+    };
+
+    exchangeCode();
+
     const handleAuthUser = async (user: any, shouldToast: boolean) => {
       let existed = false;
       let name = '';
