@@ -253,7 +253,7 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
   const proOriginal = 40;
   const starterPrice = Number((starterOriginal * (1 - discountRate)).toFixed(2));
   const proPrice = Number((proOriginal * (1 - discountRate)).toFixed(2));
-  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
 
   const formatCurrency = (value: number) =>
     value.toLocaleString(language === 'es' ? 'es-ES' : 'en-US', {
