@@ -234,7 +234,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
                   <span className="text-base">@</span>
                   <span className="text-slate-200 font-medium truncate">{email}</span>
                 </div>
-                <div className="mt-4 flex flex-col gap-3">
+                <div className="mt-4 flex flex-col gap-4">
                   <input
                     type="password"
                     value={password}
