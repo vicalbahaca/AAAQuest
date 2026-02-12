@@ -11,14 +11,19 @@ serve(async (req) => {
     return new Response('ok', { headers: corsHeaders });
   }
 
-  let payload: { email?: string } = {};
-  try {
-    payload = await req.json();
-  } catch (_error) {
-    payload = {};
+  let email = '';
+  if (req.method === 'GET') {
+    const url = new URL(req.url);
+    email = (url.searchParams.get('email') ?? '').toString().trim().toLowerCase();
+  } else {
+    let payload: { email?: string } = {};
+    try {
+      payload = await req.json();
+    } catch (_error) {
+      payload = {};
+    }
+    email = (payload.email ?? '').toString().trim().toLowerCase();
   }
-
-  const email = (payload.email ?? '').toString().trim().toLowerCase();
   if (!email) {
     return new Response(JSON.stringify({ error: 'email_required' }), {
       status: 400,
