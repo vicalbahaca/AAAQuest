@@ -1,6 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { analyzeImage } from '../services/geminiService';
+import { supabase } from '../services/supabaseClient';
 import { CheckerResult, Language, TRANSLATIONS, Theme } from '../types';
 import { Upload, ScanEye, CheckCircle, Layers, Layout, Type, Image, AppWindow, ListOrdered, Monitor, Globe, RotateCcw, AlertTriangle, ChevronDown, MessageSquareText, Languages, Component, Maximize, MousePointerClick, ArrowLeft, FileText, Download } from 'lucide-react';
 import { Loader } from './Loader';
@@ -9,6 +10,7 @@ import { jsPDF } from "jspdf";
 interface CheckerModeProps {
   language: Language;
   theme: Theme;
+  onOpenAuth: (entry: 'signup' | 'signin') => void;
 }
 
 const GlobalAccordion: React.FC<{
@@ -208,7 +210,7 @@ const DetectedScreenAccordion: React.FC<{
   );
 };
 
-export const CheckerMode: React.FC<CheckerModeProps> = ({ language, theme }) => {
+export const CheckerMode: React.FC<CheckerModeProps> = ({ language, theme, onOpenAuth }) => {
   // View State
   const [viewState, setViewState] = useState<'UPLOAD' | 'ANALYZING' | 'RESULT'>('UPLOAD');
   const [image, setImage] = useState<string | null>(null); // base64
@@ -311,6 +313,11 @@ export const CheckerMode: React.FC<CheckerModeProps> = ({ language, theme }) => 
 
   const handleAnalyze = async () => {
     if (!image) return;
+    const { data } = await supabase.auth.getSession();
+    if (!data.session?.user) {
+      onOpenAuth('signup');
+      return;
+    }
 
     setViewState('ANALYZING');
     setResult(null);

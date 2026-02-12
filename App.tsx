@@ -235,7 +235,7 @@ const App: React.FC = () => {
       case AppMode.TEST:
         return <TestMode language={language} theme={theme} />;
       case AppMode.CHECKER:
-        return <CheckerMode language={language} theme={theme} />;
+        return <CheckerMode language={language} theme={theme} onOpenAuth={openAuth} />;
       case AppMode.INFO:
         return <InfoMode setMode={navigateMode} language={language} theme={theme} />;
       case AppMode.CERTIFICATE:
