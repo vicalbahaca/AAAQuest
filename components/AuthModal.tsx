@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowLeft, X, Eye, EyeOff } from 'lucide-react';
 import { Language, Theme, TRANSLATIONS } from '../types';
-import { supabase, upsertUser } from '../services/supabaseClient';
+import { checkAuthUserByEmail, supabase, upsertUser } from '../services/supabaseClient';
 
 const registerImage = new URL('../files/Registrar.png', import.meta.url).href;
 
@@ -76,63 +76,40 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
 
     const emailValue = email.trim();
     const passwordValue = password.trim();
+    try {
+      const check = await checkAuthUserByEmail(emailValue);
+      if (!check?.exists) {
+        setErrorMessage(t.authInvalidCredentials);
+        setIsSubmitting(false);
+        return;
+      }
+    } catch (error) {
+      console.warn('Auth lookup failed', error);
+    }
+
     const signInResult = await supabase.auth.signInWithPassword({
       email: emailValue,
       password: passwordValue,
     });
 
-      if (!signInResult.error && signInResult.data?.session) {
-        try {
-          await upsertUser(signInResult.data.session.user);
-        } catch (error) {
-          console.warn('Failed to upsert profile', error);
-        }
-        const displayName = signInResult.data.session.user.user_metadata?.full_name
-          || signInResult.data.session.user.user_metadata?.name
-          || emailValue.split('@')[0]
-          || 'usuario';
-        sessionStorage.setItem('welcomeToast', displayName);
-        window.location.reload();
-        setIsSubmitting(false);
-        onClose();
-        return;
-      }
-
-    const { data: existingUser, error: lookupError } = await supabase
-      .from('users')
-      .select('id, full_name, email')
-      .eq('email', emailValue)
-      .maybeSingle();
-
-    if (lookupError) {
-      console.warn('User lookup failed', lookupError);
-    }
-
-    if (existingUser?.id) {
-      setErrorMessage(t.authInvalidCredentials);
-      setIsSubmitting(false);
-      return;
-    }
-
-    const signUpResult = await supabase.auth.signUp({
-      email: emailValue,
-      password: passwordValue,
-    });
-
-    if (signUpResult.error) {
-      setErrorMessage(t.authGenericError);
-    } else if (signUpResult.data?.session) {
+    if (!signInResult.error && signInResult.data?.session) {
       try {
-        await upsertUser(signUpResult.data.session.user);
+        await upsertUser(signInResult.data.session.user);
       } catch (error) {
         console.warn('Failed to upsert profile', error);
       }
-      sessionStorage.setItem('signupToast', '1');
+      const displayName = signInResult.data.session.user.user_metadata?.full_name
+        || signInResult.data.session.user.user_metadata?.name
+        || emailValue.split('@')[0]
+        || 'usuario';
+      sessionStorage.setItem('welcomeToast', displayName);
       window.location.reload();
+      setIsSubmitting(false);
       onClose();
       return;
     }
 
+    setErrorMessage(t.authInvalidCredentials);
     setIsSubmitting(false);
   };
 

@@ -12,7 +12,7 @@ import { NeuralCore } from './components/NeuralCore';
 import { ScanEye, Globe, ChevronDown, UserPlus, LogIn, Clock, FileText, Layers, RefreshCcw, X } from 'lucide-react';
 import { Loader } from './components/Loader';
 import { Reveal } from './components/Reveal';
-import { supabase, upsertUser } from './services/supabaseClient';
+import { checkAuthUserByEmail, supabase, upsertUser } from './services/supabaseClient';
 
 const homeVideoSrc = new URL('./files/AAADemo.mp4', import.meta.url).href;
 const figmaLogo = new URL('./files/figma-logo.svg', import.meta.url).href;
@@ -92,17 +92,25 @@ const App: React.FC = () => {
       let existed = false;
       let name = '';
       try {
-        const { data } = await supabase
-          .from('users')
-          .select('id, full_name, email')
-          .eq('id', user.id)
-          .maybeSingle();
-        if (data?.id) {
-          existed = true;
-          name = data.full_name || data.email?.split('@')[0] || '';
+        if (user.email) {
+          const check = await checkAuthUserByEmail(user.email);
+          if (check?.user) {
+            const createdAt = check.user.created_at ?? '';
+            const lastSignInAt = check.user.last_sign_in_at ?? '';
+            existed = Boolean(lastSignInAt && createdAt && lastSignInAt !== createdAt);
+            name =
+              check.user.user_metadata?.full_name
+              || check.user.user_metadata?.name
+              || check.user.email?.split('@')[0]
+              || '';
+          }
+        } else {
+          const createdAt = user.created_at ?? '';
+          const lastSignInAt = user.last_sign_in_at ?? '';
+          existed = Boolean(lastSignInAt && createdAt && lastSignInAt !== createdAt);
         }
       } catch (error) {
-        console.warn('User lookup failed', error);
+        console.warn('Auth lookup failed', error);
       }
 
       upsertUser(user).catch((error: any) => {

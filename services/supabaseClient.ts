@@ -36,3 +36,26 @@ export const upsertUser = async (user: {
     { onConflict: 'id' }
   );
 };
+
+export const checkAuthUserByEmail = async (email: string) => {
+  const { data, error } = await supabase.functions.invoke('check-auth-user', {
+    body: { email }
+  });
+
+  if (error) {
+    throw error;
+  }
+
+  return data as
+    | {
+        exists: boolean;
+        user: {
+          id: string;
+          email?: string | null;
+          user_metadata?: Record<string, any>;
+          created_at?: string | null;
+          last_sign_in_at?: string | null;
+        } | null;
+      }
+    | undefined;
+};
