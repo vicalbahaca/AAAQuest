@@ -35,11 +35,39 @@ const App: React.FC = () => {
   const [authUser, setAuthUser] = useState<any | null>(null);
   const [authName, setAuthName] = useState<string>('');
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const basePath = import.meta.env.BASE_URL || '/';
+
+  const resolveModeFromPath = () => {
+    const path = window.location.pathname;
+    if (path.endsWith('/app')) {
+      return AppMode.CHECKER;
+    }
+    return AppMode.HOME;
+  };
+
+  const navigateMode = (nextMode: AppMode) => {
+    setMode(nextMode);
+    if (nextMode === AppMode.CHECKER) {
+      const target = basePath.endsWith('/') ? `${basePath}app` : `${basePath}/app`;
+      history.pushState(null, '', target);
+    } else if (nextMode === AppMode.HOME) {
+      history.pushState(null, '', basePath);
+    }
+  };
 
   // Scroll to top whenever mode changes
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [mode]);
+
+  useEffect(() => {
+    setMode(resolveModeFromPath());
+    const handlePopState = () => {
+      setMode(resolveModeFromPath());
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   useEffect(() => {
     if (!isAuthOpen) return;
@@ -203,19 +231,19 @@ const App: React.FC = () => {
   const renderContent = () => {
     switch (mode) {
       case AppMode.STUDY:
-        return <StudyMode setFocusMode={setFocusMode} language={language} theme={theme} setMode={setMode} />;
+        return <StudyMode setFocusMode={setFocusMode} language={language} theme={theme} setMode={navigateMode} />;
       case AppMode.TEST:
         return <TestMode language={language} theme={theme} />;
       case AppMode.CHECKER:
         return <CheckerMode language={language} theme={theme} />;
       case AppMode.INFO:
-        return <InfoMode setMode={setMode} language={language} theme={theme} />;
+        return <InfoMode setMode={navigateMode} language={language} theme={theme} />;
       case AppMode.CERTIFICATE:
-        return <CertificateMode language={language} theme={theme} setMode={setMode} />;
+        return <CertificateMode language={language} theme={theme} setMode={navigateMode} />;
       case AppMode.SIGNIN:
-        return <SignIn language={language} theme={theme} setMode={setMode} />;
+        return <SignIn language={language} theme={theme} setMode={navigateMode} />;
       default:
-        return <Home setMode={setMode} t={t} theme={theme} language={language} onOpenAuth={openAuth} />;
+        return <Home setMode={navigateMode} t={t} theme={theme} language={language} onOpenAuth={openAuth} />;
     }
   };
 
@@ -270,7 +298,7 @@ const App: React.FC = () => {
       <header className={`fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-5xl rounded-full transition-all duration-300 h-16 px-6 flex items-center justify-between ${headerClasses}`}>
           <button 
             className="flex items-center gap-3 font-bold text-lg cursor-pointer group active:scale-95 transition-transform rounded-full px-2 py-1"
-            onClick={() => setMode(AppMode.HOME)}
+            onClick={() => navigateMode(AppMode.HOME)}
             aria-label={t.appTitle + " - " + t.returnSelector}
           >
             {/* Logo Icon - Green Gradient - ScanEye used for 'eye with cables' look */}
