@@ -65,7 +65,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
 
   const handleEmailContinue = async () => {
     resetMessages();
-    if (!email.trim()) return;
+    const emailValue = email.trim();
+    if (!emailValue) return;
+    const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
+    if (!emailRegex.test(emailValue)) {
+      setErrorMessage(t.authInvalidEmail);
+      return;
+    }
     setStep('password');
   };
 
