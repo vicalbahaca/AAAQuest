@@ -250,7 +250,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
                   </button>
                   <button
                     type="button"
-                    onClick={() => setStep('signup')}
+                    onClick={() => {
+                      setPassword('');
+                      setStep('signup');
+                    }}
                     className={`rounded-full px-6 py-3 text-sm font-normal transition border ${isDark ? 'border-white/10 text-white hover:bg-white/10' : 'border-slate-200 text-slate-900 hover:bg-slate-100'}`}
                   >
                     {t.signUpButton}
