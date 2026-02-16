@@ -623,10 +623,40 @@ const App: React.FC = () => {
                 {isUserMenuOpen && (
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setIsUserMenuOpen(false)} aria-hidden="true" />
-                    <div className={`absolute right-0 mt-3 w-48 border rounded-2xl shadow-xl overflow-hidden z-50 ${theme === 'dark' ? 'bg-slate-900 border-slate-700' : 'bg-white border-slate-200 shadow-slate-200/50'}`}>
-                      <div className={`px-4 py-3 text-sm ${theme === 'dark' ? 'text-slate-200' : 'text-slate-700'}`}>
-                        {authName || authUser.email}
+                    <div className={`absolute right-0 mt-3 w-56 border rounded-2xl shadow-xl overflow-hidden z-50 ${theme === 'dark' ? 'bg-slate-900 border-slate-700' : 'bg-white border-slate-200 shadow-slate-200/50'}`}>
+                      <div className={`px-4 py-3 text-sm font-semibold ${theme === 'dark' ? 'text-slate-200' : 'text-slate-700'}`}>
+                        Mi cuenta
                       </div>
+                      <button
+                        type="button"
+                        onClick={() => setIsUserMenuOpen(false)}
+                        className={`w-full text-left px-4 py-3 text-sm transition-colors ${theme === 'dark' ? 'text-slate-300 hover:bg-slate-800' : 'text-slate-700 hover:bg-slate-50'}`}
+                      >
+                        Mi plan
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setIsUserMenuOpen(false)}
+                        className={`w-full text-left px-4 py-3 text-sm transition-colors ${theme === 'dark' ? 'text-slate-300 hover:bg-slate-800' : 'text-slate-700 hover:bg-slate-50'}`}
+                      >
+                        Facturación
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setIsUserMenuOpen(false)}
+                        className={`w-full text-left px-4 py-3 text-sm transition-colors ${theme === 'dark' ? 'text-slate-300 hover:bg-slate-800' : 'text-slate-700 hover:bg-slate-50'}`}
+                      >
+                        Términos y condiciones
+                      </button>
+                      <div className={`h-px ${theme === 'dark' ? 'bg-white/10' : 'bg-slate-200'}`} />
+                      <button
+                        type="button"
+                        onClick={() => setIsUserMenuOpen(false)}
+                        className={`w-full text-left px-4 py-3 text-sm transition-colors ${theme === 'dark' ? 'text-slate-300 hover:bg-slate-800' : 'text-slate-700 hover:bg-slate-50'}`}
+                      >
+                        Contáctanos
+                      </button>
+                      <div className={`h-px ${theme === 'dark' ? 'bg-white/10' : 'bg-slate-200'}`} />
                       <button
                         type="button"
                         onClick={async () => {
