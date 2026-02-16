@@ -312,8 +312,8 @@ const App: React.FC = () => {
           <div className="w-[min(480px,calc(100vw-2rem))] rounded-3xl border border-white/10 bg-slate-950 px-6 py-5 text-white shadow-2xl shadow-black/50">
             <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
               <div className="flex items-start gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/20 text-emerald-200 font-semibold">
-                  AQ
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/20">
+                  <img src="/favicon.svg" alt="AAAQuest" className="h-7 w-7" />
                 </div>
                 <div>
                   <p className="text-base font-semibold">¿Sabes para qué utilizamos las cookies?</p>
