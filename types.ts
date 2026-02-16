@@ -336,7 +336,7 @@ export const TRANSLATIONS = {
     authPasswordRequirements: 'La contraseña debe tener al menos 6 caracteres y combinar letras y números.',
     alreadyRegisteredToast: 'Ya estás registrado.',
     signupSuccessToast: 'Registro realizado.',
-    welcomeToastPrefix: 'Bienvenido @',
+    welcomeToastPrefix: 'Bienvenido ',
     welcomeToastSuffix: ', gracias por iniciar sesión',
     launchApp: 'Abrir app',
     signInTitle: 'Accede a AAAQuest',
