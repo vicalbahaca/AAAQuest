@@ -171,6 +171,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
     }
 
     sessionStorage.setItem('signupToast', '1');
+    sessionStorage.setItem('signupToastName', fullName.trim());
     window.location.reload();
     setIsSubmitting(false);
   };

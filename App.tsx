@@ -164,7 +164,9 @@ const App: React.FC = () => {
           const displayName = name || user.user_metadata?.full_name || user.user_metadata?.name || 'usuario';
           showToast(`${t.welcomeToastPrefix}${displayName}${t.welcomeToastSuffix}`);
         } else {
-          showToast(t.signupSuccessToast);
+          const displayName =
+            name || user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'usuario';
+          showToast(`${t.signupSuccessPrefix}${displayName}`);
         }
       }
     };
@@ -199,7 +201,13 @@ const App: React.FC = () => {
     }
 
     if (params.get('signup') === '1' || sessionStorage.getItem('signupToast') === '1') {
-      showToast(t.signupSuccessToast);
+      const signupName = sessionStorage.getItem('signupToastName');
+      if (signupName) {
+        showToast(`${t.signupSuccessPrefix}${signupName}`);
+        sessionStorage.removeItem('signupToastName');
+      } else {
+        showToast(t.signupSuccessToast);
+      }
       params.delete('signup');
       sessionStorage.removeItem('signupToast');
       const query = params.toString();
