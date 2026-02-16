@@ -76,7 +76,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
     }
     try {
       const check = await checkAuthUserByEmail(emailValue);
-      setEmailExists(Boolean(check?.exists));
+      setEmailExists(Boolean(check?.user));
     } catch (error) {
       console.warn('Auth lookup failed', error);
       setEmailExists(null);
@@ -99,7 +99,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
     if (emailExists === null) {
       try {
         const check = await checkAuthUserByEmail(emailValue);
-        if (!check?.exists) {
+        if (!check?.user) {
           setErrorMessage(t.authInvalidCredentials);
           setIsSubmitting(false);
           return;

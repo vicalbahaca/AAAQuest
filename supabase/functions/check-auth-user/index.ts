@@ -25,10 +25,13 @@ serve(async (req) => {
   }
 
   if (!email) {
-    return new Response(JSON.stringify({ error: 'email_required' }), {
-      status: 400,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    return new Response(
+      JSON.stringify({ ok: true, user: null }),
+      {
+        status: 200,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      }
+    );
   }
 
   const supabaseUrl = Deno.env.get('PROJECT_URL');
@@ -39,7 +42,7 @@ serve(async (req) => {
       PROJECT_URL: !supabaseUrl,
       SERVICE_ROLE_KEY: !serviceRoleKey,
     });
-    return new Response(JSON.stringify({ error: 'server_misconfigured' }), {
+    return new Response(JSON.stringify({ ok: false }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
@@ -58,7 +61,7 @@ serve(async (req) => {
   if (!response.ok) {
     const errText = await response.text();
     console.error('check-auth-user failed', errText);
-    return new Response(JSON.stringify({ error: 'admin_fetch_failed' }), {
+    return new Response(JSON.stringify({ ok: false }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
@@ -71,7 +74,7 @@ serve(async (req) => {
 
   return new Response(
     JSON.stringify({
-      exists: Boolean(user),
+      ok: true,
       user: user
         ? {
             id: user.id,

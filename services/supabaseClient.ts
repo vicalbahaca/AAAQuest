@@ -48,7 +48,7 @@ export const checkAuthUserByEmail = async (email: string) => {
 
   return data as
     | {
-        exists: boolean;
+        ok?: boolean;
         user: {
           id: string;
           email?: string | null;
