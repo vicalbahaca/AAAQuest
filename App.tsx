@@ -35,7 +35,7 @@ const App: React.FC = () => {
   const [authUser, setAuthUser] = useState<any | null>(null);
   const [authName, setAuthName] = useState<string>('');
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const [showMaintenance, setShowMaintenance] = useState(true);
+  const [showMaintenance, setShowMaintenance] = useState(false);
   const basePath = import.meta.env.BASE_URL || '/';
 
   const resolveModeFromPath = () => {
@@ -60,6 +60,14 @@ const App: React.FC = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [mode]);
+
+  useEffect(() => {
+    const seen = sessionStorage.getItem('maintenanceSeen');
+    if (!seen) {
+      setShowMaintenance(true);
+      sessionStorage.setItem('maintenanceSeen', '1');
+    }
+  }, []);
 
   useEffect(() => {
     setMode(resolveModeFromPath());
