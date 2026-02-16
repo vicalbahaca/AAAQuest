@@ -15,6 +15,7 @@ import { Reveal } from './components/Reveal';
 import { checkAuthUserByEmail, supabase, upsertUser } from './services/supabaseClient';
 
 const homeVideoSrc = new URL('./files/AAADemo.mp4', import.meta.url).href;
+const faviconIcon = new URL('./files/favicon.svg', import.meta.url).href;
 const figmaLogo = new URL('./files/figma-logo.svg', import.meta.url).href;
 const unsplashGreenFlow = new URL('./files/unsplash-green-flow.jpg', import.meta.url).href;
 const pluginFigmaAsset = new URL('./files/PluginFigma.png', import.meta.url).href;
@@ -315,7 +316,7 @@ const App: React.FC = () => {
                 <div className="flex items-start gap-4">
                   <div className="flex items-center gap-3">
                     <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/20">
-                      <img src="/favicon.svg" alt="AAAQuest" className="h-7 w-7" />
+                      <img src={faviconIcon} alt="AAAQuest" className="h-7 w-7" />
                     </div>
                     <span className="text-sm font-semibold text-white">AAAQuest</span>
                   </div>
