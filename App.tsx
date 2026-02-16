@@ -282,6 +282,12 @@ const App: React.FC = () => {
 
   return (
     <div className={`min-h-screen flex flex-col font-inter transition-colors duration-500 ${mainContainerClasses}`}>
+      <div
+        role="alert"
+        className="fixed top-4 left-1/2 z-[80] w-[calc(100%-2rem)] max-w-xl -translate-x-1/2 rounded-2xl border border-amber-400/30 bg-amber-500/10 px-4 py-3 text-center text-sm text-amber-100 shadow-2xl shadow-black/40"
+      >
+        La plataforma está en mantenimiento, sentimos las molestias.
+      </div>
       
       {/* Dynamic Background Grid */}
       <div className="fixed inset-0 z-0 opacity-20 pointer-events-none" 
