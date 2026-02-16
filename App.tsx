@@ -36,6 +36,8 @@ const App: React.FC = () => {
   const [authName, setAuthName] = useState<string>('');
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [showMaintenance, setShowMaintenance] = useState(false);
+  const [showCookieBanner, setShowCookieBanner] = useState(true);
+  const [showCookiePrefs, setShowCookiePrefs] = useState(false);
   const basePath = import.meta.env.BASE_URL || '/';
 
   const resolveModeFromPath = () => {
@@ -305,6 +307,51 @@ const App: React.FC = () => {
         </svg>
         La plataforma está en mantenimiento, puedes registrarte y te informaremos vía correo electrónico.
       </div>
+      {showCookieBanner && (
+        <div className="fixed bottom-4 left-4 right-4 z-[70]">
+          <div className="mx-auto w-full max-w-6xl rounded-3xl border border-white/10 bg-slate-950 px-6 py-5 text-white shadow-2xl shadow-black/50">
+            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+              <div className="flex items-start gap-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/20 text-emerald-200 font-semibold">
+                  AQ
+                </div>
+                <div>
+                  <p className="text-base font-semibold">¿Sabes para qué utilizamos las cookies?</p>
+                  <p className="mt-2 text-sm text-slate-400">
+                    En AAAQuest usamos cookies para mejorar tu navegación, personalizar contenidos y analizar el tráfico.
+                    Más información en la Política de cookies.
+                  </p>
+                </div>
+              </div>
+              <div className="flex flex-col gap-2 md:w-64">
+                <button
+                  type="button"
+                  onClick={() => setShowCookieBanner(false)}
+                  className="w-full rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-emerald-950"
+                >
+                  Aceptar todas
+                </button>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowCookieBanner(false)}
+                    className="w-full rounded-full border border-white/10 px-3 py-2 text-xs font-semibold text-white"
+                  >
+                    Denegar todas
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowCookiePrefs(true)}
+                    className="w-full rounded-full border border-white/10 px-3 py-2 text-xs font-semibold text-white"
+                  >
+                    Preferencias
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       {showMaintenance && (
         <>
           <div className="fixed inset-0 z-[80] bg-black/70 backdrop-blur-sm" aria-hidden="true" />
@@ -333,6 +380,58 @@ const App: React.FC = () => {
               </a>
               .
             </p>
+          </div>
+        </>
+      )}
+      {showCookiePrefs && (
+        <>
+          <div className="fixed inset-0 z-[80] bg-black/70 backdrop-blur-sm" aria-hidden="true" />
+          <div
+            role="dialog"
+            aria-modal="true"
+            className="fixed left-1/2 top-1/2 z-[85] w-[calc(100%-2rem)] max-w-3xl -translate-x-1/2 -translate-y-1/2 rounded-3xl border border-white/10 bg-slate-950 px-8 py-8 text-white shadow-2xl shadow-black/60"
+          >
+            <button
+              type="button"
+              onClick={() => setShowCookiePrefs(false)}
+              className="mb-6 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-slate-400 hover:text-white"
+            >
+              Volver
+            </button>
+            <h3 className="text-2xl font-semibold">Categorías de cookies</h3>
+            <div className="mt-6 space-y-6">
+              <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-5">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-base font-semibold">Esenciales</p>
+                    <p className="mt-1 text-sm text-slate-400">Necesarias para que la web funcione. No se pueden desactivar.</p>
+                  </div>
+                  <span className="rounded-full bg-emerald-500/20 px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-emerald-200">
+                    Requeridas
+                  </span>
+                </div>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-5">
+                <p className="text-base font-semibold">Analítica</p>
+                <p className="mt-1 text-sm text-slate-400">Nos ayudan a entender cómo interactúan los visitantes con la web.</p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-5">
+                <p className="text-base font-semibold">Marketing</p>
+                <p className="mt-1 text-sm text-slate-400">Se usan para mostrar anuncios relevantes en otras webs.</p>
+              </div>
+            </div>
+            <div className="mt-8">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowCookiePrefs(false);
+                  setShowCookieBanner(false);
+                }}
+                className="w-full rounded-full bg-white px-6 py-3 text-sm font-semibold text-slate-900"
+              >
+                Guardar preferencias
+              </button>
+            </div>
           </div>
         </>
       )}
