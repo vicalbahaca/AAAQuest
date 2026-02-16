@@ -317,7 +317,6 @@ const App: React.FC = () => {
                     <img src="/favicon.svg" alt="AAAQuest" className="h-7 w-7" />
                   </div>
                   <div>
-                    <p className="text-base font-semibold">¿Sabes para qué utilizamos las cookies?</p>
                     <p className="mt-2 text-sm text-slate-400">
                       Utilizamos cookies para mejorar su experiencia de navegación, ofrecer anuncios o contenidos personalizados y analizar nuestro tráfico.
                     </p>
