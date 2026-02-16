@@ -401,7 +401,7 @@ const App: React.FC = () => {
                       <button
                         type="button"
                         disabled
-                        className="h-6 w-11 rounded-full border border-emerald-400/40 bg-emerald-500/80 p-0.5"
+                        className="h-6 w-11 overflow-hidden rounded-full border border-emerald-400/40 bg-emerald-500/80 p-0.5"
                         aria-pressed="true"
                       >
                         <span className="block h-5 w-5 translate-x-5 rounded-full bg-white" />
@@ -417,7 +417,7 @@ const App: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => setCookieAnalytics((prev) => !prev)}
-                        className={`h-6 w-11 rounded-full border p-0.5 transition ${cookieAnalytics ? 'bg-emerald-500/80 border-emerald-400/40' : 'bg-slate-800 border-white/10'}`}
+                        className={`h-6 w-11 overflow-hidden rounded-full border p-0.5 transition ${cookieAnalytics ? 'bg-emerald-500/80 border-emerald-400/40' : 'bg-slate-800 border-white/10'}`}
                         aria-pressed={cookieAnalytics}
                       >
                         <span className={`block h-5 w-5 rounded-full bg-white transition ${cookieAnalytics ? 'translate-x-5' : 'translate-x-0'}`} />
@@ -433,7 +433,7 @@ const App: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => setCookieMarketing((prev) => !prev)}
-                        className={`h-6 w-11 rounded-full border p-0.5 transition ${cookieMarketing ? 'bg-emerald-500/80 border-emerald-400/40' : 'bg-slate-800 border-white/10'}`}
+                        className={`h-6 w-11 overflow-hidden rounded-full border p-0.5 transition ${cookieMarketing ? 'bg-emerald-500/80 border-emerald-400/40' : 'bg-slate-800 border-white/10'}`}
                         aria-pressed={cookieMarketing}
                       >
                         <span className={`block h-5 w-5 rounded-full bg-white transition ${cookieMarketing ? 'translate-x-5' : 'translate-x-0'}`} />
