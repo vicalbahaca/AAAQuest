@@ -313,18 +313,16 @@ const App: React.FC = () => {
           <div className="w-[min(480px,calc(100vw-2rem))] rounded-3xl border border-white/10 bg-slate-950 px-6 py-5 text-white shadow-2xl shadow-black/50">
             {!showCookiePrefs ? (
               <div className="flex flex-col gap-4">
-                <div className="flex items-start gap-4">
+                <div className="flex flex-col gap-2">
                   <div className="flex items-center gap-3">
                     <div className="flex h-12 w-12 items-center justify-center">
                       <img src={faviconIcon} alt="AAAQuest" className="h-7 w-7" />
                     </div>
                     <span className="text-[18px] font-semibold text-white">AAAQuest</span>
                   </div>
-                  <div>
-                    <p className="mt-2 text-sm text-slate-400">
-                      Utilizamos cookies para mejorar su experiencia de navegación, ofrecer anuncios o contenidos personalizados y analizar nuestro tráfico.
-                    </p>
-                  </div>
+                  <p className="text-sm text-slate-400">
+                    Utilizamos cookies para mejorar su experiencia de navegación, ofrecer anuncios o contenidos personalizados y analizar nuestro tráfico.
+                  </p>
                 </div>
                 <div className="flex flex-col gap-2">
                   <button
