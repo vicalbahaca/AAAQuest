@@ -737,6 +737,12 @@ export const CheckerMode: React.FC<CheckerModeProps> = ({ language, theme, onOpe
 
                 {/* 4. CTA (Mobile: Order 4) */}
                 <div className="order-4 space-y-2 mt-4">
+                       <div
+                         role="alert"
+                         className="rounded-xl border border-amber-400/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-200"
+                       >
+                         La funcionalidad de analizar captura no está disponible en este momento.
+                       </div>
                        <button
                           disabled
                           className="w-full py-4 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl font-normal text-lg transition-all flex items-center justify-center gap-3 border border-transparent active:scale-95 bg-[#038759] hover:bg-[#026e49]"
