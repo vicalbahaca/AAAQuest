@@ -374,18 +374,24 @@ const App: React.FC = () => {
                     <div className="flex items-start justify-between gap-4">
                       <div>
                         <p className="text-sm font-semibold">Esenciales</p>
-                        <p className="mt-1 text-xs text-slate-400">Necesarias para que la web funcione. No se pueden desactivar.</p>
+                        <p className="mt-1 text-xs text-slate-400 font-semibold uppercase tracking-widest">Obligatorios</p>
+                        <p className="mt-2 text-xs text-slate-400">Necesarios para que el sitio web funcione. No se pueden desactivar.</p>
                       </div>
-                      <span className="rounded-full bg-emerald-500/20 px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-emerald-200">
-                        Requeridas
-                      </span>
+                      <button
+                        type="button"
+                        disabled
+                        className="h-7 w-12 rounded-full border border-emerald-400/40 bg-emerald-500/80 px-1"
+                        aria-pressed="true"
+                      >
+                        <span className="block h-5 w-5 translate-x-5 rounded-full bg-white" />
+                      </button>
                     </div>
                   </div>
                   <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-4">
                     <div className="flex items-start justify-between gap-4">
                       <div>
-                        <p className="text-sm font-semibold">Analítica</p>
-                        <p className="mt-1 text-xs text-slate-400">Nos ayudan a entender cómo interactúan los visitantes con la web.</p>
+                        <p className="text-sm font-semibold">Analíticos</p>
+                        <p className="mt-2 text-xs text-slate-400">Nos ayudan a comprender cómo interactúan los visitantes con el sitio web.</p>
                       </div>
                       <button
                         type="button"
@@ -401,7 +407,7 @@ const App: React.FC = () => {
                     <div className="flex items-start justify-between gap-4">
                       <div>
                         <p className="text-sm font-semibold">Marketing</p>
-                        <p className="mt-1 text-xs text-slate-400">Se usan para mostrar anuncios relevantes en otras webs.</p>
+                        <p className="mt-2 text-xs text-slate-400">Se utilizan para rastrear a los visitantes en distintos sitios web con el fin de mostrar anuncios relevantes.</p>
                       </div>
                       <button
                         type="button"
