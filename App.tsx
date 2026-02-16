@@ -395,8 +395,7 @@ const App: React.FC = () => {
                   <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-4">
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
                       <div>
-                        <p className="text-sm font-semibold">Esenciales</p>
-                        <p className="mt-1 text-xs text-slate-400 font-semibold uppercase tracking-widest">Obligatorios</p>
+                        <p className="text-sm font-semibold">Esenciales <span className="text-xs font-normal text-slate-400">(obligatorio)</span></p>
                         <p className="mt-2 text-xs text-slate-400">Necesarios para que el sitio web funcione. No se pueden desactivar.</p>
                       </div>
                       <label className="flex items-center gap-2 text-xs text-slate-400">
