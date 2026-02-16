@@ -500,7 +500,8 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
       cta: t.pricingStarterCta,
       includesLabel: t.pricingStarterIncludes,
       features: t.pricingStarterFeatures,
-      highlight: false
+      highlight: false,
+      disabled: true
     },
     {
       id: 'pro',
@@ -512,7 +513,8 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
       cta: t.pricingProCta,
       includesLabel: t.pricingProIncludes,
       features: t.pricingProFeatures,
-      highlight: true
+      highlight: true,
+      disabled: true
     },
     {
       id: 'enterprise',
@@ -757,7 +759,9 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
                     ) : (
                       <button
                         type="button"
-                        className={`w-full rounded-full py-2 text-sm font-normal transition ${
+                        disabled={plan.disabled}
+                        aria-disabled={plan.disabled}
+                        className={`w-full rounded-full py-2 text-sm font-normal transition disabled:cursor-not-allowed disabled:opacity-60 ${
                           theme === 'dark' ? 'bg-white text-slate-900 hover:bg-slate-200' : 'bg-slate-900 text-white hover:bg-slate-800'
                         }`}
                       >
