@@ -310,44 +310,112 @@ const App: React.FC = () => {
       {showCookieBanner && (
         <div className="fixed bottom-4 right-4 z-[76]">
           <div className="w-[min(480px,calc(100vw-2rem))] rounded-3xl border border-white/10 bg-slate-950 px-6 py-5 text-white shadow-2xl shadow-black/50">
-            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-              <div className="flex items-start gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/20">
-                  <img src="/favicon.svg" alt="AAAQuest" className="h-7 w-7" />
+            {!showCookiePrefs ? (
+              <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                <div className="flex items-start gap-4">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/20">
+                    <img src="/favicon.svg" alt="AAAQuest" className="h-7 w-7" />
+                  </div>
+                  <div>
+                    <p className="text-base font-semibold">¿Sabes para qué utilizamos las cookies?</p>
+                    <p className="mt-2 text-sm text-slate-400">
+                      Utilizamos cookies para mejorar su experiencia de navegación, ofrecer anuncios o contenidos personalizados y analizar nuestro tráfico.
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-base font-semibold">¿Sabes para qué utilizamos las cookies?</p>
-                  <p className="mt-2 text-sm text-slate-400">
-                    Utilizamos cookies para mejorar su experiencia de navegación, ofrecer anuncios o contenidos personalizados y analizar nuestro tráfico.
-                  </p>
-                </div>
-              </div>
-              <div className="flex flex-col gap-2 md:w-64">
-                <button
-                  type="button"
-                  onClick={() => setShowCookieBanner(false)}
-                  className="w-full rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-emerald-950"
-                >
-                  Aceptar todas
-                </button>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="flex flex-col gap-2 md:w-64">
                   <button
                     type="button"
                     onClick={() => setShowCookieBanner(false)}
-                    className="w-full rounded-full border border-white/10 px-3 py-2 text-xs font-semibold text-white"
+                    className="w-full rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-emerald-950"
                   >
-                    Denegar todas
+                    Aceptar todas
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => setShowCookiePrefs(true)}
-                    className="w-full rounded-full border border-white/10 px-3 py-2 text-xs font-semibold text-white"
-                  >
-                    Preferencias
-                  </button>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowCookieBanner(false)}
+                      className="w-full rounded-full border border-white/10 px-3 py-2 text-xs font-semibold text-white"
+                    >
+                      Denegar todas
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowCookiePrefs(true)}
+                      className="w-full rounded-full border border-white/10 px-3 py-2 text-xs font-semibold text-white"
+                    >
+                      Preferencias
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div className="space-y-5">
+                <button
+                  type="button"
+                  onClick={() => setShowCookiePrefs(false)}
+                  className="text-xs font-semibold uppercase tracking-widest text-slate-400 hover:text-white"
+                >
+                  Volver
+                </button>
+                <h3 className="text-xl font-semibold">Categorías de cookies</h3>
+                <div className="space-y-3">
+                  <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-4">
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <p className="text-sm font-semibold">Esenciales</p>
+                        <p className="mt-1 text-xs text-slate-400">Necesarias para que la web funcione. No se pueden desactivar.</p>
+                      </div>
+                      <span className="rounded-full bg-emerald-500/20 px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-emerald-200">
+                        Requeridas
+                      </span>
+                    </div>
+                  </div>
+                  <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-4">
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <p className="text-sm font-semibold">Analítica</p>
+                        <p className="mt-1 text-xs text-slate-400">Nos ayudan a entender cómo interactúan los visitantes con la web.</p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setCookieAnalytics((prev) => !prev)}
+                        className={`h-7 w-12 rounded-full border px-1 transition ${cookieAnalytics ? 'bg-emerald-500/80 border-emerald-400/40' : 'bg-slate-800 border-white/10'}`}
+                        aria-pressed={cookieAnalytics}
+                      >
+                        <span className={`block h-5 w-5 rounded-full bg-white transition ${cookieAnalytics ? 'translate-x-5' : 'translate-x-0'}`} />
+                      </button>
+                    </div>
+                  </div>
+                  <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-4">
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <p className="text-sm font-semibold">Marketing</p>
+                        <p className="mt-1 text-xs text-slate-400">Se usan para mostrar anuncios relevantes en otras webs.</p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setCookieMarketing((prev) => !prev)}
+                        className={`h-7 w-12 rounded-full border px-1 transition ${cookieMarketing ? 'bg-emerald-500/80 border-emerald-400/40' : 'bg-slate-800 border-white/10'}`}
+                        aria-pressed={cookieMarketing}
+                      >
+                        <span className={`block h-5 w-5 rounded-full bg-white transition ${cookieMarketing ? 'translate-x-5' : 'translate-x-0'}`} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowCookiePrefs(false);
+                    setShowCookieBanner(false);
+                  }}
+                  className="w-full rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-900"
+                >
+                  Guardar preferencias
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}
