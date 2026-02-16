@@ -169,6 +169,16 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
       setIsSubmitting(false);
       return;
     }
+    const signInResult = await supabase.auth.signInWithPassword({
+      email: emailValue,
+      password: passwordValue,
+    });
+
+    if (signInResult.error || !signInResult.data?.session) {
+      setErrorMessage(t.authGenericError);
+      setIsSubmitting(false);
+      return;
+    }
 
     sessionStorage.setItem('signupToast', '1');
     sessionStorage.setItem('signupToastName', fullName.trim());
