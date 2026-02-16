@@ -325,6 +325,16 @@ const App: React.FC = () => {
 
   return (
     <div className={`min-h-screen flex flex-col font-inter transition-colors duration-500 ${mainContainerClasses}`}>
+      <style>{`
+        .toggle{cursor:pointer;display:inline-flex;align-items:center}
+        .toggle-switch{display:inline-block;background:#2b2f3a;border-radius:999px;width:58px;height:32px;position:relative;vertical-align:middle;transition:background .25s}
+        .toggle-switch:before{content:"";display:block;background:linear-gradient(to bottom,#fff 0%,#eee 100%);border-radius:999px;box-shadow:0 0 0 1px rgba(0,0,0,.25);width:24px;height:24px;position:absolute;top:4px;left:4px;transition:left .25s}
+        .toggle:hover .toggle-switch:before{background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.5)}
+        .toggle-checkbox{position:absolute;visibility:hidden}
+        .toggle-checkbox:checked + .toggle-switch{background:#038759}
+        .toggle-checkbox:checked + .toggle-switch:before{left:30px}
+        .toggle-switch{max-width:100%}
+      `}</style>
       <div className="fixed bottom-4 right-4 z-[70] flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-500 px-4 py-2 text-xs text-amber-950 shadow-lg shadow-black/40">
         <svg viewBox="-0.5 0 25 25" className="h-4 w-4" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <path d="M10.8809 16.15C10.8809 16.0021 10.9101 15.8556 10.967 15.7191C11.024 15.5825 11.1073 15.4586 11.2124 15.3545C11.3175 15.2504 11.4422 15.1681 11.5792 15.1124C11.7163 15.0567 11.8629 15.0287 12.0109 15.03C12.2291 15.034 12.4413 15.1021 12.621 15.226C12.8006 15.3499 12.9399 15.5241 13.0211 15.7266C13.1024 15.9292 13.122 16.1512 13.0778 16.3649C13.0335 16.5786 12.9272 16.7745 12.7722 16.9282C12.6172 17.0818 12.4204 17.1863 12.2063 17.2287C11.9922 17.2711 11.7703 17.2494 11.5685 17.1663C11.3666 17.0833 11.1938 16.9426 11.0715 16.7618C10.9492 16.5811 10.8829 16.3683 10.8809 16.15ZM11.2408 13.42L11.1008 8.20001C11.0875 8.07453 11.1008 7.94766 11.1398 7.82764C11.1787 7.70761 11.2424 7.5971 11.3268 7.5033C11.4112 7.40949 11.5144 7.33449 11.6296 7.28314C11.7449 7.2318 11.8697 7.20526 11.9958 7.20526C12.122 7.20526 12.2468 7.2318 12.3621 7.28314C12.4773 7.33449 12.5805 7.40949 12.6649 7.5033C12.7493 7.5971 12.813 7.70761 12.8519 7.82764C12.8909 7.94766 12.9042 8.07453 12.8909 8.20001L12.7609 13.42C12.7609 13.6215 12.6809 13.8149 12.5383 13.9574C12.3958 14.0999 12.2024 14.18 12.0009 14.18C11.7993 14.18 11.606 14.0999 11.4635 13.9574C11.321 13.8149 11.2408 13.6215 11.2408 13.42Z" />
@@ -398,14 +408,10 @@ const App: React.FC = () => {
                         <p className="text-sm font-semibold">Esenciales <span className="text-xs font-normal text-slate-400">(obligatorio)</span></p>
                         <p className="mt-2 text-xs text-slate-400">Necesarios para que el sitio web funcione. No se pueden desactivar.</p>
                       </div>
-                      <button
-                        type="button"
-                        disabled
-                        className="relative h-6 w-11 overflow-hidden rounded-full border border-emerald-400/40 bg-emerald-500/80"
-                        aria-pressed="true"
-                      >
-                        <span className="absolute left-0.5 top-0.5 h-5 w-5 translate-x-5 rounded-full bg-white" />
-                      </button>
+                      <label className="toggle">
+                        <input className="toggle-checkbox" type="checkbox" checked disabled />
+                        <div className="toggle-switch" aria-hidden="true" />
+                      </label>
                     </div>
                   </div>
                   <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-4">
@@ -414,14 +420,15 @@ const App: React.FC = () => {
                         <p className="text-sm font-semibold">Analíticos</p>
                         <p className="mt-2 text-xs text-slate-400">Nos ayudan a comprender cómo interactúan los visitantes con el sitio web.</p>
                       </div>
-                      <button
-                        type="button"
-                        onClick={() => setCookieAnalytics((prev) => !prev)}
-                        className={`relative h-6 w-11 overflow-hidden rounded-full border transition ${cookieAnalytics ? 'bg-emerald-500/80 border-emerald-400/40' : 'bg-slate-800 border-white/10'}`}
-                        aria-pressed={cookieAnalytics}
-                      >
-                        <span className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white transition ${cookieAnalytics ? 'translate-x-5' : 'translate-x-0'}`} />
-                      </button>
+                      <label className="toggle">
+                        <input
+                          className="toggle-checkbox"
+                          type="checkbox"
+                          checked={cookieAnalytics}
+                          onChange={() => setCookieAnalytics((prev) => !prev)}
+                        />
+                        <div className="toggle-switch" aria-hidden="true" />
+                      </label>
                     </div>
                   </div>
                   <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-4">
@@ -430,14 +437,15 @@ const App: React.FC = () => {
                         <p className="text-sm font-semibold">Marketing</p>
                         <p className="mt-2 text-xs text-slate-400">Se utilizan para rastrear a los visitantes en distintos sitios web con el fin de mostrar anuncios relevantes.</p>
                       </div>
-                      <button
-                        type="button"
-                        onClick={() => setCookieMarketing((prev) => !prev)}
-                        className={`relative h-6 w-11 overflow-hidden rounded-full border transition ${cookieMarketing ? 'bg-emerald-500/80 border-emerald-400/40' : 'bg-slate-800 border-white/10'}`}
-                        aria-pressed={cookieMarketing}
-                      >
-                        <span className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white transition ${cookieMarketing ? 'translate-x-5' : 'translate-x-0'}`} />
-                      </button>
+                      <label className="toggle">
+                        <input
+                          className="toggle-checkbox"
+                          type="checkbox"
+                          checked={cookieMarketing}
+                          onChange={() => setCookieMarketing((prev) => !prev)}
+                        />
+                        <div className="toggle-switch" aria-hidden="true" />
+                      </label>
                     </div>
                   </div>
                 </div>
