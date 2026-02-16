@@ -500,57 +500,6 @@ const App: React.FC = () => {
           </div>
         </>
       )}
-      {showCookiePrefs && (
-        <>
-          <div className="fixed inset-0 z-[80] bg-black/70 backdrop-blur-sm" aria-hidden="true" />
-          <div
-            role="dialog"
-            aria-modal="true"
-            className="fixed left-1/2 top-1/2 z-[85] w-[calc(100%-2rem)] max-w-3xl -translate-x-1/2 -translate-y-1/2 rounded-3xl border border-white/10 bg-slate-950 px-8 py-8 text-white shadow-2xl shadow-black/60"
-          >
-            <button
-              type="button"
-              onClick={() => setShowCookiePrefs(false)}
-              className="mb-6 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-slate-400 hover:text-white"
-            >
-              Volver
-            </button>
-            <div className="mt-6 space-y-6">
-              <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-5">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <p className="text-base font-semibold">Esenciales</p>
-                    <p className="mt-1 text-sm text-slate-400">Necesarias para que la web funcione. No se pueden desactivar.</p>
-                  </div>
-                  <span className="rounded-full bg-emerald-500/20 px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-emerald-200">
-                    Requeridas
-                  </span>
-                </div>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-5">
-                <p className="text-base font-semibold">Analítica</p>
-                <p className="mt-1 text-sm text-slate-400">Nos ayudan a entender cómo interactúan los visitantes con la web.</p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-5">
-                <p className="text-base font-semibold">Marketing</p>
-                <p className="mt-1 text-sm text-slate-400">Se usan para mostrar anuncios relevantes en otras webs.</p>
-              </div>
-            </div>
-            <div className="mt-8">
-              <button
-                type="button"
-                onClick={() => {
-                  setShowCookiePrefs(false);
-                  setShowCookieBanner(false);
-                }}
-                className="w-full rounded-full bg-white px-6 py-3 text-sm font-semibold text-slate-900"
-              >
-                Guardar preferencias
-              </button>
-            </div>
-          </div>
-        </>
-      )}
       
       {/* Dynamic Background Grid */}
       <div className="fixed inset-0 z-0 opacity-20 pointer-events-none" 
