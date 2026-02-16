@@ -39,6 +39,8 @@ const App: React.FC = () => {
   const [showMaintenance, setShowMaintenance] = useState(false);
   const [showCookieBanner, setShowCookieBanner] = useState(true);
   const [showCookiePrefs, setShowCookiePrefs] = useState(false);
+  const [cookieAnalytics, setCookieAnalytics] = useState(true);
+  const [cookieMarketing, setCookieMarketing] = useState(true);
   const basePath = import.meta.env.BASE_URL || '/';
 
   const resolveModeFromPath = () => {
