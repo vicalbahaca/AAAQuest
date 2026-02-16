@@ -29,6 +29,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [emailFormatError, setEmailFormatError] = useState<string | null>(null);
   const [emailExists, setEmailExists] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -43,12 +44,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
     setIsSubmitting(false);
     setEmailExists(null);
     setPasswordError(null);
+    setEmailFormatError(null);
   }, [isOpen, entry]);
 
   useEffect(() => {
     setStatusMessage(null);
     setErrorMessage(null);
     setPasswordError(null);
+    setEmailFormatError(null);
   }, [step]);
 
   if (!isOpen) return null;
@@ -79,7 +82,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
     if (!emailValue) return;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(emailValue)) {
-      setErrorMessage(t.authInvalidEmail);
+      setEmailFormatError(t.authInvalidEmail);
       return;
     }
     try {
@@ -273,14 +276,22 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
                 </div>
 
                 <div className="mt-6 flex flex-col gap-3">
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(event) => setEmail(event.target.value)}
-                    placeholder={t.signUpEmailPlaceholder}
-                    className={`w-full rounded-full border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500/40 ${inputClasses}`}
-                    autoComplete="email"
-                  />
+                  <div className="flex flex-col gap-2">
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(event) => {
+                        setEmail(event.target.value);
+                        if (emailFormatError) setEmailFormatError(null);
+                      }}
+                      placeholder={t.signUpEmailPlaceholder}
+                      className={`w-full rounded-full border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500/40 ${inputClasses}`}
+                      autoComplete="email"
+                    />
+                    {emailFormatError && (
+                      <p className="text-xs text-rose-300">{emailFormatError}</p>
+                    )}
+                  </div>
                   <button
                     type="button"
                     onClick={handleEmailContinue}
