@@ -120,10 +120,24 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
       } catch (error) {
         console.warn('Failed to upsert profile', error);
       }
-      const displayName = signInResult.data.session.user.user_metadata?.full_name
+      let displayName =
+        signInResult.data.session.user.user_metadata?.full_name
         || signInResult.data.session.user.user_metadata?.name
-        || emailValue.split('@')[0]
-        || 'usuario';
+        || '';
+      if (!displayName) {
+        try {
+          const check = await checkAuthUserByEmail(emailValue);
+          displayName =
+            check?.user?.user_metadata?.full_name
+            || check?.user?.user_metadata?.name
+            || '';
+        } catch (error) {
+          console.warn('Auth lookup failed', error);
+        }
+      }
+      if (!displayName) {
+        displayName = emailValue.split('@')[0] || 'usuario';
+      }
       sessionStorage.setItem('welcomeToast', displayName);
       window.location.reload();
       setIsSubmitting(false);
