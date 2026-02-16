@@ -37,7 +37,7 @@ const App: React.FC = () => {
   const [authName, setAuthName] = useState<string>('');
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [showMaintenance, setShowMaintenance] = useState(false);
-  const [showCookieBanner, setShowCookieBanner] = useState(true);
+  const [showCookieBanner, setShowCookieBanner] = useState(false);
   const [showCookiePrefs, setShowCookiePrefs] = useState(false);
   const [cookieAnalytics, setCookieAnalytics] = useState(true);
   const [cookieMarketing, setCookieMarketing] = useState(true);
@@ -65,6 +65,28 @@ const App: React.FC = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [mode]);
+
+  useEffect(() => {
+    const stored = document.cookie.split('; ').find((row) => row.startsWith('cookie_prefs='));
+    if (!stored) {
+      setShowCookieBanner(true);
+      return;
+    }
+    const value = stored.split('=')[1] ?? '';
+    try {
+      const parsed = JSON.parse(decodeURIComponent(value));
+      if (typeof parsed?.analytics === 'boolean') setCookieAnalytics(parsed.analytics);
+      if (typeof parsed?.marketing === 'boolean') setCookieMarketing(parsed.marketing);
+      setShowCookieBanner(false);
+    } catch {
+      setShowCookieBanner(true);
+    }
+  }, []);
+
+  const persistCookiePrefs = (prefs: { analytics: boolean; marketing: boolean }) => {
+    const payload = encodeURIComponent(JSON.stringify(prefs));
+    document.cookie = `cookie_prefs=${payload}; path=/; max-age=31536000; SameSite=Lax`;
+  };
 
   useEffect(() => {
     const seen = sessionStorage.getItem('maintenanceSeen');
@@ -331,6 +353,9 @@ const App: React.FC = () => {
                     type="button"
                     onClick={(event) => {
                       event.preventDefault();
+                      persistCookiePrefs({ analytics: true, marketing: true });
+                      setCookieAnalytics(true);
+                      setCookieMarketing(true);
                       setShowCookieBanner(false);
                     }}
                     className="w-full rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-emerald-950"
@@ -342,6 +367,9 @@ const App: React.FC = () => {
                       type="button"
                       onClick={(event) => {
                         event.preventDefault();
+                        persistCookiePrefs({ analytics: false, marketing: false });
+                        setCookieAnalytics(false);
+                        setCookieMarketing(false);
                         setShowCookieBanner(false);
                       }}
                       className="w-full rounded-full border border-white/10 px-3 py-2 text-xs font-semibold text-white"
@@ -418,6 +446,7 @@ const App: React.FC = () => {
                   type="button"
                   onClick={(event) => {
                     event.preventDefault();
+                    persistCookiePrefs({ analytics: cookieAnalytics, marketing: cookieMarketing });
                     setShowCookiePrefs(false);
                     setShowCookieBanner(false);
                   }}
