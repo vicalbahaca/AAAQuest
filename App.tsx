@@ -318,8 +318,7 @@ const App: React.FC = () => {
                 <div>
                   <p className="text-base font-semibold">¿Sabes para qué utilizamos las cookies?</p>
                   <p className="mt-2 text-sm text-slate-400">
-                    En AAAQuest usamos cookies para mejorar tu navegación, personalizar contenidos y analizar el tráfico.
-                    Más información en la Política de cookies.
+                    Utilizamos cookies para mejorar su experiencia de navegación, ofrecer anuncios o contenidos personalizados y analizar nuestro tráfico.
                   </p>
                 </div>
               </div>
