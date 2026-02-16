@@ -291,8 +291,9 @@ const App: React.FC = () => {
 
   return (
     <div className={`min-h-screen flex flex-col font-inter transition-colors duration-500 ${mainContainerClasses}`}>
-      <div className="fixed right-4 top-4 z-[75] rounded-full border border-amber-400/30 bg-amber-500/10 px-4 py-2 text-xs text-amber-100 shadow-lg shadow-black/40">
-        La plataforma está en mantenimiento
+      <div className="fixed bottom-4 right-4 z-[75] flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-500 px-4 py-2 text-xs text-amber-950 shadow-lg shadow-black/40">
+        <AlertTriangle className="h-4 w-4" />
+        La plataforma está en mantenimiento, puedes registrarte y te informaremos.
       </div>
       {showMaintenance && (
         <>
@@ -311,7 +312,7 @@ const App: React.FC = () => {
             </button>
             <h2 className="text-2xl font-semibold">Plataforma en mantenimiento</h2>
             <p className="mt-3 text-sm text-slate-200">
-              Estamos añadiendo mejoras en la plataforma, tanto la funcionalidad de modo estudio como la de analizador ha sido bloqueada. Esperamos daros noticias pronto. Para más información puedes ver el estado en{' '}
+              Estamos añadiendo mejoras en la plataforma, tanto la funcionalidad de modo estudio como la de analizador ha sido bloqueada. Puedes registrarte y te informaremos. Para más información puedes ver el estado en{' '}
               <a
                 href="https://www.linkedin.com/in/victorsaizalfageme/"
                 target="_blank"
