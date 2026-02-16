@@ -291,6 +291,9 @@ const App: React.FC = () => {
 
   return (
     <div className={`min-h-screen flex flex-col font-inter transition-colors duration-500 ${mainContainerClasses}`}>
+      <div className="fixed right-4 top-4 z-[75] rounded-full border border-amber-400/30 bg-amber-500/10 px-4 py-2 text-xs text-amber-100 shadow-lg shadow-black/40">
+        La plataforma está en mantenimiento
+      </div>
       {showMaintenance && (
         <>
           <div className="fixed inset-0 z-[80] bg-black/70 backdrop-blur-sm" aria-hidden="true" />
