@@ -30,6 +30,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const [emailFormatError, setEmailFormatError] = useState<string | null>(null);
+  const [nameError, setNameError] = useState<string | null>(null);
+  const [emailRequiredError, setEmailRequiredError] = useState<string | null>(null);
   const [emailExists, setEmailExists] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -45,6 +47,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
     setEmailExists(null);
     setPasswordError(null);
     setEmailFormatError(null);
+    setNameError(null);
+    setEmailRequiredError(null);
   }, [isOpen, entry]);
 
   useEffect(() => {
@@ -52,6 +56,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
     setErrorMessage(null);
     setPasswordError(null);
     setEmailFormatError(null);
+    setNameError(null);
+    setEmailRequiredError(null);
   }, [step]);
 
   if (!isOpen) return null;
@@ -162,15 +168,40 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
 
   const handleCreateAccount = async () => {
     resetMessages();
+    const trimmedName = fullName.trim();
+    const trimmedEmail = email.trim();
     const trimmedPassword = password.trim();
-    if (!fullName.trim() || !email.trim() || !trimmedPassword) return;
-    if (trimmedPassword.length < 8) {
-      setPasswordError(t.authPasswordMin);
-      return;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    let hasError = false;
+    if (!trimmedName) {
+      setNameError(t.authNameRequired);
+      hasError = true;
+    } else if (trimmedName.length < 3) {
+      setNameError(t.authNameMin);
+      hasError = true;
     }
+
+    if (!trimmedEmail) {
+      setEmailRequiredError(t.authEmailRequired);
+      hasError = true;
+    } else if (!emailRegex.test(trimmedEmail)) {
+      setEmailFormatError(t.authInvalidEmail);
+      hasError = true;
+    }
+
+    if (!trimmedPassword) {
+      setPasswordError(t.authPasswordMin);
+      hasError = true;
+    } else if (trimmedPassword.length < 8) {
+      setPasswordError(t.authPasswordMin);
+      hasError = true;
+    }
+
+    if (hasError) return;
     setIsSubmitting(true);
 
-    const emailValue = email.trim();
+    const emailValue = trimmedEmail;
     const passwordValue = trimmedPassword;
     const { data, error } = await supabase.functions.invoke('create-auth-user', {
       body: {
@@ -365,22 +396,40 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
             {step === 'signup' && (
               <div className="flex-1 flex items-center">
                 <div className="w-full flex flex-col gap-4">
+                  <div className="flex flex-col gap-2">
                   <input
                     type="text"
                     value={fullName}
-                    onChange={(event) => setFullName(event.target.value)}
+                    onChange={(event) => {
+                      setFullName(event.target.value);
+                      if (nameError) setNameError(null);
+                    }}
                     placeholder={t.signUpNamePlaceholder}
                     className={`w-full rounded-full border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500/40 ${inputClasses}`}
                     autoComplete="name"
                   />
+                  {nameError && (
+                    <p className="text-xs text-rose-300">{nameError}</p>
+                  )}
+                  </div>
                   <input
                     type="email"
                     value={email}
-                    onChange={(event) => setEmail(event.target.value)}
+                    onChange={(event) => {
+                      setEmail(event.target.value);
+                      if (emailRequiredError) setEmailRequiredError(null);
+                      if (emailFormatError) setEmailFormatError(null);
+                    }}
                     placeholder={t.signUpEmailPlaceholder}
                     className={`w-full rounded-full border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500/40 ${inputClasses}`}
                     autoComplete="email"
                   />
+                  {emailRequiredError && (
+                    <p className="text-xs text-rose-300">{emailRequiredError}</p>
+                  )}
+                  {emailFormatError && (
+                    <p className="text-xs text-rose-300">{emailFormatError}</p>
+                  )}
                 <div className="relative">
                   <input
                     type={showPassword ? 'text' : 'password'}
