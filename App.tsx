@@ -35,6 +35,7 @@ const App: React.FC = () => {
   const [authUser, setAuthUser] = useState<any | null>(null);
   const [authName, setAuthName] = useState<string>('');
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [showMaintenance, setShowMaintenance] = useState(true);
   const basePath = import.meta.env.BASE_URL || '/';
 
   const resolveModeFromPath = () => {
@@ -282,12 +283,25 @@ const App: React.FC = () => {
 
   return (
     <div className={`min-h-screen flex flex-col font-inter transition-colors duration-500 ${mainContainerClasses}`}>
-      <div
-        role="alert"
-        className="fixed top-4 left-1/2 z-[80] w-[calc(100%-2rem)] max-w-xl -translate-x-1/2 rounded-2xl border border-amber-400/30 bg-amber-500/10 px-4 py-3 text-center text-sm text-amber-100 shadow-2xl shadow-black/40"
-      >
-        La plataforma está en mantenimiento, sentimos las molestias.
-      </div>
+      {showMaintenance && (
+        <>
+          <div className="fixed inset-0 z-[80] bg-black/70 backdrop-blur-sm" aria-hidden="true" />
+          <div
+            role="alert"
+            className="fixed left-1/2 top-1/2 z-[90] w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-3xl border border-white/10 bg-slate-950 px-6 py-6 text-center text-sm text-white shadow-2xl shadow-black/60"
+          >
+            <button
+              type="button"
+              aria-label="Cerrar"
+              className="absolute right-4 top-4 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
+              onClick={() => setShowMaintenance(false)}
+            >
+              <X className="h-4 w-4" />
+            </button>
+            La plataforma está en mantenimiento, sentimos las molestias.
+          </div>
+        </>
+      )}
       
       {/* Dynamic Background Grid */}
       <div className="fixed inset-0 z-0 opacity-20 pointer-events-none" 
