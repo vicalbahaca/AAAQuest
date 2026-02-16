@@ -398,15 +398,14 @@ const App: React.FC = () => {
                         <p className="text-sm font-semibold">Esenciales <span className="text-xs font-normal text-slate-400">(obligatorio)</span></p>
                         <p className="mt-2 text-xs text-slate-400">Necesarios para que el sitio web funcione. No se pueden desactivar.</p>
                       </div>
-                      <label className="flex items-center gap-2 text-xs text-slate-400">
-                        <input
-                          type="checkbox"
-                          checked
-                          disabled
-                          className="h-4 w-4"
-                        />
-                        Activado
-                      </label>
+                      <button
+                        type="button"
+                        disabled
+                        className="h-6 w-11 rounded-full border border-emerald-400/40 bg-emerald-500/80 p-0.5"
+                        aria-pressed="true"
+                      >
+                        <span className="block h-5 w-5 translate-x-5 rounded-full bg-white" />
+                      </button>
                     </div>
                   </div>
                   <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-4">
@@ -415,15 +414,14 @@ const App: React.FC = () => {
                         <p className="text-sm font-semibold">Analíticos</p>
                         <p className="mt-2 text-xs text-slate-400">Nos ayudan a comprender cómo interactúan los visitantes con el sitio web.</p>
                       </div>
-                      <label className="flex items-center gap-2 text-xs text-slate-400">
-                        <input
-                          type="checkbox"
-                          checked={cookieAnalytics}
-                          onChange={() => setCookieAnalytics((prev) => !prev)}
-                          className="h-4 w-4"
-                        />
-                        {cookieAnalytics ? 'Activado' : 'Desactivado'}
-                      </label>
+                      <button
+                        type="button"
+                        onClick={() => setCookieAnalytics((prev) => !prev)}
+                        className={`h-6 w-11 rounded-full border p-0.5 transition ${cookieAnalytics ? 'bg-emerald-500/80 border-emerald-400/40' : 'bg-slate-800 border-white/10'}`}
+                        aria-pressed={cookieAnalytics}
+                      >
+                        <span className={`block h-5 w-5 rounded-full bg-white transition ${cookieAnalytics ? 'translate-x-5' : 'translate-x-0'}`} />
+                      </button>
                     </div>
                   </div>
                   <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-4">
@@ -432,15 +430,14 @@ const App: React.FC = () => {
                         <p className="text-sm font-semibold">Marketing</p>
                         <p className="mt-2 text-xs text-slate-400">Se utilizan para rastrear a los visitantes en distintos sitios web con el fin de mostrar anuncios relevantes.</p>
                       </div>
-                      <label className="flex items-center gap-2 text-xs text-slate-400">
-                        <input
-                          type="checkbox"
-                          checked={cookieMarketing}
-                          onChange={() => setCookieMarketing((prev) => !prev)}
-                          className="h-4 w-4"
-                        />
-                        {cookieMarketing ? 'Activado' : 'Desactivado'}
-                      </label>
+                      <button
+                        type="button"
+                        onClick={() => setCookieMarketing((prev) => !prev)}
+                        className={`h-6 w-11 rounded-full border p-0.5 transition ${cookieMarketing ? 'bg-emerald-500/80 border-emerald-400/40' : 'bg-slate-800 border-white/10'}`}
+                        aria-pressed={cookieMarketing}
+                      >
+                        <span className={`block h-5 w-5 rounded-full bg-white transition ${cookieMarketing ? 'translate-x-5' : 'translate-x-0'}`} />
+                      </button>
                     </div>
                   </div>
                 </div>
