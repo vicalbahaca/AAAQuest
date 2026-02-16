@@ -467,7 +467,7 @@ const App: React.FC = () => {
 
       {toastMessage && (
         <div className="fixed top-24 right-6 z-[60]">
-          <div className={`flex items-center gap-3 rounded-2xl border px-4 py-3 shadow-xl ${theme === 'dark' ? 'bg-slate-900 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'}`}>
+          <div className={`flex items-center gap-3 rounded-2xl border px-4 py-3 shadow-xl ${theme === 'dark' ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-200 text-slate-900'}`}>
             <span className="text-sm">{toastMessage}</span>
             <button
               type="button"
