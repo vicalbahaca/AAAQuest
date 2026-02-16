@@ -1,5 +1,4 @@
 import { serve } from 'https://deno.land/std@0.202.0/http/server.ts';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -24,6 +23,7 @@ serve(async (req) => {
     }
     email = (payload.email ?? '').toString().trim().toLowerCase();
   }
+
   if (!email) {
     return new Response(JSON.stringify({ error: 'email_required' }), {
       status: 400,
@@ -31,28 +31,41 @@ serve(async (req) => {
     });
   }
 
-  const supabaseUrl = Deno.env.get('SUPABASE_URL');
-  const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+  const supabaseUrl = Deno.env.get('PROJECT_URL');
+  const serviceRoleKey = Deno.env.get('SERVICE_ROLE_KEY');
 
   if (!supabaseUrl || !serviceRoleKey) {
+    console.error('Missing envs', {
+      PROJECT_URL: !supabaseUrl,
+      SERVICE_ROLE_KEY: !serviceRoleKey,
+    });
     return new Response(JSON.stringify({ error: 'server_misconfigured' }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 
-  const supabase = createClient(supabaseUrl, serviceRoleKey, {
-    auth: {
-      persistSession: false,
+  const url = `${supabaseUrl}/auth/v1/admin/users?email=${encodeURIComponent(email)}`;
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${serviceRoleKey}`,
+      apikey: serviceRoleKey,
+      'Content-Type': 'application/json',
     },
   });
 
-  const { data, error } = await supabase.auth.admin.getUserByEmail(email);
-  if (error) {
-    console.error('check-auth-user failed', error);
+  if (!response.ok) {
+    const errText = await response.text();
+    console.error('check-auth-user failed', errText);
+    return new Response(JSON.stringify({ error: 'admin_fetch_failed' }), {
+      status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
   }
 
-  const user = data?.user ?? null;
+  const payload = await response.json();
+  const user = payload?.users?.[0] ?? null;
 
   return new Response(
     JSON.stringify({
@@ -67,8 +80,6 @@ serve(async (req) => {
           }
         : null,
     }),
-    {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    }
+    { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
   );
 });
