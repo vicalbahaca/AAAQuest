@@ -28,6 +28,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [emailExists, setEmailExists] = useState<boolean | null>(null);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -39,6 +40,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
     setStatusMessage(null);
     setErrorMessage(null);
     setIsSubmitting(false);
+    setEmailExists(null);
   }, [isOpen, entry]);
 
   if (!isOpen) return null;
@@ -72,6 +74,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
       setErrorMessage(t.authInvalidEmail);
       return;
     }
+    try {
+      const check = await checkAuthUserByEmail(emailValue);
+      setEmailExists(Boolean(check?.exists));
+    } catch (error) {
+      console.warn('Auth lookup failed', error);
+      setEmailExists(null);
+    }
     setStep('password');
   };
 
@@ -82,15 +91,22 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
 
     const emailValue = email.trim();
     const passwordValue = password.trim();
-    try {
-      const check = await checkAuthUserByEmail(emailValue);
-      if (!check?.exists) {
-        setErrorMessage(t.authInvalidCredentials);
-        setIsSubmitting(false);
-        return;
+    if (emailExists === false) {
+      setErrorMessage(t.authInvalidCredentials);
+      setIsSubmitting(false);
+      return;
+    }
+    if (emailExists === null) {
+      try {
+        const check = await checkAuthUserByEmail(emailValue);
+        if (!check?.exists) {
+          setErrorMessage(t.authInvalidCredentials);
+          setIsSubmitting(false);
+          return;
+        }
+      } catch (error) {
+        console.warn('Auth lookup failed', error);
       }
-    } catch (error) {
-      console.warn('Auth lookup failed', error);
     }
 
     const signInResult = await supabase.auth.signInWithPassword({
@@ -258,6 +274,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
                     type="button"
                     onClick={() => {
                       setPassword('');
+                      setEmailExists(null);
                       setStep('signup');
                     }}
                     className={`rounded-full px-6 py-3 text-sm font-normal transition border ${isDark ? 'border-white/10 text-white hover:bg-white/10' : 'border-slate-200 text-slate-900 hover:bg-slate-100'}`}
