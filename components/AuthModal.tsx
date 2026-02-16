@@ -355,6 +355,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
                   >
                     {primaryButtonLabel}
                   </button>
+                  {errorMessage && (
+                    <p className="text-xs text-rose-300">{errorMessage}</p>
+                  )}
                 </div>
               </div>
             )}
@@ -414,7 +417,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
               </div>
             )}
 
-            {(statusMessage || errorMessage) && (
+            {step !== 'password' && (statusMessage || errorMessage) && (
               <div
                 className={`mt-6 rounded-2xl border px-4 py-3 text-sm ${errorMessage ? 'border-rose-400/30 text-rose-200 bg-rose-500/10' : 'border-emerald-400/30 text-emerald-200 bg-emerald-500/10'}`}
               >
