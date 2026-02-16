@@ -84,7 +84,7 @@ const App: React.FC = () => {
   }, []);
 
   const persistCookiePrefs = (prefs: { analytics: boolean; marketing: boolean }) => {
-    const payload = encodeURIComponent(JSON.stringify(prefs));
+    const payload = encodeURIComponent(JSON.stringify({ essential: true, ...prefs }));
     document.cookie = `cookie_prefs=${payload}; path=/; max-age=31536000; SameSite=Lax`;
   };
 
