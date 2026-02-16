@@ -520,7 +520,7 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
   const proOriginal = 40;
   const starterPrice = Number((starterOriginal * (1 - discountRate)).toFixed(2));
   const proPrice = Number((proOriginal * (1 - discountRate)).toFixed(2));
-  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+  const [openFaqIndexes, setOpenFaqIndexes] = useState<Set<number>>(new Set());
 
   const formatCurrency = (value: number) =>
     value.toLocaleString(language === 'es' ? 'es-ES' : 'en-US', {
@@ -834,12 +834,22 @@ const Home: React.FC<{setMode: (m: AppMode) => void, t: any, theme: Theme, langu
           </Reveal>
           <div className="mt-10 space-y-4">
             {t.faqItems.map((item: any, index: number) => {
-              const isOpen = openFaqIndex === index;
+              const isOpen = openFaqIndexes.has(index);
               return (
                 <Reveal key={item.q} delay={index * 120}>
                   <button
                     type="button"
-                    onClick={() => setOpenFaqIndex(isOpen ? null : index)}
+                    onClick={() => {
+                      setOpenFaqIndexes((prev) => {
+                        const next = new Set(prev);
+                        if (next.has(index)) {
+                          next.delete(index);
+                        } else {
+                          next.add(index);
+                        }
+                        return next;
+                      });
+                    }}
                     className={`w-full rounded-2xl border px-6 py-5 text-left transition ${theme === 'dark' ? 'border-white/10 bg-slate-900/60 hover:border-white/20' : 'border-slate-200 bg-white hover:border-slate-300 shadow-md shadow-slate-200/40'}`}
                     aria-expanded={isOpen}
                   >
