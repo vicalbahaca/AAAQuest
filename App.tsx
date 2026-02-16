@@ -367,7 +367,7 @@ const App: React.FC = () => {
             {/* Pricing Button */}
             <a
               href="#pricing"
-              className={`flex items-center justify-center gap-2 px-4 h-10 border rounded-full transition-all active:scale-95 text-xs font-normal ${navButtonClasses}`}
+              className={`flex items-center justify-center gap-2 px-4 h-10 rounded-full transition-all active:scale-95 text-xs font-normal ${theme === 'dark' ? 'text-slate-300 hover:text-white' : 'text-slate-600 hover:text-slate-900'}`}
               aria-label={t.pricingNav}
             >
               <span className="pt-0.5 leading-none">{t.pricingNav}</span>
