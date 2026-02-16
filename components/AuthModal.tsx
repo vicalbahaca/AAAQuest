@@ -156,36 +156,17 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
 
     const emailValue = email.trim();
     const passwordValue = password.trim();
-    const signUpResult = await supabase.auth.signUp({
-      email: emailValue,
-      password: passwordValue,
-      options: {
-        data: { full_name: fullName.trim() }
-      }
+    const { data, error } = await supabase.functions.invoke('create-auth-user', {
+      body: {
+        email: emailValue,
+        password: passwordValue,
+        full_name: fullName.trim(),
+      },
     });
 
-    if (signUpResult.error) {
-      const message = signUpResult.error.message?.toLowerCase() || '';
-      if (message.includes('already') || message.includes('registered') || message.includes('exists')) {
-        setErrorMessage(t.authEmailExists);
-      } else if (message.includes('password') || message.includes('length') || message.includes('characters')) {
-        setErrorMessage(t.authPasswordRequirements);
-      } else {
-        setErrorMessage(t.authGenericError);
-      }
+    if (error || !data?.ok) {
+      setErrorMessage(t.authGenericError);
       setIsSubmitting(false);
-      return;
-    }
-
-    if (signUpResult.data?.session) {
-      try {
-        await upsertUser(signUpResult.data.session.user);
-      } catch (error) {
-        console.warn('Failed to upsert profile', error);
-      }
-      sessionStorage.setItem('signupToast', '1');
-      window.location.reload();
-      onClose();
       return;
     }
 
