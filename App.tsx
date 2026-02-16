@@ -91,11 +91,10 @@ const App: React.FC = () => {
 
   const showToast = (message: string) => {
     setToastMessage(message);
-    if (toastTimerRef.current) window.clearTimeout(toastTimerRef.current);
-    toastTimerRef.current = window.setTimeout(() => {
-      setToastMessage(null);
+    if (toastTimerRef.current) {
+      window.clearTimeout(toastTimerRef.current);
       toastTimerRef.current = null;
-    }, 4000);
+    }
   };
 
   const openAuth = async (entry: 'signup' | 'signin') => {
