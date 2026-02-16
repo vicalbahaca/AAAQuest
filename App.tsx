@@ -318,7 +318,7 @@ const App: React.FC = () => {
                     <div className="flex h-12 w-12 items-center justify-center">
                       <img src={faviconIcon} alt="AAAQuest" className="h-7 w-7" />
                     </div>
-                    <span className="text-sm font-semibold text-white">AAAQuest</span>
+                    <span className="text-[18px] font-semibold text-white">AAAQuest</span>
                   </div>
                   <div>
                     <p className="mt-2 text-sm text-slate-400">
