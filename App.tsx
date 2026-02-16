@@ -515,7 +515,6 @@ const App: React.FC = () => {
             >
               Volver
             </button>
-            <h3 className="text-2xl font-semibold">Categorías de cookies</h3>
             <div className="mt-6 space-y-6">
               <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-5">
                 <div className="flex items-start justify-between gap-4">
