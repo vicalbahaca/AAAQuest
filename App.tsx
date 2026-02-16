@@ -315,7 +315,7 @@ const App: React.FC = () => {
               <div className="flex flex-col gap-4">
                 <div className="flex items-start gap-4">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/20">
+                    <div className="flex h-12 w-12 items-center justify-center">
                       <img src={faviconIcon} alt="AAAQuest" className="h-7 w-7" />
                     </div>
                     <span className="text-sm font-semibold text-white">AAAQuest</span>
