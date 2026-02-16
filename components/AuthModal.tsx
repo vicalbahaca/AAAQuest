@@ -28,6 +28,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
   const [emailExists, setEmailExists] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -41,11 +42,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
     setErrorMessage(null);
     setIsSubmitting(false);
     setEmailExists(null);
+    setPasswordError(null);
   }, [isOpen, entry]);
 
   useEffect(() => {
     setStatusMessage(null);
     setErrorMessage(null);
+    setPasswordError(null);
   }, [step]);
 
   if (!isOpen) return null;
@@ -156,11 +159,16 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
 
   const handleCreateAccount = async () => {
     resetMessages();
-    if (!fullName.trim() || !email.trim() || !password.trim()) return;
+    const trimmedPassword = password.trim();
+    if (!fullName.trim() || !email.trim() || !trimmedPassword) return;
+    if (trimmedPassword.length < 8) {
+      setPasswordError(t.authPasswordMin);
+      return;
+    }
     setIsSubmitting(true);
 
     const emailValue = email.trim();
-    const passwordValue = password.trim();
+    const passwordValue = trimmedPassword;
     const { data, error } = await supabase.functions.invoke('create-auth-user', {
       body: {
         email: emailValue,
@@ -359,15 +367,18 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
                     className={`w-full rounded-full border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500/40 ${inputClasses}`}
                     autoComplete="email"
                   />
-                  <div className="relative">
-                    <input
-                      type={showPassword ? 'text' : 'password'}
-                      value={password}
-                      onChange={(event) => setPassword(event.target.value)}
-                      placeholder={t.signInPasswordLabel}
-                      className={`w-full rounded-full border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500/40 pr-12 ${inputClasses}`}
-                      autoComplete="new-password"
-                    />
+                <div className="relative">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(event) => {
+                      setPassword(event.target.value);
+                      if (passwordError) setPasswordError(null);
+                    }}
+                    placeholder={t.signInPasswordLabel}
+                    className={`w-full rounded-full border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500/40 pr-12 ${inputClasses}`}
+                    autoComplete="new-password"
+                  />
                     <button
                       type="button"
                       onClick={() => setShowPassword((prev) => !prev)}
@@ -377,6 +388,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                   </div>
+                  {passwordError && (
+                    <p className="text-xs text-rose-300">{passwordError}</p>
+                  )}
                   <button
                     type="button"
                     onClick={handleCreateAccount}
