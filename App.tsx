@@ -288,7 +288,7 @@ const App: React.FC = () => {
           <div className="fixed inset-0 z-[80] bg-black/70 backdrop-blur-sm" aria-hidden="true" />
           <div
             role="alert"
-            className="fixed left-1/2 top-1/2 z-[90] w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-3xl border border-white/10 bg-slate-950 px-6 py-6 text-center text-sm text-white shadow-2xl shadow-black/60"
+            className="fixed left-1/2 top-1/2 z-[90] w-[calc(100%-2rem)] max-w-2xl -translate-x-1/2 -translate-y-1/2 rounded-3xl border border-white/10 bg-slate-950 px-8 py-8 text-center text-white shadow-2xl shadow-black/60"
           >
             <button
               type="button"
@@ -298,7 +298,19 @@ const App: React.FC = () => {
             >
               <X className="h-4 w-4" />
             </button>
-            La plataforma está en mantenimiento, sentimos las molestias.
+            <h2 className="text-2xl font-semibold">Plataforma en mantenimiento</h2>
+            <p className="mt-3 text-sm text-slate-200">
+              Estamos añadiendo mejoras en la plataforma, tanto la funcionalidad de modo estudio como la de analizador ha sido bloqueada. Esperamos daros noticias pronto. Para más información puedes ver el estado en{' '}
+              <a
+                href="https://www.linkedin.com/in/victorsaizalfageme/"
+                target="_blank"
+                rel="noreferrer"
+                className="text-emerald-300 underline underline-offset-4"
+              >
+                LinkedIn
+              </a>
+              .
+            </p>
           </div>
         </>
       )}
