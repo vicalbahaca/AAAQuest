@@ -598,16 +598,28 @@ const App: React.FC = () => {
 
             {authUser && (
               <div className="relative">
+                {(() => {
+                  const avatarUrl =
+                    authUser?.user_metadata?.picture
+                    || authUser?.user_metadata?.avatar_url
+                    || '';
+                  return (
                 <button
                   type="button"
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  className="flex items-center justify-center w-10 h-10 rounded-full border border-white/10 bg-gradient-to-tr from-emerald-500 to-teal-500 text-white shadow-lg active:scale-95"
+                  className={`flex items-center justify-center w-10 h-10 rounded-full border border-white/10 text-white shadow-lg active:scale-95 ${avatarUrl ? 'bg-slate-900/40' : 'bg-gradient-to-tr from-emerald-500 to-teal-500'}`}
                   aria-haspopup="true"
                   aria-expanded={isUserMenuOpen}
                   aria-label="User menu"
                 >
-                  <span className="text-xs font-semibold uppercase">{(authName || authUser.email || 'U').slice(0, 1)}</span>
+                  {avatarUrl ? (
+                    <img src={avatarUrl} alt="Avatar" className="w-full h-full rounded-full object-cover" />
+                  ) : (
+                    <span className="text-xs font-semibold uppercase">{(authName || authUser.email || 'U').slice(0, 1)}</span>
+                  )}
                 </button>
+                  );
+                })()}
                 {isUserMenuOpen && (
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setIsUserMenuOpen(false)} aria-hidden="true" />
