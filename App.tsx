@@ -327,7 +327,10 @@ const App: React.FC = () => {
                 <div className="flex flex-col gap-2">
                   <button
                     type="button"
-                    onClick={() => setShowCookieBanner(false)}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      setShowCookieBanner(false);
+                    }}
                     className="w-full rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-emerald-950"
                   >
                     Aceptar todas
@@ -335,14 +338,20 @@ const App: React.FC = () => {
                   <div className="grid grid-cols-2 gap-2">
                     <button
                       type="button"
-                      onClick={() => setShowCookieBanner(false)}
+                      onClick={(event) => {
+                        event.preventDefault();
+                        setShowCookieBanner(false);
+                      }}
                       className="w-full rounded-full border border-white/10 px-3 py-2 text-xs font-semibold text-white"
                     >
                       Denegar todas
                     </button>
                     <button
                       type="button"
-                      onClick={() => setShowCookiePrefs(true)}
+                      onClick={(event) => {
+                        event.preventDefault();
+                        setShowCookiePrefs(true);
+                      }}
                       className="w-full rounded-full border border-white/10 px-3 py-2 text-xs font-semibold text-white"
                     >
                       Preferencias
@@ -405,7 +414,8 @@ const App: React.FC = () => {
                 </div>
                 <button
                   type="button"
-                  onClick={() => {
+                  onClick={(event) => {
+                    event.preventDefault();
                     setShowCookiePrefs(false);
                     setShowCookieBanner(false);
                   }}
@@ -415,7 +425,10 @@ const App: React.FC = () => {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setShowCookiePrefs(false)}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setShowCookiePrefs(false);
+                  }}
                   className="w-full text-center text-sm font-semibold text-[#038759]"
                 >
                   Volver
