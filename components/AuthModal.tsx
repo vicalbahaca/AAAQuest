@@ -43,6 +43,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
     setEmailExists(null);
   }, [isOpen, entry]);
 
+  useEffect(() => {
+    setStatusMessage(null);
+    setErrorMessage(null);
+  }, [step]);
+
   if (!isOpen) return null;
 
   const resetMessages = () => {
