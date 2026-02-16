@@ -352,14 +352,12 @@ const App: React.FC = () => {
               </div>
             ) : (
               <div className="space-y-5">
-                <button
-                  type="button"
-                  onClick={() => setShowCookiePrefs(false)}
-                  className="text-xs font-semibold uppercase tracking-widest text-slate-400 hover:text-white"
-                >
-                  Volver
-                </button>
-                <h3 className="text-xl font-semibold">Categorías de cookies</h3>
+                <div className="flex items-center gap-3">
+                  <div className="flex h-12 w-12 items-center justify-center">
+                    <img src={faviconIcon} alt="AAAQuest" className="h-7 w-7" />
+                  </div>
+                  <span className="text-[18px] font-semibold text-white">AAAQuest</span>
+                </div>
                 <div className="space-y-3">
                   <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-4">
                     <div className="flex items-start justify-between gap-4">
@@ -413,7 +411,14 @@ const App: React.FC = () => {
                   }}
                   className="w-full rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-900"
                 >
-                  Guardar preferencias
+                  Aceptar seleccionadas
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowCookiePrefs(false)}
+                  className="w-full text-center text-sm font-semibold text-[#038759]"
+                >
+                  Volver
                 </button>
               </div>
             )}
