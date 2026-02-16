@@ -65,7 +65,9 @@ serve(async (req) => {
   }
 
   const payload = await response.json();
-  const user = payload?.users?.[0] ?? null;
+  const users = Array.isArray(payload?.users) ? payload.users : [];
+  const user =
+    users.find((item: { email?: string | null }) => (item.email ?? '').toLowerCase() === email) ?? null;
 
   return new Response(
     JSON.stringify({
