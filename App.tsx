@@ -171,11 +171,10 @@ const App: React.FC = () => {
       if (params.get('code')) {
         try {
           await supabase.auth.exchangeCodeForSession(window.location.href);
-          params.delete('code');
-          const query = params.toString();
-          history.replaceState(null, '', window.location.pathname + (query ? `?${query}` : '') + window.location.hash);
         } catch (error) {
           console.warn('Failed to exchange auth code', error);
+        } finally {
+          history.replaceState(null, '', window.location.pathname);
         }
       }
     };
