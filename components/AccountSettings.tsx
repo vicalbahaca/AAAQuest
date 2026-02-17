@@ -15,7 +15,9 @@ export const AccountSettings: React.FC<AccountSettingsProps> = ({ language, them
   const isDark = theme === 'dark';
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -37,10 +39,24 @@ export const AccountSettings: React.FC<AccountSettingsProps> = ({ language, them
 
     const trimmedName = fullName.trim();
     const trimmedEmail = email.trim();
-    const trimmedPassword = password.trim();
+    const trimmedCurrent = currentPassword.trim();
+    const trimmedNew = newPassword.trim();
+    const trimmedConfirm = confirmPassword.trim();
 
-    if (trimmedPassword && trimmedPassword.length < 8) {
+    if ((trimmedCurrent || trimmedNew || trimmedConfirm) && trimmedCurrent.length < 8) {
       setErrorMessage(t.authPasswordMin);
+      return;
+    }
+    if ((trimmedCurrent || trimmedNew || trimmedConfirm) && trimmedNew.length < 8) {
+      setErrorMessage(t.authPasswordMin);
+      return;
+    }
+    if ((trimmedCurrent || trimmedNew || trimmedConfirm) && trimmedConfirm.length < 8) {
+      setErrorMessage(t.authPasswordMin);
+      return;
+    }
+    if ((trimmedCurrent || trimmedNew || trimmedConfirm) && trimmedNew !== trimmedConfirm) {
+      setErrorMessage(t.accountPasswordMismatch);
       return;
     }
 
@@ -51,8 +67,20 @@ export const AccountSettings: React.FC<AccountSettingsProps> = ({ language, them
     if (trimmedEmail && trimmedEmail !== authUser?.email) {
       updates.email = trimmedEmail;
     }
-    if (trimmedPassword) {
-      updates.password = trimmedPassword;
+    if (trimmedNew) {
+      if (!trimmedCurrent) {
+        setErrorMessage(t.accountCurrentPasswordRequired);
+        return;
+      }
+      const { error: reauthError } = await supabase.auth.signInWithPassword({
+        email: authUser?.email,
+        password: trimmedCurrent,
+      });
+      if (reauthError) {
+        setErrorMessage(t.accountCurrentPasswordInvalid);
+        return;
+      }
+      updates.password = trimmedNew;
     }
 
     if (Object.keys(updates).length === 0) {
@@ -88,7 +116,9 @@ export const AccountSettings: React.FC<AccountSettingsProps> = ({ language, them
     }
 
     setStatusMessage(t.accountSaved);
-    setPassword('');
+    setCurrentPassword('');
+    setNewPassword('');
+    setConfirmPassword('');
   };
 
   return (
@@ -148,16 +178,38 @@ export const AccountSettings: React.FC<AccountSettingsProps> = ({ language, them
 
         <section className={`rounded-3xl border p-6 ${isDark ? 'border-white/10 bg-slate-900/60' : 'border-slate-200 bg-white'}`}>
           <h2 className={`text-lg font-semibold ${isDark ? 'text-white' : 'text-slate-900'}`}>{t.accountSecurityTitle}</h2>
-          <div className="mt-6 flex flex-col gap-2 max-w-md">
-            <label className={`text-xs font-semibold ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>{t.accountPasswordLabel}</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder={t.accountPasswordPlaceholder}
-              className={`rounded-xl border px-4 py-3 text-sm outline-none ${isDark ? 'bg-slate-950 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
-            />
-            <p className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>{t.accountPasswordHint}</p>
+          <div className="mt-6 grid gap-4 max-w-xl md:grid-cols-2">
+            <div className="flex flex-col gap-2 md:col-span-2">
+              <label className={`text-xs font-semibold ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>{t.accountCurrentPasswordLabel}</label>
+              <input
+                type="password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                placeholder={t.accountCurrentPasswordPlaceholder}
+                className={`rounded-xl border px-4 py-3 text-sm outline-none ${isDark ? 'bg-slate-950 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <label className={`text-xs font-semibold ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>{t.accountPasswordLabel}</label>
+              <input
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder={t.accountPasswordPlaceholder}
+                className={`rounded-xl border px-4 py-3 text-sm outline-none ${isDark ? 'bg-slate-950 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <label className={`text-xs font-semibold ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>{t.accountPasswordConfirmLabel}</label>
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder={t.accountPasswordConfirmPlaceholder}
+                className={`rounded-xl border px-4 py-3 text-sm outline-none ${isDark ? 'bg-slate-950 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
+              />
+            </div>
+            <p className={`text-xs md:col-span-2 ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>{t.accountPasswordHint}</p>
           </div>
         </section>
 
