@@ -636,6 +636,7 @@ const App: React.FC = () => {
                           {authUser.email}
                         </div>
                       </div>
+                      <div className={`h-px ${theme === 'dark' ? 'bg-white/10' : 'bg-slate-200'}`} />
                       <button
                         type="button"
                         onClick={() => setIsUserMenuOpen(false)}
