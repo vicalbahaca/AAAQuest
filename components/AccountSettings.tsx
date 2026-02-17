@@ -59,7 +59,17 @@ export const AccountSettings: React.FC<AccountSettingsProps> = ({ language, them
       return;
     }
 
+    const { data: sessionData } = await supabase.auth.getSession();
+    const accessToken = sessionData.session?.access_token;
+    if (!accessToken) {
+      setErrorMessage(t.accountNotSignedIn);
+      return;
+    }
+
     const { data, error } = await supabase.functions.invoke('update-auth-user', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
       body: {
         full_name: trimmedName || undefined,
         email: trimmedEmail || undefined,
