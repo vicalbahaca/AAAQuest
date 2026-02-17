@@ -341,7 +341,7 @@ export const TRANSLATIONS = {
     alreadyRegisteredToast: 'Ya estás registrado.',
     signupSuccessToast: 'Registro realizado.',
     signupSuccessPrefix: 'Registro realizado. Bienvenido/a ',
-    welcomeToastPrefix: 'Bienvenido ',
+    welcomeToastPrefix: 'Bienvenido/a ',
     welcomeToastSuffix: '',
     launchApp: 'Abrir app',
     signInTitle: 'Accede a AAAQuest',
