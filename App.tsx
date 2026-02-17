@@ -43,22 +43,39 @@ const App: React.FC = () => {
   const [cookieAnalytics, setCookieAnalytics] = useState(true);
   const [cookieMarketing, setCookieMarketing] = useState(true);
   const basePath = import.meta.env.BASE_URL || '/';
+  const [allowLandingAccess, setAllowLandingAccess] = useState(false);
+
+  const normalizePath = (value: string) => value.replace(/\/+$/, '') || '/';
+  const normalizedHome = normalizePath(basePath);
+  const homeHref = basePath.endsWith('/') ? basePath : `${basePath}/`;
+  const appHref = normalizedHome === '/' ? '/app' : `${normalizedHome}/app`;
 
   const resolveModeFromPath = () => {
-    const path = window.location.pathname;
-    if (path.endsWith('/app')) {
+    const path = normalizePath(window.location.pathname);
+    if (path === normalizePath(appHref)) {
       return AppMode.CHECKER;
     }
     return AppMode.HOME;
   };
 
+  const isPublicMode = (nextMode: AppMode) =>
+    [
+      AppMode.HOME,
+      AppMode.STUDY,
+      AppMode.TEST,
+      AppMode.INFO,
+      AppMode.CERTIFICATE,
+      AppMode.SIGNIN,
+    ].includes(nextMode);
+
   const navigateMode = (nextMode: AppMode) => {
-    setMode(nextMode);
-    if (nextMode === AppMode.CHECKER) {
-      const target = basePath.endsWith('/') ? `${basePath}app` : `${basePath}/app`;
-      history.pushState(null, '', target);
-    } else if (nextMode === AppMode.HOME) {
-      history.pushState(null, '', basePath);
+    const isLockedToApp = Boolean(authUser) && mode !== AppMode.HOME;
+    const resolvedMode = isLockedToApp && isPublicMode(nextMode) ? AppMode.CHECKER : nextMode;
+    setMode(resolvedMode);
+    if (resolvedMode === AppMode.CHECKER || resolvedMode === AppMode.ACCOUNT) {
+      history.pushState(null, '', appHref);
+    } else if (resolvedMode === AppMode.HOME) {
+      history.pushState(null, '', homeHref);
     }
   };
 
@@ -99,6 +116,19 @@ const App: React.FC = () => {
 
   useEffect(() => {
     setMode(resolveModeFromPath());
+    const path = normalizePath(window.location.pathname);
+    const isLandingPath = path === normalizedHome;
+    let isDirect = true;
+    if (document.referrer) {
+      try {
+        isDirect = new URL(document.referrer).origin !== window.location.origin;
+      } catch {
+        isDirect = true;
+      }
+    }
+    if (isLandingPath && isDirect) {
+      setAllowLandingAccess(true);
+    }
     const handlePopState = () => {
       setMode(resolveModeFromPath());
     };
@@ -296,7 +326,7 @@ const App: React.FC = () => {
             language={language}
             theme={theme}
             authUser={authUser}
-            onBack={() => navigateMode(AppMode.HOME)}
+            onBack={() => navigateMode(AppMode.CHECKER)}
             onUserUpdated={(user) => {
               setAuthUser(user);
               const name = user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email?.split('@')[0] || '';
@@ -309,6 +339,21 @@ const App: React.FC = () => {
       default:
         return <Home setMode={navigateMode} t={t} theme={theme} language={language} onOpenAuth={openAuth} />;
     }
+  };
+
+  useEffect(() => {
+    if (!authUser) return;
+    if (mode === AppMode.HOME && !allowLandingAccess) {
+      navigateMode(AppMode.CHECKER);
+    }
+  }, [authUser, mode, allowLandingAccess]);
+
+  const handleLogoClick = () => {
+    if (authUser && mode !== AppMode.HOME) {
+      navigateMode(AppMode.CHECKER);
+      return;
+    }
+    navigateMode(AppMode.HOME);
   };
 
   if (isLoadingLanguage) {
@@ -562,7 +607,7 @@ const App: React.FC = () => {
       <header className={`fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-5xl rounded-full transition-all duration-300 h-16 px-6 flex items-center justify-between ${headerClasses}`}>
           <button 
             className="flex items-center gap-3 font-bold text-lg cursor-pointer group active:scale-95 transition-transform rounded-full px-2 py-1"
-            onClick={() => navigateMode(AppMode.HOME)}
+            onClick={handleLogoClick}
             aria-label={t.appTitle + " - " + t.returnSelector}
           >
             {/* Logo Icon - Green Gradient - ScanEye used for 'eye with cables' look */}
@@ -574,14 +619,15 @@ const App: React.FC = () => {
           </button>
           
           <nav className="flex items-center gap-2" aria-label="Main Navigation">
-            {/* Pricing Button */}
-            <a
-              href="#pricing"
-              className={`flex items-center justify-center gap-2 px-4 h-10 rounded-full transition-all active:scale-95 text-xs font-normal ${theme === 'dark' ? 'text-slate-300 hover:text-white' : 'text-slate-600 hover:text-slate-900'}`}
-              aria-label={t.pricingNav}
-            >
-              <span className="pt-0.5 leading-none">{t.pricingNav}</span>
-            </a>
+            {mode === AppMode.HOME && (
+              <a
+                href="#pricing"
+                className={`flex items-center justify-center gap-2 px-4 h-10 rounded-full transition-all active:scale-95 text-xs font-normal ${theme === 'dark' ? 'text-slate-300 hover:text-white' : 'text-slate-600 hover:text-slate-900'}`}
+                aria-label={t.pricingNav}
+              >
+                <span className="pt-0.5 leading-none">{t.pricingNav}</span>
+              </a>
+            )}
             {!authUser && (
               <button
                 type="button"
