@@ -105,6 +105,12 @@ export const AccountSettings: React.FC<AccountSettingsProps> = ({ language, them
           <h1 className={`mt-3 text-3xl font-semibold ${isDark ? 'text-white' : 'text-slate-900'}`}>{t.accountTitle}</h1>
         </div>
         <div className="flex items-center gap-3">
+          <div className="text-right">
+            <div className={`text-sm font-semibold ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>
+              {authUser?.user_metadata?.full_name || authUser?.user_metadata?.name || ''}
+            </div>
+            <div className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{authUser?.email}</div>
+          </div>
           {authUser?.user_metadata?.picture ? (
             <img src={authUser.user_metadata.picture} alt="Avatar" className="h-10 w-10 rounded-full object-cover" />
           ) : (
@@ -112,12 +118,6 @@ export const AccountSettings: React.FC<AccountSettingsProps> = ({ language, them
               {(authUser?.email || 'U').slice(0, 1).toUpperCase()}
             </div>
           )}
-          <div className="text-right">
-            <div className={`text-sm font-semibold ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>
-              {authUser?.user_metadata?.full_name || authUser?.user_metadata?.name || ''}
-            </div>
-            <div className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{authUser?.email}</div>
-          </div>
         </div>
       </div>
 
