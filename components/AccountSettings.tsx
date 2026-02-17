@@ -98,8 +98,9 @@ export const AccountSettings: React.FC<AccountSettingsProps> = ({ language, them
           <button
             type="button"
             onClick={onBack}
-            className={`text-xs uppercase tracking-widest ${isDark ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'}`}
+            className={`inline-flex items-center gap-2 text-xs uppercase tracking-widest ${isDark ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'}`}
           >
+            <span aria-hidden="true">←</span>
             {t.accountBack}
           </button>
           <h1 className={`mt-3 text-3xl font-semibold ${isDark ? 'text-white' : 'text-slate-900'}`}>{t.accountTitle}</h1>
