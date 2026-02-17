@@ -629,14 +629,13 @@ const App: React.FC = () => {
                 {isUserMenuOpen && (
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setIsUserMenuOpen(false)} aria-hidden="true" />
-                    <div className={`absolute right-0 mt-3 w-56 border rounded-2xl shadow-xl overflow-hidden z-50 ${theme === 'dark' ? 'bg-slate-900 border-slate-700' : 'bg-white border-slate-200 shadow-slate-200/50'}`}>
-                      <button
-                        type="button"
-                        onClick={() => setIsUserMenuOpen(false)}
-                        className={`w-full text-left px-4 py-3 text-sm font-normal transition-colors ${theme === 'dark' ? 'text-slate-300 hover:bg-slate-800' : 'text-slate-700 hover:bg-slate-50'}`}
-                      >
-                        Mi cuenta
-                      </button>
+                    <div className={`absolute right-0 mt-3 w-64 border rounded-2xl shadow-xl overflow-hidden z-50 ${theme === 'dark' ? 'bg-slate-900 border-slate-700' : 'bg-white border-slate-200 shadow-slate-200/50'}`}>
+                      <div className={`px-4 py-3 ${theme === 'dark' ? 'text-slate-200' : 'text-slate-700'}`}>
+                        <div className="text-sm font-semibold">{authName || authUser.email?.split('@')[0]}</div>
+                        <div className={`text-xs ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'} whitespace-nowrap`}>
+                          {authUser.email}
+                        </div>
+                      </div>
                       <button
                         type="button"
                         onClick={() => setIsUserMenuOpen(false)}
