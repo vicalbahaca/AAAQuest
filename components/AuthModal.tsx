@@ -33,6 +33,17 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
   const [nameError, setNameError] = useState<string | null>(null);
   const [emailRequiredError, setEmailRequiredError] = useState<string | null>(null);
   const [emailExists, setEmailExists] = useState<boolean | null>(null);
+  const dialogTitleId = 'auth-dialog-title';
+  const emailFormatErrorId = 'auth-email-format-error';
+  const emailRequiredErrorId = 'auth-email-required-error';
+  const nameErrorId = 'auth-name-error';
+  const passwordErrorId = 'auth-password-error';
+  const signInErrorId = 'auth-signin-error';
+  const signInEmailId = 'auth-signin-email';
+  const signInPasswordId = 'auth-signin-password';
+  const signUpNameId = 'auth-signup-name';
+  const signUpEmailId = 'auth-signup-email';
+  const signUpPasswordId = 'auth-signup-password';
 
   useEffect(() => {
     if (!isOpen) return;
@@ -246,6 +257,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
     : 'bg-white border-slate-200 text-slate-900 placeholder:text-slate-400';
 
   const buttonClasses = 'bg-[#038759] text-white hover:bg-[#026e49]';
+  const emailStepDescribedBy = emailFormatError ? emailFormatErrorId : undefined;
+  const signUpEmailDescribedBy = [emailRequiredError ? emailRequiredErrorId : null, emailFormatError ? emailFormatErrorId : null].filter(Boolean).join(' ') || undefined;
+  const signUpNameDescribedBy = nameError ? nameErrorId : undefined;
+  const signUpPasswordDescribedBy = passwordError ? passwordErrorId : undefined;
+  const signInPasswordDescribedBy = errorMessage ? signInErrorId : undefined;
 
   return (
     <div className="fixed inset-0 z-[70] flex items-center justify-center px-4 py-10">
@@ -257,13 +273,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
       <div
         role="dialog"
         aria-modal="true"
+        aria-labelledby={dialogTitleId}
         className={`relative w-full max-w-5xl overflow-hidden rounded-[2rem] border shadow-2xl min-h-[520px] ${isDark ? 'bg-black border-white/10' : 'bg-white border-slate-200'}`}
       >
         <button
           type="button"
           onClick={onClose}
           className="absolute right-4 top-4 z-20 w-9 h-9 rounded-full bg-white/10 text-white flex items-center justify-center transition hover:bg-white/20"
-          aria-label="Close sign up"
+          aria-label={t.authCloseLabel}
         >
           <X className="w-4 h-4" />
         </button>
@@ -281,7 +298,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
                   <ArrowLeft className="w-4 h-4" />
                 </button>
               )}
-              <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">
+              <h2 id={dialogTitleId} className="text-3xl md:text-4xl font-semibold tracking-tight">
                 {title}
               </h2>
             </div>
@@ -309,6 +326,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
                 <div className="mt-6 flex flex-col gap-3">
                   <div className="flex flex-col gap-2">
                     <input
+                      id={signInEmailId}
                       type="email"
                       value={email}
                       onChange={(event) => {
@@ -316,11 +334,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
                         if (emailFormatError) setEmailFormatError(null);
                       }}
                       placeholder={t.signUpEmailPlaceholder}
+                      aria-invalid={Boolean(emailFormatError)}
+                      aria-describedby={emailStepDescribedBy}
                       className={`w-full rounded-full border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500/40 ${inputClasses}`}
                       autoComplete="email"
                     />
                     {emailFormatError && (
-                      <p className="text-xs text-rose-300">{emailFormatError}</p>
+                      <p id={emailFormatErrorId} className="text-xs text-rose-300" role="alert">
+                        {emailFormatError}
+                      </p>
                     )}
                   </div>
                   <button
@@ -350,22 +372,27 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
             )}
 
             {step === 'password' && (
-              <div className="flex-1 flex items-center">
+                <div className="flex-1 flex items-center">
                 <div className="w-full flex flex-col gap-4">
                   <input
+                    id={signInEmailId}
                     type="email"
                     value={email}
                     onChange={(event) => setEmail(event.target.value)}
                     placeholder={t.signUpEmailPlaceholder}
+                    aria-invalid={Boolean(errorMessage)}
                     className={`w-full rounded-full border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500/40 ${inputClasses}`}
                     autoComplete="email"
                   />
                   <div className="relative">
                     <input
+                      id={signInPasswordId}
                       type={showPassword ? 'text' : 'password'}
                       value={password}
                       onChange={(event) => setPassword(event.target.value)}
                       placeholder={t.signInPasswordLabel}
+                      aria-invalid={Boolean(errorMessage)}
+                      aria-describedby={signInPasswordDescribedBy}
                       className={`w-full rounded-full border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500/40 pr-12 ${inputClasses}`}
                       autoComplete="current-password"
                     />
@@ -374,6 +401,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
                       onClick={() => setShowPassword((prev) => !prev)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-white"
                       aria-label={showPassword ? t.hidePassword : t.showPassword}
+                      aria-pressed={showPassword}
                     >
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -387,7 +415,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
                     {primaryButtonLabel}
                   </button>
                   {errorMessage && (
-                    <p className="text-xs text-rose-300">{errorMessage}</p>
+                    <p id={signInErrorId} className="text-xs text-rose-300" role="alert">
+                      {errorMessage}
+                    </p>
                   )}
                 </div>
               </div>
@@ -398,6 +428,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
                 <div className="w-full flex flex-col gap-4">
                   <div className="flex flex-col gap-2">
                   <input
+                    id={signUpNameId}
                     type="text"
                     value={fullName}
                     onChange={(event) => {
@@ -405,14 +436,19 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
                       if (nameError) setNameError(null);
                     }}
                     placeholder={t.signUpNamePlaceholder}
+                    aria-invalid={Boolean(nameError)}
+                    aria-describedby={signUpNameDescribedBy}
                     className={`w-full rounded-full border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500/40 ${inputClasses}`}
                     autoComplete="name"
                   />
                   {nameError && (
-                    <p className="text-xs text-rose-300">{nameError}</p>
+                    <p id={nameErrorId} className="text-xs text-rose-300" role="alert">
+                      {nameError}
+                    </p>
                   )}
                   </div>
                   <input
+                    id={signUpEmailId}
                     type="email"
                     value={email}
                     onChange={(event) => {
@@ -421,17 +457,24 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
                       if (emailFormatError) setEmailFormatError(null);
                     }}
                     placeholder={t.signUpEmailPlaceholder}
+                    aria-invalid={Boolean(emailRequiredError || emailFormatError)}
+                    aria-describedby={signUpEmailDescribedBy}
                     className={`w-full rounded-full border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500/40 ${inputClasses}`}
                     autoComplete="email"
                   />
                   {emailRequiredError && (
-                    <p className="text-xs text-rose-300">{emailRequiredError}</p>
+                    <p id={emailRequiredErrorId} className="text-xs text-rose-300" role="alert">
+                      {emailRequiredError}
+                    </p>
                   )}
                   {emailFormatError && (
-                    <p className="text-xs text-rose-300">{emailFormatError}</p>
+                    <p id={emailFormatErrorId} className="text-xs text-rose-300" role="alert">
+                      {emailFormatError}
+                    </p>
                   )}
                 <div className="relative">
                   <input
+                    id={signUpPasswordId}
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(event) => {
@@ -439,6 +482,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
                       if (passwordError) setPasswordError(null);
                     }}
                     placeholder={t.signInPasswordLabel}
+                    aria-invalid={Boolean(passwordError)}
+                    aria-describedby={signUpPasswordDescribedBy}
                     className={`w-full rounded-full border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500/40 pr-12 ${inputClasses}`}
                     autoComplete="new-password"
                   />
@@ -447,12 +492,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
                       onClick={() => setShowPassword((prev) => !prev)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-white"
                       aria-label={showPassword ? t.hidePassword : t.showPassword}
+                      aria-pressed={showPassword}
                     >
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                   </div>
                   {passwordError && (
-                    <p className="text-xs text-rose-300">{passwordError}</p>
+                    <p id={passwordErrorId} className="text-xs text-rose-300" role="alert">
+                      {passwordError}
+                    </p>
                   )}
                   <button
                     type="button"
@@ -468,6 +516,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
 
             {step !== 'password' && (statusMessage || errorMessage) && (
               <div
+                role="alert"
+                aria-live="polite"
                 className={`mt-6 rounded-2xl border px-4 py-3 text-sm ${errorMessage ? 'border-rose-400/30 text-rose-200 bg-rose-500/10' : 'border-emerald-400/30 text-emerald-200 bg-emerald-500/10'}`}
               >
                 {errorMessage || statusMessage}

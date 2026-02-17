@@ -13,6 +13,12 @@ interface AccountSettingsProps {
 export const AccountSettings: React.FC<AccountSettingsProps> = ({ language, theme, authUser, onBack, onUserUpdated }) => {
   const t = TRANSLATIONS[language];
   const isDark = theme === 'dark';
+  const nameInputId = 'account-name';
+  const emailInputId = 'account-email';
+  const emailHintId = 'account-email-hint';
+  const currentPasswordId = 'account-current-password';
+  const newPasswordId = 'account-new-password';
+  const confirmPasswordId = 'account-confirm-password';
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [currentPassword, setCurrentPassword] = useState('');
@@ -166,15 +172,16 @@ export const AccountSettings: React.FC<AccountSettingsProps> = ({ language, them
           <h2 className={`text-lg font-semibold ${isDark ? 'text-white' : 'text-slate-900'}`}>{t.accountBasicInfo}</h2>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             <div className="flex flex-col gap-2">
-              <label className={`text-xs font-semibold ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>{t.accountNameLabel}</label>
+              <label htmlFor={nameInputId} className={`text-xs font-semibold ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>{t.accountNameLabel}</label>
               <input
+                id={nameInputId}
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 className={`rounded-xl border px-4 py-3 text-sm outline-none ${isDark ? 'bg-slate-950 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
               />
             </div>
             <div className="flex flex-col gap-2">
-              <label className={`text-xs font-semibold ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>{t.accountEmailLabel}</label>
+              <label htmlFor={emailInputId} className={`text-xs font-semibold ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>{t.accountEmailLabel}</label>
               <div className="relative">
                 {isGoogleUser && (
                   <span className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 opacity-100">
@@ -187,13 +194,15 @@ export const AccountSettings: React.FC<AccountSettingsProps> = ({ language, them
                   </span>
                 )}
                 <input
+                  id={emailInputId}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   disabled={isGoogleUser}
+                  aria-describedby={emailHintId}
                   className={`w-full rounded-xl border px-4 py-3 text-sm outline-none ${isDark ? 'bg-slate-950 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'} ${isGoogleUser ? 'opacity-60 cursor-not-allowed pl-10' : ''}`}
                 />
               </div>
-              <p className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>
+              <p id={emailHintId} className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>
                 {isGoogleUser ? t.accountEmailGoogleHint : t.accountEmailHint}
               </p>
             </div>
@@ -204,8 +213,9 @@ export const AccountSettings: React.FC<AccountSettingsProps> = ({ language, them
           <h2 className={`text-lg font-semibold ${isDark ? 'text-white' : 'text-slate-900'}`}>{t.accountSecurityTitle}</h2>
           <div className="mt-6 grid gap-4 max-w-xl md:grid-cols-2">
             <div className="flex flex-col gap-2 md:col-span-2">
-              <label className={`text-xs font-semibold ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>{t.accountCurrentPasswordLabel}</label>
+              <label htmlFor={currentPasswordId} className={`text-xs font-semibold ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>{t.accountCurrentPasswordLabel}</label>
               <input
+                id={currentPasswordId}
                 type="password"
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
@@ -214,8 +224,9 @@ export const AccountSettings: React.FC<AccountSettingsProps> = ({ language, them
               />
             </div>
             <div className="flex flex-col gap-2">
-              <label className={`text-xs font-semibold ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>{t.accountPasswordLabel}</label>
+              <label htmlFor={newPasswordId} className={`text-xs font-semibold ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>{t.accountPasswordLabel}</label>
               <input
+                id={newPasswordId}
                 type="password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
@@ -224,8 +235,9 @@ export const AccountSettings: React.FC<AccountSettingsProps> = ({ language, them
               />
             </div>
             <div className="flex flex-col gap-2">
-              <label className={`text-xs font-semibold ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>{t.accountPasswordConfirmLabel}</label>
+              <label htmlFor={confirmPasswordId} className={`text-xs font-semibold ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>{t.accountPasswordConfirmLabel}</label>
               <input
+                id={confirmPasswordId}
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}

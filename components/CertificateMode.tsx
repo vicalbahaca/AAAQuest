@@ -263,6 +263,7 @@ export const CertificateMode: React.FC<CertificateModeProps> = ({ language, them
                         <button 
                             onClick={() => setShowModal(false)}
                             className={`absolute top-4 right-4 p-1 rounded-full hover:bg-slate-500/10 ${textSub} transition-colors`}
+                            aria-label={language === 'es' ? 'Cerrar' : 'Close'}
                         >
                             <X className="w-5 h-5" />
                         </button>
@@ -274,6 +275,7 @@ export const CertificateMode: React.FC<CertificateModeProps> = ({ language, them
                         
                         <div className="mb-6 relative">
                             <input 
+                                id="certificate-name-input"
                                 type="text" 
                                 value={nameInput}
                                 onChange={(e) => setNameInput(e.target.value)}
@@ -281,9 +283,11 @@ export const CertificateMode: React.FC<CertificateModeProps> = ({ language, them
                                 className={`w-full p-4 rounded-xl border outline-none focus:ring-2 transition-all font-medium ${inputBg} ${isNameTooLong ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'focus:ring-teal-500'}`}
                                 autoFocus
                                 onKeyDown={(e) => e.key === 'Enter' && !isNameTooLong && handleAction()}
+                                aria-invalid={isNameTooLong}
+                                aria-describedby="certificate-name-help"
                             />
                             
-                            <div className="flex justify-between mt-2 px-1">
+                            <div id="certificate-name-help" className="flex justify-between mt-2 px-1">
                                 <span className={`text-xs ${isNameTooLong ? 'text-red-500 font-bold' : textSub}`}>
                                     {isNameTooLong 
                                         ? (language === 'es' ? "El nombre no puede exceder los 35 caracteres." : "Name cannot exceed 35 characters.")

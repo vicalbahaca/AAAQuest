@@ -142,6 +142,7 @@ export const SignIn: React.FC<SignInProps> = ({ setMode, language, theme }) => {
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
                 placeholder="you@email.com"
+                aria-invalid={Boolean(errorMessage)}
                 className={`mt-2 w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500/40 ${inputClasses}`}
                 autoComplete="email"
               />
@@ -156,6 +157,7 @@ export const SignIn: React.FC<SignInProps> = ({ setMode, language, theme }) => {
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
                 placeholder="••••••••"
+                aria-invalid={Boolean(errorMessage)}
                 className={`mt-2 w-full rounded-xl border px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500/40 ${inputClasses}`}
                 autoComplete="current-password"
               />
@@ -188,6 +190,8 @@ export const SignIn: React.FC<SignInProps> = ({ setMode, language, theme }) => {
 
             {(statusMessage || errorMessage) && (
               <div
+                role="alert"
+                aria-live="polite"
                 className={`rounded-2xl border px-4 py-3 text-sm ${errorMessage ? (isDark ? 'border-rose-400/30 text-rose-200 bg-rose-500/10' : 'border-rose-200 text-rose-600 bg-rose-50') : (isDark ? 'border-emerald-400/30 text-emerald-200 bg-emerald-500/10' : 'border-emerald-200 text-emerald-700 bg-emerald-50')}`}
               >
                 {errorMessage || statusMessage}
