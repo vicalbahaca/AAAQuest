@@ -22,7 +22,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
   const isDark = theme === 'dark';
   const basePath = import.meta.env.BASE_URL || '/';
   const appPath = basePath.endsWith('/') ? `${basePath}app` : `${basePath}/app`;
-  const appRedirectUrl = `${window.location.origin}${appPath}`;
+  const callbackPath = basePath.endsWith('/') ? `${basePath}auth/callback` : `${basePath}/auth/callback`;
+  const appRedirectUrl = `${window.location.origin}${callbackPath}`;
   const [step, setStep] = useState<AuthStep>('email');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

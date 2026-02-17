@@ -49,10 +49,11 @@ const App: React.FC = () => {
   const normalizedHome = normalizePath(basePath);
   const homeHref = basePath.endsWith('/') ? basePath : `${basePath}/`;
   const appHref = normalizedHome === '/' ? '/app' : `${normalizedHome}/app`;
+  const callbackHref = normalizedHome === '/' ? '/auth/callback' : `${normalizedHome}/auth/callback`;
 
   const resolveModeFromPath = () => {
     const path = normalizePath(window.location.pathname);
-    if (path === normalizePath(appHref)) {
+    if (path === normalizePath(appHref) || path === normalizePath(callbackHref)) {
       return AppMode.CHECKER;
     }
     return AppMode.HOME;
@@ -168,14 +169,25 @@ const App: React.FC = () => {
   useEffect(() => {
     const exchangeCode = async () => {
       const params = new URLSearchParams(window.location.search);
-      if (params.get('code')) {
+      const path = normalizePath(window.location.pathname);
+      const hasCode = params.get('code');
+      if (hasCode) {
         try {
           await supabase.auth.exchangeCodeForSession(window.location.href);
         } catch (error) {
           console.warn('Failed to exchange auth code', error);
         } finally {
-          history.replaceState(null, '', window.location.pathname);
+          history.replaceState(null, '', appHref);
+          setAllowLandingAccess(false);
+          setMode(AppMode.CHECKER);
         }
+        return;
+      }
+
+      if (path === normalizePath(callbackHref)) {
+        history.replaceState(null, '', appHref);
+        setAllowLandingAccess(false);
+        setMode(AppMode.CHECKER);
       }
     };
 

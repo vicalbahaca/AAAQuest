@@ -64,10 +64,12 @@ export const SignIn: React.FC<SignInProps> = ({ setMode, language, theme }) => {
   const handleOAuthSignIn = async (provider: 'google') => {
     resetMessages();
     setIsSubmitting(true);
+    const basePath = import.meta.env.BASE_URL || '/';
+    const callbackPath = basePath.endsWith('/') ? `${basePath}auth/callback` : `${basePath}/auth/callback`;
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: `${window.location.origin}${(import.meta.env.BASE_URL || '/').endsWith('/') ? `${import.meta.env.BASE_URL || '/'}app` : `${import.meta.env.BASE_URL || '/'}/app`}`,
+        redirectTo: `${window.location.origin}${callbackPath}`,
       },
     });
     if (error) {
