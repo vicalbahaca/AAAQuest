@@ -353,6 +353,14 @@ const App: React.FC = () => {
     }
   }, [authUser, mode, allowLandingAccess]);
 
+  useEffect(() => {
+    if (authUser) return;
+    if (mode === AppMode.CHECKER) {
+      setAllowLandingAccess(true);
+      navigateMode(AppMode.HOME);
+    }
+  }, [authUser, mode]);
+
   const handleLogoClick = () => {
     if (authUser && mode !== AppMode.HOME) {
       navigateMode(AppMode.CHECKER);
