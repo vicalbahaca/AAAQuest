@@ -20,6 +20,9 @@ interface AuthModalProps {
 export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, language, theme }) => {
   const t = TRANSLATIONS[language];
   const isDark = theme === 'dark';
+  const basePath = import.meta.env.BASE_URL || '/';
+  const appPath = basePath.endsWith('/') ? `${basePath}app` : `${basePath}/app`;
+  const appRedirectUrl = `${window.location.origin}${appPath}`;
   const [step, setStep] = useState<AuthStep>('email');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -82,7 +85,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
     resetMessages();
     setIsSubmitting(true);
     sessionStorage.setItem('oauthPending', '1');
-    const redirectTo = `${window.location.origin}${import.meta.env.BASE_URL}`;
+    const redirectTo = appRedirectUrl;
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: { redirectTo },
@@ -167,7 +170,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
         displayName = emailValue.split('@')[0] || 'usuario';
       }
       sessionStorage.setItem('welcomeToast', displayName);
-      window.location.reload();
+      window.location.assign(appRedirectUrl);
       setIsSubmitting(false);
       onClose();
       return;
@@ -240,7 +243,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, entry, onClose, la
 
     sessionStorage.setItem('signupToast', '1');
     sessionStorage.setItem('signupToastName', fullName.trim());
-    window.location.reload();
+    window.location.assign(appRedirectUrl);
     setIsSubmitting(false);
   };
 

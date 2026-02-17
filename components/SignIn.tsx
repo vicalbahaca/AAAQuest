@@ -54,6 +54,9 @@ export const SignIn: React.FC<SignInProps> = ({ setMode, language, theme }) => {
       setErrorMessage(error.message || t.signInError);
     } else {
       setStatusMessage(t.signInSuccess);
+      const basePath = import.meta.env.BASE_URL || '/';
+      const appPath = basePath.endsWith('/') ? `${basePath}app` : `${basePath}/app`;
+      window.location.assign(`${window.location.origin}${appPath}`);
     }
     setIsSubmitting(false);
   };
@@ -64,7 +67,7 @@ export const SignIn: React.FC<SignInProps> = ({ setMode, language, theme }) => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: window.location.origin,
+        redirectTo: `${window.location.origin}${(import.meta.env.BASE_URL || '/').endsWith('/') ? `${import.meta.env.BASE_URL || '/'}app` : `${import.meta.env.BASE_URL || '/'}/app`}`,
       },
     });
     if (error) {
@@ -84,6 +87,9 @@ export const SignIn: React.FC<SignInProps> = ({ setMode, language, theme }) => {
       setErrorMessage(error.message || t.signUpError);
     } else {
       setStatusMessage(t.signUpSuccess);
+      const basePath = import.meta.env.BASE_URL || '/';
+      const appPath = basePath.endsWith('/') ? `${basePath}app` : `${basePath}/app`;
+      window.location.assign(`${window.location.origin}${appPath}`);
     }
     setIsSubmitting(false);
   };

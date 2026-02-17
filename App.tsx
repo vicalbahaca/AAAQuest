@@ -217,6 +217,8 @@ const App: React.FC = () => {
       setAuthName(resolvedName);
 
       if (shouldToast) {
+        setAllowLandingAccess(false);
+        navigateMode(AppMode.CHECKER);
         if (existed) {
           const displayName = name || user.user_metadata?.full_name || user.user_metadata?.name || 'usuario';
           showToast(`${t.welcomeToastPrefix}${displayName}${t.welcomeToastSuffix}`);
