@@ -113,7 +113,9 @@ export const AccountSettings: React.FC<AccountSettingsProps> = ({ language, them
             </div>
           )}
           <div className="text-right">
-            <div className={`text-sm font-semibold ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>{authUser?.user_metadata?.full_name || authUser?.user_metadata?.name || authUser?.email}</div>
+            <div className={`text-sm font-semibold ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>
+              {authUser?.user_metadata?.full_name || authUser?.user_metadata?.name || ''}
+            </div>
             <div className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{authUser?.email}</div>
           </div>
         </div>
