@@ -669,7 +669,7 @@ const App: React.FC = () => {
                           setAuthUser(null);
                           setAuthName('');
                         }}
-                        className={`w-full text-left px-4 py-3 text-sm transition-colors flex items-center justify-between ${theme === 'dark' ? 'text-slate-300 hover:bg-slate-800' : 'text-slate-700 hover:bg-slate-50'}`}
+                        className={`w-full text-left px-4 py-3 text-sm transition-colors flex items-center gap-2 ${theme === 'dark' ? 'text-slate-300 hover:bg-slate-800' : 'text-slate-700 hover:bg-slate-50'}`}
                       >
                         {t.signOutButton}
                         <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
