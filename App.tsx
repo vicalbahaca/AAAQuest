@@ -355,11 +355,12 @@ const App: React.FC = () => {
 
   useEffect(() => {
     if (authUser) return;
-    if (mode === AppMode.CHECKER) {
+    const path = normalizePath(window.location.pathname);
+    if (path === normalizePath(appHref) || mode === AppMode.CHECKER) {
       setAllowLandingAccess(true);
-      navigateMode(AppMode.HOME);
+      window.location.replace(homeHref);
     }
-  }, [authUser, mode]);
+  }, [authUser, mode, appHref, homeHref]);
 
   const handleLogoClick = () => {
     if (authUser && mode !== AppMode.HOME) {
