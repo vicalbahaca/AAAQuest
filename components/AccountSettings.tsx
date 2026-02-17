@@ -59,8 +59,14 @@ export const AccountSettings: React.FC<AccountSettingsProps> = ({ language, them
       return;
     }
 
-    const { error } = await supabase.auth.updateUser(updates);
-    if (error) {
+    const { data, error } = await supabase.functions.invoke('update-auth-user', {
+      body: {
+        full_name: trimmedName || undefined,
+        email: trimmedEmail || undefined,
+        password: trimmedPassword || undefined,
+      },
+    });
+    if (error || !data?.ok) {
       setErrorMessage(t.authGenericError);
       return;
     }
