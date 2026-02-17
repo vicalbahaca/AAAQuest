@@ -291,7 +291,19 @@ const App: React.FC = () => {
       case AppMode.CERTIFICATE:
         return <CertificateMode language={language} theme={theme} setMode={navigateMode} />;
       case AppMode.ACCOUNT:
-        return <AccountSettings language={language} theme={theme} authUser={authUser} onBack={() => navigateMode(AppMode.HOME)} />;
+        return (
+          <AccountSettings
+            language={language}
+            theme={theme}
+            authUser={authUser}
+            onBack={() => navigateMode(AppMode.HOME)}
+            onUserUpdated={(user) => {
+              setAuthUser(user);
+              const name = user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email?.split('@')[0] || '';
+              setAuthName(name);
+            }}
+          />
+        );
       case AppMode.SIGNIN:
         return <SignIn language={language} theme={theme} setMode={navigateMode} />;
       default:

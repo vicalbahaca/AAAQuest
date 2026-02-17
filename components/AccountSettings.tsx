@@ -7,9 +7,10 @@ interface AccountSettingsProps {
   theme: Theme;
   authUser: any | null;
   onBack: () => void;
+  onUserUpdated: (user: any) => void;
 }
 
-export const AccountSettings: React.FC<AccountSettingsProps> = ({ language, theme, authUser, onBack }) => {
+export const AccountSettings: React.FC<AccountSettingsProps> = ({ language, theme, authUser, onBack, onUserUpdated }) => {
   const t = TRANSLATIONS[language];
   const isDark = theme === 'dark';
   const [fullName, setFullName] = useState('');
@@ -79,6 +80,11 @@ export const AccountSettings: React.FC<AccountSettingsProps> = ({ language, them
     if (error || !data?.ok) {
       setErrorMessage(t.authGenericError);
       return;
+    }
+
+    const { data: refreshed } = await supabase.auth.getUser();
+    if (refreshed?.user) {
+      onUserUpdated(refreshed.user);
     }
 
     setStatusMessage(t.accountSaved);
