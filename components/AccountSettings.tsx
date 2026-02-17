@@ -20,6 +20,11 @@ export const AccountSettings: React.FC<AccountSettingsProps> = ({ language, them
   const [confirmPassword, setConfirmPassword] = useState('');
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const isGoogleUser = Boolean(
+    authUser?.app_metadata?.provider === 'google' ||
+      authUser?.app_metadata?.providers?.includes?.('google') ||
+      authUser?.user_metadata?.iss?.includes?.('google')
+  );
 
   useEffect(() => {
     const name = authUser?.user_metadata?.full_name || authUser?.user_metadata?.name || '';
@@ -64,7 +69,7 @@ export const AccountSettings: React.FC<AccountSettingsProps> = ({ language, them
     if (trimmedName && trimmedName !== (authUser?.user_metadata?.full_name || authUser?.user_metadata?.name || '')) {
       updates.data = { full_name: trimmedName };
     }
-    const emailChanged = trimmedEmail && trimmedEmail !== authUser?.email;
+    const emailChanged = !isGoogleUser && trimmedEmail && trimmedEmail !== authUser?.email;
     if (emailChanged) {
       updates.email = trimmedEmail;
     }
@@ -105,8 +110,8 @@ export const AccountSettings: React.FC<AccountSettingsProps> = ({ language, them
       },
       body: {
         full_name: trimmedName || undefined,
-        email: trimmedEmail || undefined,
-        password: trimmedPassword || undefined,
+        email: emailChanged ? trimmedEmail : undefined,
+        password: trimmedNew || undefined,
       },
     });
     if (error || !data?.ok) {
@@ -173,9 +178,12 @@ export const AccountSettings: React.FC<AccountSettingsProps> = ({ language, them
               <input
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className={`rounded-xl border px-4 py-3 text-sm outline-none ${isDark ? 'bg-slate-950 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
+                disabled={isGoogleUser}
+                className={`rounded-xl border px-4 py-3 text-sm outline-none ${isDark ? 'bg-slate-950 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'} ${isGoogleUser ? 'opacity-60 cursor-not-allowed' : ''}`}
               />
-              <p className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>{t.accountEmailHint}</p>
+              <p className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>
+                {isGoogleUser ? t.accountEmailGoogleHint : t.accountEmailHint}
+              </p>
             </div>
           </div>
         </section>
