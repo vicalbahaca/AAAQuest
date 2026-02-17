@@ -177,7 +177,7 @@ const App: React.FC = () => {
         } finally {
           setAllowLandingAccess(false);
           setMode(AppMode.CHECKER);
-          window.location.replace(appHref);
+          history.replaceState(null, '', appHref);
         }
         return;
       }
