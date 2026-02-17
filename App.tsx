@@ -49,11 +49,10 @@ const App: React.FC = () => {
   const normalizedHome = normalizePath(basePath);
   const homeHref = basePath.endsWith('/') ? basePath : `${basePath}/`;
   const appHref = normalizedHome === '/' ? '/app' : `${normalizedHome}/app`;
-  const callbackHref = normalizedHome === '/' ? '/auth/callback' : `${normalizedHome}/auth/callback`;
 
   const resolveModeFromPath = () => {
     const path = normalizePath(window.location.pathname);
-    if (path === normalizePath(appHref) || path === normalizePath(callbackHref)) {
+    if (path === normalizePath(appHref)) {
       return AppMode.CHECKER;
     }
     return AppMode.HOME;
@@ -169,7 +168,6 @@ const App: React.FC = () => {
   useEffect(() => {
     const exchangeCode = async () => {
       const params = new URLSearchParams(window.location.search);
-      const path = normalizePath(window.location.pathname);
       const hasCode = params.get('code');
       if (hasCode) {
         try {
@@ -182,12 +180,6 @@ const App: React.FC = () => {
           window.location.replace(appHref);
         }
         return;
-      }
-
-      if (path === normalizePath(callbackHref)) {
-        setAllowLandingAccess(false);
-        setMode(AppMode.CHECKER);
-        window.location.replace(appHref);
       }
     };
 

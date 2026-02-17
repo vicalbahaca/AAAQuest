@@ -65,11 +65,11 @@ export const SignIn: React.FC<SignInProps> = ({ setMode, language, theme }) => {
     resetMessages();
     setIsSubmitting(true);
     const basePath = import.meta.env.BASE_URL || '/';
-    const callbackPath = basePath.endsWith('/') ? `${basePath}auth/callback` : `${basePath}/auth/callback`;
+    const appPath = basePath.endsWith('/') ? `${basePath}app` : `${basePath}/app`;
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: `${window.location.origin}${callbackPath}`,
+        redirectTo: `${window.location.origin}${appPath}`,
       },
     });
     if (error) {
