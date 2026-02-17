@@ -8,6 +8,7 @@ import { InfoMode } from './components/InfoMode';
 import { CertificateMode } from './components/CertificateMode';
 import { SignIn } from './components/SignIn';
 import { AuthModal } from './components/AuthModal';
+import { AccountSettings } from './components/AccountSettings';
 import { NeuralCore } from './components/NeuralCore';
 import { ScanEye, Globe, ChevronDown, UserPlus, LogIn, Clock, FileText, Layers, RefreshCcw, X } from 'lucide-react';
 import { Loader } from './components/Loader';
@@ -289,6 +290,8 @@ const App: React.FC = () => {
         return <InfoMode setMode={navigateMode} language={language} theme={theme} />;
       case AppMode.CERTIFICATE:
         return <CertificateMode language={language} theme={theme} setMode={navigateMode} />;
+      case AppMode.ACCOUNT:
+        return <AccountSettings language={language} theme={theme} authUser={authUser} onBack={() => navigateMode(AppMode.HOME)} />;
       case AppMode.SIGNIN:
         return <SignIn language={language} theme={theme} setMode={navigateMode} />;
       default:
@@ -637,6 +640,16 @@ const App: React.FC = () => {
                         </div>
                       </div>
                       <div className={`h-px ${theme === 'dark' ? 'bg-white/10' : 'bg-slate-200'}`} />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsUserMenuOpen(false);
+                          navigateMode(AppMode.ACCOUNT);
+                        }}
+                        className={`w-full text-left px-4 py-3 text-sm transition-colors ${theme === 'dark' ? 'text-slate-300 hover:bg-slate-800' : 'text-slate-700 hover:bg-slate-50'}`}
+                      >
+                        Mi cuenta
+                      </button>
                       <button
                         type="button"
                         onClick={() => setIsUserMenuOpen(false)}
