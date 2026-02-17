@@ -197,10 +197,16 @@ const App: React.FC = () => {
       }
     };
 
+    const shouldToastFromFlags = () => {
+      return sessionStorage.getItem('oauthPending') === '1'
+        || sessionStorage.getItem('welcomeToast') !== null
+        || sessionStorage.getItem('signupToast') === '1';
+    };
+
     supabase.auth.getSession().then(({ data }) => {
       if (data.session?.user) {
-        const shouldToast = sessionStorage.getItem('oauthPending') === '1';
-        if (shouldToast) sessionStorage.removeItem('oauthPending');
+        const shouldToast = shouldToastFromFlags();
+        if (sessionStorage.getItem('oauthPending') === '1') sessionStorage.removeItem('oauthPending');
         handleAuthUser(data.session.user, shouldToast);
       } else {
         setAuthUser(null);
@@ -210,7 +216,7 @@ const App: React.FC = () => {
 
     const { data: listener } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (session?.user) {
-        const shouldToast = event === 'SIGNED_IN' || sessionStorage.getItem('oauthPending') === '1';
+        const shouldToast = shouldToastFromFlags();
         if (sessionStorage.getItem('oauthPending') === '1') sessionStorage.removeItem('oauthPending');
         handleAuthUser(session.user, shouldToast);
       } else {
