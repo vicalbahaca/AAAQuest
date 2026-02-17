@@ -541,6 +541,7 @@ const App: React.FC = () => {
       />
 
       {/* Modern Floating Header - Width aligned to Content (max-w-5xl) */}
+      {mode !== AppMode.ACCOUNT && (
       <header className={`fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-5xl rounded-full transition-all duration-300 h-16 px-6 flex items-center justify-between ${headerClasses}`}>
           <button 
             className="flex items-center gap-3 font-bold text-lg cursor-pointer group active:scale-95 transition-transform rounded-full px-2 py-1"
@@ -717,6 +718,7 @@ const App: React.FC = () => {
 
           </nav>
       </header>
+      )}
 
       {toastMessage && (
         <div className="fixed top-24 right-6 z-[60]">
