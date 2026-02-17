@@ -64,10 +64,12 @@ export const AccountSettings: React.FC<AccountSettingsProps> = ({ language, them
     if (trimmedName && trimmedName !== (authUser?.user_metadata?.full_name || authUser?.user_metadata?.name || '')) {
       updates.data = { full_name: trimmedName };
     }
-    if (trimmedEmail && trimmedEmail !== authUser?.email) {
+    const emailChanged = trimmedEmail && trimmedEmail !== authUser?.email;
+    if (emailChanged) {
       updates.email = trimmedEmail;
     }
-    if (trimmedNew) {
+    const needsReauth = Boolean(trimmedNew || emailChanged);
+    if (needsReauth) {
       if (!trimmedCurrent) {
         setErrorMessage(t.accountCurrentPasswordRequired);
         return;
@@ -80,6 +82,8 @@ export const AccountSettings: React.FC<AccountSettingsProps> = ({ language, them
         setErrorMessage(t.accountCurrentPasswordInvalid);
         return;
       }
+    }
+    if (trimmedNew) {
       updates.password = trimmedNew;
     }
 
