@@ -627,7 +627,7 @@ const App: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => setIsUserMenuOpen(false)}
-                        className={`w-full text-left px-4 py-3 text-sm font-semibold transition-colors ${theme === 'dark' ? 'text-slate-200 hover:bg-slate-800' : 'text-slate-700 hover:bg-slate-50'}`}
+                        className={`w-full text-left px-4 py-3 text-sm font-normal transition-colors ${theme === 'dark' ? 'text-slate-200 hover:bg-slate-800' : 'text-slate-700 hover:bg-slate-50'}`}
                       >
                         Mi cuenta
                       </button>
