@@ -765,9 +765,11 @@ const App: React.FC = () => {
                         type="button"
                         onClick={async () => {
                           setIsUserMenuOpen(false);
-                          await supabase.auth.signOut();
-                          setAuthUser(null);
-                          setAuthName('');
+                        await supabase.auth.signOut();
+                        setAuthUser(null);
+                        setAuthName('');
+                        setAllowLandingAccess(true);
+                        navigateMode(AppMode.HOME);
                         }}
                         className={`w-full text-left px-4 py-3 text-sm transition-colors flex items-center gap-2 ${theme === 'dark' ? 'text-slate-300 hover:bg-slate-800' : 'text-slate-700 hover:bg-slate-50'}`}
                       >
