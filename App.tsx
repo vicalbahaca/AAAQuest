@@ -177,17 +177,17 @@ const App: React.FC = () => {
         } catch (error) {
           console.warn('Failed to exchange auth code', error);
         } finally {
-          history.replaceState(null, '', appHref);
           setAllowLandingAccess(false);
           setMode(AppMode.CHECKER);
+          window.location.replace(appHref);
         }
         return;
       }
 
       if (path === normalizePath(callbackHref)) {
-        history.replaceState(null, '', appHref);
         setAllowLandingAccess(false);
         setMode(AppMode.CHECKER);
+        window.location.replace(appHref);
       }
     };
 
