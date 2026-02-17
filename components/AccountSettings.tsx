@@ -199,7 +199,7 @@ export const AccountSettings: React.FC<AccountSettingsProps> = ({ language, them
                   onChange={(e) => setEmail(e.target.value)}
                   disabled={isGoogleUser}
                   aria-describedby={emailHintId}
-                  className={`w-full rounded-xl border px-4 py-3 text-sm outline-none ${isDark ? 'bg-slate-950 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'} ${isGoogleUser ? 'opacity-60 cursor-not-allowed pl-10' : ''}`}
+                  className={`w-full rounded-xl border px-4 py-3 text-sm outline-none ${isDark ? 'bg-slate-950 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'} ${isGoogleUser ? 'cursor-not-allowed pl-10' : ''}`}
                 />
               </div>
               <p id={emailHintId} className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>
