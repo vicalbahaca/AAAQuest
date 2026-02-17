@@ -334,7 +334,7 @@ export const TRANSLATIONS = {
     authEmailRequired: 'El campo de correo electrónico es obligatorio.',
     authNameRequired: 'El campo de nombre es obligatorio.',
     authNameMin: 'El nombre debe contener al menos 3 caracteres.',
-    accountTitle: 'Ajustes personales',
+    accountTitle: 'Mi cuenta',
     accountBack: 'Volver',
     accountBasicInfo: 'Información básica',
     accountNameLabel: 'Nombre',
