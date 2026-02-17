@@ -238,8 +238,28 @@ export const AccountSettings: React.FC<AccountSettingsProps> = ({ language, them
         </section>
 
         {(statusMessage || errorMessage) && (
-          <div className={`rounded-2xl border px-4 py-3 text-sm ${errorMessage ? 'border-rose-400/30 text-rose-200 bg-rose-500/10' : 'border-emerald-400/30 text-emerald-200 bg-emerald-500/10'}`}>
-            {errorMessage || statusMessage}
+          <div
+            role="alert"
+            className={`fixed right-6 top-6 z-[120] w-[min(360px,calc(100%-2rem))] rounded-2xl border px-4 py-3 text-sm shadow-2xl ${
+              errorMessage
+                ? 'border-rose-400/30 text-rose-100 bg-rose-500'
+                : 'border-emerald-400/30 text-emerald-100 bg-emerald-600'
+            }`}
+          >
+            <div className="flex items-start justify-between gap-3">
+              <span className="pr-2">{errorMessage || statusMessage}</span>
+              <button
+                type="button"
+                onClick={() => {
+                  setErrorMessage(null);
+                  setStatusMessage(null);
+                }}
+                className="text-white/80 hover:text-white"
+                aria-label="Cerrar"
+              >
+                ×
+              </button>
+            </div>
           </div>
         )}
 
