@@ -8,16 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" type="image/svg+xml" href="files/favicon.svg" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    <script>
-      (function () {
-        var params = new URLSearchParams(window.location.search);
-        var p = params.get('p');
-        if (!p) return;
-        var base = window.location.pathname.startsWith('/AAAQuest') ? '/AAAQuest' : '';
-        var target = base + (p.startsWith('/') ? p : '/' + p);
-        window.history.replaceState(null, '', target);
-      })();
-    </script>
+    <!-- GitHub Pages redirect helper removed for Vercel -->
     <style>
       body {
         font-family: 'Inter', sans-serif;
