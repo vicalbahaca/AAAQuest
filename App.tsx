@@ -37,6 +37,7 @@ const App: React.FC = () => {
   const [authUser, setAuthUser] = useState<any | null>(null);
   const [authName, setAuthName] = useState<string>('');
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
   const [showMaintenance, setShowMaintenance] = useState(false);
   const [showCookieBanner, setShowCookieBanner] = useState(false);
   const [showCookiePrefs, setShowCookiePrefs] = useState(false);
@@ -248,6 +249,7 @@ const App: React.FC = () => {
         setAuthUser(null);
         setAuthName('');
       }
+      setAuthChecked(true);
     });
 
     const { data: listener } = supabase.auth.onAuthStateChange(async (event, session) => {
@@ -259,6 +261,7 @@ const App: React.FC = () => {
         setAuthUser(null);
         setAuthName('');
       }
+      if (!authChecked) setAuthChecked(true);
     });
 
     const params = new URLSearchParams(window.location.search);
@@ -354,13 +357,13 @@ const App: React.FC = () => {
   }, [authUser, mode, allowLandingAccess]);
 
   useEffect(() => {
-    if (authUser) return;
+    if (!authChecked || authUser) return;
     const path = normalizePath(window.location.pathname);
     if (path === normalizePath(appHref) || mode === AppMode.CHECKER) {
       setAllowLandingAccess(true);
       window.location.replace(homeHref);
     }
-  }, [authUser, mode, appHref, homeHref]);
+  }, [authChecked, authUser, mode, appHref, homeHref]);
 
   const handleLogoClick = () => {
     if (authUser && mode !== AppMode.HOME) {
