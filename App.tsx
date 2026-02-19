@@ -8,6 +8,7 @@ import { InfoMode } from './components/InfoMode';
 import { CertificateMode } from './components/CertificateMode';
 import { SignIn } from './components/SignIn';
 import { AuthModal } from './components/AuthModal';
+import { ContactModal } from './components/ContactModal';
 import { AccountSettings } from './components/AccountSettings';
 import { NeuralCore } from './components/NeuralCore';
 import { Globe, ChevronDown, UserPlus, LogIn, Clock, FileText, Layers, RefreshCcw, X } from 'lucide-react';
@@ -32,6 +33,7 @@ const App: React.FC = () => {
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [authEntry, setAuthEntry] = useState<'signup' | 'signin'>('signup');
+  const [isContactOpen, setIsContactOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const toastTimerRef = useRef<number | null>(null);
   const [authUser, setAuthUser] = useState<any | null>(null);
@@ -164,6 +166,10 @@ const App: React.FC = () => {
     }
     setAuthEntry(entry);
     setIsAuthOpen(true);
+  };
+
+  const openContact = () => {
+    setIsContactOpen(true);
   };
 
   useEffect(() => {
@@ -634,6 +640,14 @@ const App: React.FC = () => {
                 <span className="pt-0.5 leading-none">{t.pricingNav}</span>
               </a>
             )}
+            <button
+              type="button"
+              onClick={openContact}
+              className={`flex items-center justify-center gap-2 px-4 h-10 rounded-full transition-all active:scale-95 text-xs font-normal ${theme === 'dark' ? 'text-slate-300 hover:text-white' : 'text-slate-600 hover:text-slate-900'}`}
+              aria-label="Contáctanos"
+            >
+              <span className="pt-0.5 leading-none">Contáctanos</span>
+            </button>
             {!authUser && (
               <button
                 type="button"
@@ -835,6 +849,14 @@ const App: React.FC = () => {
         onClose={() => setIsAuthOpen(false)}
         language={language}
         theme={theme}
+      />
+      <ContactModal
+        isOpen={isContactOpen}
+        onClose={() => setIsContactOpen(false)}
+        userEmail={authUser?.email ?? null}
+        userName={authName}
+        theme={theme}
+        onRequestAuth={() => openAuth('signin')}
       />
     </div>
   );
