@@ -11,6 +11,7 @@ import { AuthModal } from './components/AuthModal';
 import { ContactModal } from './components/ContactModal';
 import { AccountSettings } from './components/AccountSettings';
 import { NeuralCore } from './components/NeuralCore';
+import { PlanStatusModal } from './components/PlanStatusModal';
 import { Globe, ChevronDown, UserPlus, LogIn, Clock, FileText, Layers, RefreshCcw, X } from 'lucide-react';
 import { Loader } from './components/Loader';
 import { Reveal } from './components/Reveal';
@@ -52,9 +53,13 @@ const App: React.FC = () => {
   const normalizedHome = normalizePath(basePath);
   const homeHref = basePath.endsWith('/') ? basePath : `${basePath}/`;
   const appHref = normalizedHome === '/' ? '/app' : `${normalizedHome}/app`;
+  const planHref = `${appHref}/plan`;
 
   const resolveModeFromPath = () => {
     const path = normalizePath(window.location.pathname);
+    if (path === normalizePath(planHref)) {
+      return AppMode.PLAN;
+    }
     if (path === normalizePath(appHref)) {
       return AppMode.CHECKER;
     }
@@ -77,6 +82,8 @@ const App: React.FC = () => {
     setMode(resolvedMode);
     if (resolvedMode === AppMode.CHECKER || resolvedMode === AppMode.ACCOUNT) {
       history.pushState(null, '', appHref);
+    } else if (resolvedMode === AppMode.PLAN) {
+      history.pushState(null, '', planHref);
     } else if (resolvedMode === AppMode.HOME) {
       history.pushState(null, '', homeHref);
     }
@@ -348,6 +355,8 @@ const App: React.FC = () => {
             }}
           />
         );
+      case AppMode.PLAN:
+        return <MyPlan theme={theme} language={language} t={t} />;
       case AppMode.SIGNIN:
         return <SignIn language={language} theme={theme} setMode={navigateMode} />;
       default:
@@ -358,21 +367,26 @@ const App: React.FC = () => {
   useEffect(() => {
     if (!authUser) return;
     const path = normalizePath(window.location.pathname);
-    const appPath = normalizePath(appHref);
-    if (path !== appPath || mode !== AppMode.CHECKER) {
+    const homePath = normalizePath(homeHref);
+    if (path === homePath || mode === AppMode.HOME) {
       setAllowLandingAccess(false);
       navigateMode(AppMode.CHECKER);
     }
-  }, [authUser, mode, appHref]);
+  }, [authUser, mode, homeHref]);
 
   useEffect(() => {
     if (!authChecked || authUser) return;
     const path = normalizePath(window.location.pathname);
-    if (path === normalizePath(appHref) || mode === AppMode.CHECKER) {
+    if (
+      path === normalizePath(appHref)
+      || path === normalizePath(planHref)
+      || mode === AppMode.CHECKER
+      || mode === AppMode.PLAN
+    ) {
       setAllowLandingAccess(true);
       window.location.replace(homeHref);
     }
-  }, [authChecked, authUser, mode, appHref, homeHref]);
+  }, [authChecked, authUser, mode, appHref, planHref, homeHref]);
 
   if (isLoadingLanguage) {
     const loaderText = t.changingLanguage;
@@ -748,7 +762,10 @@ const App: React.FC = () => {
                       </button>
                       <button
                         type="button"
-                        onClick={() => setIsUserMenuOpen(false)}
+                        onClick={() => {
+                          setIsUserMenuOpen(false);
+                          navigateMode(AppMode.PLAN);
+                        }}
                         className={`w-full text-left px-4 py-3 text-sm transition-colors ${theme === 'dark' ? 'text-slate-300 hover:bg-slate-800' : 'text-slate-700 hover:bg-slate-50'}`}
                       >
                         Mi plan
@@ -858,6 +875,165 @@ const App: React.FC = () => {
         theme={theme}
         onRequestAuth={() => openAuth('signin')}
       />
+    </div>
+  );
+};
+
+const MyPlan: React.FC<{ theme: Theme; language: Language; t: any }> = ({ theme, language, t }) => {
+  const [showPlanModal, setShowPlanModal] = useState(true);
+  const totalAttempts = 5;
+  const remainingAttempts = 5;
+
+  const discountRate = 0.15;
+  const starterOriginal = 15;
+  const proOriginal = 40;
+  const starterPrice = Number((starterOriginal * (1 - discountRate)).toFixed(2));
+  const proPrice = Number((proOriginal * (1 - discountRate)).toFixed(2));
+
+  const formatCurrency = (value: number) =>
+    value.toLocaleString(language === 'es' ? 'es-ES' : 'en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+
+  const formatEuro = (value: number) => `${formatCurrency(value)} EUR`;
+
+  const pricingPlans = [
+    {
+      id: 'starter',
+      name: t.pricingStarterName,
+      desc: t.pricingStarterDesc,
+      badge: t.pricingStarterBadge,
+      price: starterPrice,
+      original: starterOriginal,
+      cta: t.pricingStarterCta,
+      includesLabel: t.pricingStarterIncludes,
+      features: t.pricingStarterFeatures,
+      highlight: false,
+      disabled: true
+    },
+    {
+      id: 'pro',
+      name: t.pricingProName,
+      desc: t.pricingProDesc,
+      badge: t.pricingProBadge,
+      price: proPrice,
+      original: proOriginal,
+      cta: t.pricingProCta,
+      includesLabel: t.pricingProIncludes,
+      features: t.pricingProFeatures,
+      highlight: true,
+      disabled: true
+    },
+    {
+      id: 'enterprise',
+      name: t.pricingEnterpriseName,
+      desc: t.pricingEnterpriseDesc,
+      badge: t.pricingEnterpriseBadge,
+      priceLabel: t.pricingEnterprisePrice,
+      cta: t.pricingEnterpriseCta,
+      ctaHref: 'mailto:victorsaizalfageme@gmail.com',
+      includesLabel: t.pricingEnterpriseIncludes,
+      features: t.pricingEnterpriseFeatures,
+      highlight: false
+    }
+  ];
+
+  return (
+    <div className="relative flex flex-col items-center justify-start min-h-screen w-full pt-32 pb-24">
+      <PlanStatusModal
+        isOpen={showPlanModal}
+        onClose={() => setShowPlanModal(false)}
+        theme={theme}
+        planName="Gratuita"
+        totalAttempts={totalAttempts}
+        remainingAttempts={remainingAttempts}
+      />
+
+      <div className="w-full max-w-6xl mx-auto px-6">
+        <Reveal>
+          <div className="text-center max-w-3xl mx-auto">
+            <h1 className={`text-3xl md:text-4xl font-black ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+              Mi plan
+            </h1>
+            <p className={`mt-4 text-base md:text-lg ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>
+              Gestiona tu suscripción y revisa las opciones disponibles.
+            </p>
+          </div>
+        </Reveal>
+
+        <section className="w-full mt-12">
+          <div className="grid lg:grid-cols-3 gap-6 mt-6">
+            {pricingPlans.map((plan: any, index: number) => (
+              <Reveal key={plan.id} delay={index * 120}>
+                <div
+                  className={`rounded-3xl border p-10 h-full flex flex-col ${
+                    theme === 'dark'
+                      ? 'border-white/10 bg-gradient-to-b from-slate-900/90 to-slate-950/90 shadow-2xl shadow-black/40'
+                      : 'border-slate-200 bg-white shadow-xl shadow-slate-200/40'
+                  } ${plan.highlight ? 'ring-1 ring-[#038759]/70' : ''}`}
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <h3 className={`text-2xl font-semibold ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>{plan.name}</h3>
+                      <p className={`mt-2 text-sm min-h-[48px] ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>{plan.desc}</p>
+                    </div>
+                  </div>
+
+                  <div className="mt-6">
+                    <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-widest border ${
+                      theme === 'dark' ? 'bg-slate-800/80 border-white/10 text-slate-200' : 'bg-slate-100 border-slate-200 text-slate-600'
+                    }`}>
+                      {plan.badge}
+                    </span>
+                  </div>
+
+                  <div className="mt-6">
+                    {plan.original && (
+                      <div className="text-sm text-slate-500">
+                        {t.pricingBefore} <span className="line-through">{formatEuro(plan.original)}</span>
+                      </div>
+                    )}
+                    <div className={`mt-2 text-3xl font-black ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+                      {plan.price ? formatEuro(plan.price) : plan.priceLabel}
+                      {plan.price && (
+                        <span className={`text-base font-normal ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>{t.pricingPerMonth}</span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="mt-auto pt-8">
+                    {plan.ctaHref ? (
+                      <a
+                        href={plan.ctaHref}
+                        className={`w-full rounded-full text-center py-2 text-sm font-normal transition inline-flex items-center justify-center ${
+                          theme === 'dark' ? 'bg-white text-slate-900 hover:bg-slate-200' : 'bg-slate-900 text-white hover:bg-slate-800'
+                        }`}
+                      >
+                        {plan.cta}
+                      </a>
+                    ) : (
+                      <button
+                        type="button"
+                        disabled={plan.disabled}
+                        aria-disabled={plan.disabled}
+                        className={`w-full rounded-full py-2 text-sm font-normal transition disabled:cursor-not-allowed disabled:opacity-60 ${
+                          theme === 'dark' ? 'bg-white text-slate-900 hover:bg-slate-200' : 'bg-slate-900 text-white hover:bg-slate-800'
+                        }`}
+                      >
+                        {plan.cta}
+                      </button>
+                    )}
+                  </div>
+
+                </div>
+              </Reveal>
+            ))}
+          </div>
+
+          <p className={`mt-6 text-center text-[10px] px-12 ${theme === 'dark' ? 'text-slate-500' : 'text-slate-400'}`}>{t.pricingFootnote}</p>
+        </section>
+      </div>
     </div>
   );
 };

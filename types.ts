@@ -7,7 +7,8 @@ export enum AppMode {
   CHECKER = 'CHECKER',
   INFO = 'INFO',
   CERTIFICATE = 'CERTIFICATE',
-  ACCOUNT = 'ACCOUNT'
+  ACCOUNT = 'ACCOUNT',
+  PLAN = 'PLAN'
 }
 
 export type Theme = 'light' | 'dark';
