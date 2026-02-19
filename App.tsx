@@ -24,6 +24,8 @@ const unsplashGreenFlow = new URL('./files/unsplash-green-flow.jpg', import.meta
 const pluginFigmaAsset = new URL('./files/PluginFigma.png', import.meta.url).href;
 const workflowImage = unsplashGreenFlow;
 const pluginImage = pluginFigmaAsset;
+const MONTHLY_ATTEMPTS_TOTAL = 5;
+const MONTHLY_ATTEMPTS_REMAINING = 5;
 
 const App: React.FC = () => {
   const [mode, setMode] = useState<AppMode>(AppMode.HOME);
@@ -672,6 +674,50 @@ const App: React.FC = () => {
                 <span className="pt-0.5 leading-none">{t.signUpNav}</span>
               </button>
             )}
+            {authUser && (
+              <div
+                className={`flex items-center gap-3 rounded-full px-3 h-10 border ${
+                  theme === 'dark'
+                    ? 'border-white/10 bg-slate-900/70 text-white'
+                    : 'border-slate-200 bg-white text-slate-900'
+                }`}
+                aria-label="Créditos restantes"
+              >
+                <div className="relative h-7 w-7">
+                  {(() => {
+                    const progress = Math.round((MONTHLY_ATTEMPTS_REMAINING / MONTHLY_ATTEMPTS_TOTAL) * 100);
+                    return (
+                      <svg viewBox="0 0 36 36" className="h-7 w-7">
+                        <path
+                          d="M18 2.0845
+                             a 15.9155 15.9155 0 0 1 0 31.831
+                             a 15.9155 15.9155 0 0 1 0 -31.831"
+                          fill="none"
+                          stroke={theme === 'dark' ? 'rgba(255,255,255,0.12)' : '#E2E8F0'}
+                          strokeWidth="4"
+                        />
+                        <path
+                          d="M18 2.0845
+                             a 15.9155 15.9155 0 0 1 0 31.831
+                             a 15.9155 15.9155 0 0 1 0 -31.831"
+                          fill="none"
+                          stroke="#10B981"
+                          strokeWidth="4"
+                          strokeDasharray={`${progress}, 100`}
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                    );
+                  })()}
+                </div>
+                <div className="leading-tight">
+                  <div className="text-xs font-semibold">Prueba gratis</div>
+                  <div className={`text-[11px] ${theme === 'dark' ? 'text-emerald-300' : 'text-emerald-600'}`}>
+                    {MONTHLY_ATTEMPTS_REMAINING} créditos disponibles
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Language Dropdown */}
             <div className="relative">
@@ -881,8 +927,8 @@ const App: React.FC = () => {
 
 const MyPlan: React.FC<{ theme: Theme; language: Language; t: any }> = ({ theme, language, t }) => {
   const [showPlanModal, setShowPlanModal] = useState(true);
-  const totalAttempts = 5;
-  const remainingAttempts = 5;
+  const totalAttempts = MONTHLY_ATTEMPTS_TOTAL;
+  const remainingAttempts = MONTHLY_ATTEMPTS_REMAINING;
 
   const discountRate = 0.15;
   const starterOriginal = 15;
