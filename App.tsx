@@ -656,14 +656,6 @@ const App: React.FC = () => {
                 <span className="pt-0.5 leading-none">{t.pricingNav}</span>
               </a>
             )}
-            <button
-              type="button"
-              onClick={openContact}
-              className={`flex items-center justify-center gap-2 px-4 h-10 rounded-full transition-all active:scale-95 text-xs font-normal ${theme === 'dark' ? 'text-slate-300 hover:text-white' : 'text-slate-600 hover:text-slate-900'}`}
-              aria-label="Contáctanos"
-            >
-              <span className="pt-0.5 leading-none">Contáctanos</span>
-            </button>
             {!authUser && (
               <button
                 type="button"
@@ -833,7 +825,10 @@ const App: React.FC = () => {
                       <div className={`h-px ${theme === 'dark' ? 'bg-white/10' : 'bg-slate-200'}`} />
                       <button
                         type="button"
-                        onClick={() => setIsUserMenuOpen(false)}
+                        onClick={() => {
+                          setIsUserMenuOpen(false);
+                          openContact();
+                        }}
                         className={`w-full text-left px-4 py-3 text-sm transition-colors ${theme === 'dark' ? 'text-slate-300 hover:bg-slate-800' : 'text-slate-700 hover:bg-slate-50'}`}
                       >
                         Contáctanos
