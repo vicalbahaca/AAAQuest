@@ -27,6 +27,49 @@ const pluginImage = pluginFigmaAsset;
 const MONTHLY_ATTEMPTS_TOTAL = 5;
 const MONTHLY_ATTEMPTS_REMAINING = 5;
 
+const CreditsBadge: React.FC<{ theme: Theme }> = ({ theme }) => {
+  const progress = Math.round((MONTHLY_ATTEMPTS_REMAINING / MONTHLY_ATTEMPTS_TOTAL) * 100);
+  return (
+    <div
+      className={`flex items-center gap-3 rounded-full px-3 h-10 border ${
+        theme === 'dark'
+          ? 'border-white/10 bg-slate-900/70 text-white'
+          : 'border-slate-200 bg-white text-slate-900'
+      }`}
+      aria-label="Créditos restantes"
+    >
+      <div className="relative h-7 w-7">
+        <svg viewBox="0 0 36 36" className="h-7 w-7">
+          <path
+            d="M18 2.0845
+               a 15.9155 15.9155 0 0 1 0 31.831
+               a 15.9155 15.9155 0 0 1 0 -31.831"
+            fill="none"
+            stroke={theme === 'dark' ? 'rgba(255,255,255,0.12)' : '#E2E8F0'}
+            strokeWidth="4"
+          />
+          <path
+            d="M18 2.0845
+               a 15.9155 15.9155 0 0 1 0 31.831
+               a 15.9155 15.9155 0 0 1 0 -31.831"
+            fill="none"
+            stroke="#10B981"
+            strokeWidth="4"
+            strokeDasharray={`${progress}, 100`}
+            strokeLinecap="round"
+          />
+        </svg>
+      </div>
+      <div className="leading-tight">
+        <div className="text-xs font-semibold">Prueba gratis</div>
+        <div className={`text-[11px] ${theme === 'dark' ? 'text-emerald-300' : 'text-emerald-600'}`}>
+          {MONTHLY_ATTEMPTS_REMAINING} créditos disponibles
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const App: React.FC = () => {
   const [mode, setMode] = useState<AppMode>(AppMode.HOME);
   const [focusMode, setFocusMode] = useState(false);
@@ -358,7 +401,7 @@ const App: React.FC = () => {
           />
         );
       case AppMode.PLAN:
-        return <MyPlan theme={theme} language={language} t={t} />;
+        return <MyPlan theme={theme} language={language} t={t} onBack={() => navigateMode(AppMode.CHECKER)} />;
       case AppMode.SIGNIN:
         return <SignIn language={language} theme={theme} setMode={navigateMode} />;
       default:
@@ -667,48 +710,7 @@ const App: React.FC = () => {
               </button>
             )}
             {authUser && (
-              <div
-                className={`flex items-center gap-3 rounded-full px-3 h-10 border ${
-                  theme === 'dark'
-                    ? 'border-white/10 bg-slate-900/70 text-white'
-                    : 'border-slate-200 bg-white text-slate-900'
-                }`}
-                aria-label="Créditos restantes"
-              >
-                <div className="relative h-7 w-7">
-                  {(() => {
-                    const progress = Math.round((MONTHLY_ATTEMPTS_REMAINING / MONTHLY_ATTEMPTS_TOTAL) * 100);
-                    return (
-                      <svg viewBox="0 0 36 36" className="h-7 w-7">
-                        <path
-                          d="M18 2.0845
-                             a 15.9155 15.9155 0 0 1 0 31.831
-                             a 15.9155 15.9155 0 0 1 0 -31.831"
-                          fill="none"
-                          stroke={theme === 'dark' ? 'rgba(255,255,255,0.12)' : '#E2E8F0'}
-                          strokeWidth="4"
-                        />
-                        <path
-                          d="M18 2.0845
-                             a 15.9155 15.9155 0 0 1 0 31.831
-                             a 15.9155 15.9155 0 0 1 0 -31.831"
-                          fill="none"
-                          stroke="#10B981"
-                          strokeWidth="4"
-                          strokeDasharray={`${progress}, 100`}
-                          strokeLinecap="round"
-                        />
-                      </svg>
-                    );
-                  })()}
-                </div>
-                <div className="leading-tight">
-                  <div className="text-xs font-semibold">Prueba gratis</div>
-                  <div className={`text-[11px] ${theme === 'dark' ? 'text-emerald-300' : 'text-emerald-600'}`}>
-                    {MONTHLY_ATTEMPTS_REMAINING} créditos disponibles
-                  </div>
-                </div>
-              </div>
+              <CreditsBadge theme={theme} />
             )}
 
             {/* Language Dropdown */}
@@ -920,7 +922,7 @@ const App: React.FC = () => {
   );
 };
 
-const MyPlan: React.FC<{ theme: Theme; language: Language; t: any }> = ({ theme, language, t }) => {
+const MyPlan: React.FC<{ theme: Theme; language: Language; t: any; onBack: () => void }> = ({ theme, language, t, onBack }) => {
   const [showPlanBanner, setShowPlanBanner] = useState(true);
   const totalAttempts = MONTHLY_ATTEMPTS_TOTAL;
   const remainingAttempts = MONTHLY_ATTEMPTS_REMAINING;
@@ -991,19 +993,39 @@ const MyPlan: React.FC<{ theme: Theme; language: Language; t: any }> = ({ theme,
         remainingAttempts={remainingAttempts}
       />
 
-      <div className="w-full max-w-6xl mx-auto px-6">
+      <div className="w-full max-w-5xl mx-auto px-4 pb-20">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <button
+              type="button"
+              onClick={onBack}
+              className={`inline-flex items-center gap-2 text-xs uppercase tracking-widest ${theme === 'dark' ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'}`}
+            >
+              <span aria-hidden="true">←</span>
+              {t.accountBack}
+            </button>
+            <h1 className={`mt-3 text-3xl font-semibold ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>Mi plan</h1>
+          </div>
+          <div className="flex items-center gap-3">
+            <CreditsBadge theme={theme} />
+            <a
+              href="#plan-cards"
+              className={`rounded-full px-4 py-2 text-xs font-semibold transition ${theme === 'dark' ? 'bg-white text-slate-900 hover:bg-slate-200' : 'bg-slate-900 text-white hover:bg-slate-800'}`}
+            >
+              Plan de pago
+            </a>
+          </div>
+        </div>
+
         <Reveal>
-          <div className="text-center max-w-3xl mx-auto">
-            <h1 className={`text-3xl md:text-4xl font-black ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
-              Mi plan
-            </h1>
-            <p className={`mt-4 text-base md:text-lg ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>
+          <div className="text-center max-w-3xl mx-auto mt-12">
+            <p className={`text-base md:text-lg ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>
               Gestiona tu suscripción y revisa las opciones disponibles.
             </p>
           </div>
         </Reveal>
 
-        <section className="w-full mt-12">
+        <section id="plan-cards" className="w-full mt-12 scroll-mt-32">
           <div className="grid lg:grid-cols-3 gap-6 mt-6">
             {pricingPlans.map((plan: any, index: number) => (
               <Reveal key={plan.id} delay={index * 120}>
