@@ -351,10 +351,13 @@ const App: React.FC = () => {
 
   useEffect(() => {
     if (!authUser) return;
-    if (mode === AppMode.HOME && !allowLandingAccess) {
+    const path = normalizePath(window.location.pathname);
+    const appPath = normalizePath(appHref);
+    if (path !== appPath || mode !== AppMode.CHECKER) {
+      setAllowLandingAccess(false);
       navigateMode(AppMode.CHECKER);
     }
-  }, [authUser, mode, allowLandingAccess]);
+  }, [authUser, mode, appHref]);
 
   useEffect(() => {
     if (!authChecked || authUser) return;
@@ -366,7 +369,7 @@ const App: React.FC = () => {
   }, [authChecked, authUser, mode, appHref, homeHref]);
 
   const handleLogoClick = () => {
-    if (authUser && mode !== AppMode.HOME) {
+    if (authUser) {
       navigateMode(AppMode.CHECKER);
       return;
     }
