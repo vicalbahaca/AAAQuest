@@ -11,7 +11,7 @@ import { AuthModal } from './components/AuthModal';
 import { ContactModal } from './components/ContactModal';
 import { AccountSettings } from './components/AccountSettings';
 import { NeuralCore } from './components/NeuralCore';
-import { PlanStatusModal } from './components/PlanStatusModal';
+import { PlanStatusBanner } from './components/PlanStatusBanner';
 import { Globe, ChevronDown, UserPlus, LogIn, Clock, FileText, Layers, RefreshCcw, X } from 'lucide-react';
 import { Loader } from './components/Loader';
 import { Reveal } from './components/Reveal';
@@ -921,7 +921,7 @@ const App: React.FC = () => {
 };
 
 const MyPlan: React.FC<{ theme: Theme; language: Language; t: any }> = ({ theme, language, t }) => {
-  const [showPlanModal, setShowPlanModal] = useState(true);
+  const [showPlanBanner, setShowPlanBanner] = useState(true);
   const totalAttempts = MONTHLY_ATTEMPTS_TOTAL;
   const remainingAttempts = MONTHLY_ATTEMPTS_REMAINING;
 
@@ -981,10 +981,10 @@ const MyPlan: React.FC<{ theme: Theme; language: Language; t: any }> = ({ theme,
   ];
 
   return (
-    <div className="relative flex flex-col items-center justify-start min-h-screen w-full pt-32 pb-24">
-      <PlanStatusModal
-        isOpen={showPlanModal}
-        onClose={() => setShowPlanModal(false)}
+    <div className="relative flex flex-col items-center justify-start min-h-screen w-full pt-36 pb-24">
+      <PlanStatusBanner
+        isOpen={showPlanBanner}
+        onClose={() => setShowPlanBanner(false)}
         theme={theme}
         planName="Gratuita"
         totalAttempts={totalAttempts}
