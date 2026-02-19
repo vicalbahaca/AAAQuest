@@ -10,7 +10,7 @@ import { SignIn } from './components/SignIn';
 import { AuthModal } from './components/AuthModal';
 import { AccountSettings } from './components/AccountSettings';
 import { NeuralCore } from './components/NeuralCore';
-import { ScanEye, Globe, ChevronDown, UserPlus, LogIn, Clock, FileText, Layers, RefreshCcw, X } from 'lucide-react';
+import { Globe, ChevronDown, UserPlus, LogIn, Clock, FileText, Layers, RefreshCcw, X } from 'lucide-react';
 import { Loader } from './components/Loader';
 import { Reveal } from './components/Reveal';
 import { checkAuthUserByEmail, supabase, upsertUser } from './services/supabaseClient';
@@ -368,14 +368,6 @@ const App: React.FC = () => {
     }
   }, [authChecked, authUser, mode, appHref, homeHref]);
 
-  const handleLogoClick = () => {
-    if (authUser) {
-      navigateMode(AppMode.CHECKER);
-      return;
-    }
-    navigateMode(AppMode.HOME);
-  };
-
   if (isLoadingLanguage) {
     const loaderText = t.changingLanguage;
     return (
@@ -625,18 +617,12 @@ const App: React.FC = () => {
       {/* Modern Floating Header - Width aligned to Content (max-w-5xl) */}
       {mode !== AppMode.ACCOUNT && (
       <header className={`fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-5xl rounded-full transition-all duration-300 h-16 px-6 flex items-center justify-between ${headerClasses}`}>
-          <button 
-            className="flex items-center gap-3 font-bold text-lg cursor-pointer group active:scale-95 transition-transform rounded-full px-2 py-1"
-            onClick={handleLogoClick}
-            aria-label={t.appTitle + " - " + t.returnSelector}
-          >
-            {/* Logo Icon - Green Gradient - ScanEye used for 'eye with cables' look */}
-            <div className={`w-9 h-9 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 bg-gradient-to-tr from-emerald-500 to-green-600 hover:shadow-emerald-500/50`}>
-              <ScanEye className="text-white w-5 h-5" />
+          <div className="flex items-center gap-3 font-bold text-lg rounded-full px-2 py-1">
+            <div className="w-9 h-9 rounded-full flex items-center justify-center shadow-lg bg-gradient-to-tr from-emerald-500 to-green-600">
+              <img src={faviconIcon} alt="Logo AAAQuest" className="h-5 w-5" />
             </div>
-            
             <span className={`tracking-tight transition-colors hidden sm:inline ${logoClasses}`}>{t.appTitle}</span>
-          </button>
+          </div>
           
           <nav className="flex items-center gap-2" aria-label="Main Navigation">
             {mode === AppMode.HOME && (
