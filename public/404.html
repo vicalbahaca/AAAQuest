@@ -4,19 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AAAQuest</title>
-    <script>
-      (function () {
-        var base = '/AAAQuest';
-        var path = window.location.pathname || '/';
-        if (path.indexOf(base) === 0) {
-          path = path.slice(base.length);
-        }
-        var search = window.location.search || '';
-        var hash = window.location.hash || '';
-        var target = base + '/?p=' + encodeURIComponent(path + search + hash);
-        window.location.replace(target);
-      })();
-    </script>
+    <!-- GitHub Pages redirect helper removed for Vercel -->
   </head>
-  <body></body>
+  <body>
+    <p>Page not found.</p>
+  </body>
 </html>
